@@ -10,7 +10,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Gentelella Alela! | </title>
+    <title>七台河房管局维修基金系统</title>
 
     <!-- Bootstrap -->
     <link href="<%=path%>/vendors/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -18,6 +18,13 @@
     <link href="<%=path%>/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <!-- Custom Theme Style -->
     <link href="<%=path%>/vendors/gentelella/css/custom.min.css" rel="stylesheet">
+    <style>
+        iframe{
+            border: 0;
+            width:100%;
+            height: 100%;
+        }
+    </style>
 </head>
 <body class="nav-md">
 <div class="container body">
@@ -47,23 +54,25 @@
                 <!-- sidebar menu -->
                 <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
                     <div class="menu_section">
-                        <h3>General</h3>
+                        <h3>功能列表</h3>
                         <ul class="nav side-menu">
-                            <li><a><i class="fa fa-home"></i> Home <span class="fa fa-chevron-down"></span></a>
+                            <li><a><i class="fa fa-home"></i> 政策管理 <span class="fa fa-chevron-down"></span></a>
                                 <ul class="nav child_menu">
-                                    <li><a href="index.html">Dashboard</a></li>
-                                    <li><a href="index2.html">Dashboard2</a></li>
-                                    <li><a href="index3.html">Dashboard3</a></li>
+                                    <li><a href="index.html">房产算法开关</a></li>
+                                    <li><a href="index2.html">基金缴存标准</a></li>
+                                    <li><a href="index3.html">利率管理</a></li>
                                 </ul>
                             </li>
-                            <li><a><i class="fa fa-edit"></i> Forms <span class="fa fa-chevron-down"></span></a>
+                            <li><a><i class="fa fa-edit"></i> 基础信息管理 <span class="fa fa-chevron-down"></span></a>
                                 <ul class="nav child_menu">
-                                    <li><a href="form.html">General Form</a></li>
-                                    <li><a href="form_advanced.html">Advanced Components</a></li>
-                                    <li><a href="form_validation.html">Form Validation</a></li>
-                                    <li><a href="form_wizards.html">Form Wizard</a></li>
-                                    <li><a href="form_upload.html">Form Upload</a></li>
-                                    <li><a href="form_buttons.html">Form Buttons</a></li>
+                                    <li><a target="main_frame" href="/api/regions.html">区域管理</a></li>
+                                    <li><a href="form_advanced.html">单位管理</a></li>
+                                    <li><a href="form_validation.html">街道管理</a></li>
+                                    <li><a href="form_wizards.html">小区管理</a></li>
+                                    <li><a href="form_upload.html">楼栋管理</a></li>
+                                    <li><a href="form_buttons.html">单元管理</a></li>
+                                    <li><a href="form_upload.html">房屋管理</a></li>
+                                    <li><a href="form_buttons.html">批量导入</a></li>
                                 </ul>
                             </li>
                             <li><a><i class="fa fa-desktop"></i> UI Elements <span class="fa fa-chevron-down"></span></a>
@@ -141,7 +150,7 @@
 
         <!-- page content -->
         <div class="right_col" role="main">
-
+            <iframe name="main_frame"></iframe>
         </div>
         <!-- /page content -->
 
