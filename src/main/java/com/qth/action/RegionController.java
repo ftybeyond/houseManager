@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.List;
 
 @Controller
-@RequestMapping("api")
+@RequestMapping(value = "rest")
+@ResponseBody
 public class RegionController {
 
     @Autowired
     IRegionService regionService;
 
     @RequestMapping(path="regions")
-    @ResponseBody
     public List<Region> regionList(){
         return regionService.getRegionList();
     }

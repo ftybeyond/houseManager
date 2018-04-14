@@ -10,7 +10,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>七台河房管局维修基金系统</title>
+    <title>七台河市房管局住房维修基金系统</title>
 
     <!-- Bootstrap -->
     <link href="<%=path%>/vendors/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -18,6 +18,12 @@
     <link href="<%=path%>/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <!-- Custom Theme Style -->
     <link href="<%=path%>/vendors/gentelella/css/custom.min.css" rel="stylesheet">
+
+    <script src="<%=path%>/vendors/requireJS/require.js"></script>
+    <script type="text/javascript" src="<%=path%>/vendors/requireJS/require-config.js"></script>
+    <script type="text/javascript">
+        require(['index']);
+    </script>
     <style>
         iframe{
             border: 0;
@@ -157,20 +163,12 @@
         <!-- footer content -->
         <footer>
             <div class="pull-right">
-                Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>
+                Copyright © 2018-2020 七台河房管局 All Rights Reserved.
             </div>
             <div class="clearfix"></div>
         </footer>
         <!-- /footer content -->
     </div>
 </div>
-
-<!-- jQuery -->
-<script src="<%=path%>/vendors/jquery/2.x/jquery.min.js"></script>
-<!-- Bootstrap -->
-<script src="<%=path%>/vendors/bootstrap/js/bootstrap.min.js"></script>
-<!-- Custom Theme Scripts -->
-<script src="<%=path%>/vendors/gentelella/js/custom.min.js"></script>
-
 </body>
 </html>

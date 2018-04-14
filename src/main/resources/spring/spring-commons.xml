@@ -15,7 +15,8 @@
     <context:annotation-config/>
 
     <!-- 设置使用注解的类所在的jar包 -->
-    <context:component-scan base-package="com.qth"></context:component-scan>
+    <context:component-scan base-package="com.qth.action"></context:component-scan>
+    <context:component-scan base-package="com.qth.service"></context:component-scan>
 
     <!-- 读取配置文件-->
     <bean id="configProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
