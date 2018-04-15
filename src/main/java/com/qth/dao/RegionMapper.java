@@ -43,4 +43,8 @@ public interface RegionMapper {
      * @mbg.generated Fri Apr 13 16:10:18 CST 2018
      */
     int updateByPrimaryKey(Region record);
+
+    List<Region> selectDataTable(Region region);
+
+    int selectDataTableCount(Region region);
 }

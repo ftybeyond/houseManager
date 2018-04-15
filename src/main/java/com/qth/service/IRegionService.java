@@ -1,18 +1,21 @@
 package com.qth.service;
 
 import com.qth.model.Region;
+import com.qth.util.DataTableRspWrapper;
 
 import java.util.List;
 
 public interface IRegionService
 {
-    public List<Region> getRegionList();
+    public List<Region> selectAll();
 
-    public int insertRegion();
+    public DataTableRspWrapper<Region> selectDataTable2Rsp(Region region);
+
+    public int insertRegion(Region region);
 
     public int updateRegion(Region region);
 
-    public int findRegionById(int id);
+    public Region findRegionById(int id);
 
     public int deleteRegionById(int id);
 }

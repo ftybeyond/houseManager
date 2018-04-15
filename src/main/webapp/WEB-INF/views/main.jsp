@@ -22,7 +22,7 @@
     <script src="<%=path%>/vendors/requireJS/require.js"></script>
     <script type="text/javascript" src="<%=path%>/vendors/requireJS/require-config.js"></script>
     <script type="text/javascript">
-        require(['index']);
+        require(['main']);
     </script>
     <style>
         iframe{
@@ -71,7 +71,7 @@
                             </li>
                             <li><a><i class="fa fa-edit"></i> 基础信息管理 <span class="fa fa-chevron-down"></span></a>
                                 <ul class="nav child_menu">
-                                    <li><a target="main_frame" href="/api/regions.html">区域管理</a></li>
+                                    <li><a target="main_frame" href="/page/regionList.action">区域管理</a></li>
                                     <li><a href="form_advanced.html">单位管理</a></li>
                                     <li><a href="form_validation.html">街道管理</a></li>
                                     <li><a href="form_wizards.html">小区管理</a></li>
@@ -145,7 +145,7 @@
                                     </a>
                                 </li>
                                 <li><a href="javascript:;">Help</a></li>
-                                <li><a href="login.html"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
+                                <li><a href="/index.html"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
                             </ul>
                         </li>
                     </ul>

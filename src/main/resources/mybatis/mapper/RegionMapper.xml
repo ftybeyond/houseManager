@@ -57,4 +57,30 @@
     select id, name
     from region
   </select>
+  
+  <select id="selectDataTable" resultMap="BaseResultMap" parameterType="com.qth.model.Region">
+    select id, name
+    from region
+    <where>
+      <if test="id!=null">
+        id=#{id}
+      </if>
+      <if test="name!=null and name.length()>0">
+        and name LIKE '%${name}%'
+      </if>
+    </where>
+    limit #{start} ,#{length}
+  </select>
+  <select id="selectDataTableCount" resultType="int" parameterType="com.qth.model.Region">
+    select count(*)
+    from region
+    <where>
+      <if test="id!=null">
+        id=#{id}
+      </if>
+      <if test="name!=null and name.length()>0">
+        and name LIKE "%"#{name}"%"
+      </if>
+    </where>
+  </select>
 </mapper>

@@ -8,23 +8,30 @@ import java.security.NoSuchAlgorithmException;
 
 public class MD5 {
 
-    /**利用MD5进行加密
-     * @param str  待加密的字符串
-     * @return  加密后的字符串
-     */
-    public static String EncoderByMd5(String str) {
+    public static String EncoderByMd5(String s) {
         try {
-            //确定计算方法
-            MessageDigest md5=MessageDigest.getInstance("MD5");
-            BASE64Encoder base64en = new BASE64Encoder();
-            //加密后的字符串
-            String newstr=base64en.encode(md5.digest(str.getBytes("utf-8")));
-            return newstr;
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] bytes = md.digest(s.getBytes("utf-8"));
+            return toHex(bytes);
         }
-        return null;
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static String toHex(byte[] bytes) {
+
+        final char[] HEX_DIGITS = "0123456789ABCDEF".toCharArray();
+        StringBuilder ret = new StringBuilder(bytes.length * 2);
+        for (int i=0; i<bytes.length; i++) {
+            ret.append(HEX_DIGITS[(bytes[i] >> 4) & 0x0f]);
+            ret.append(HEX_DIGITS[bytes[i] & 0x0f]);
+        }
+        return ret.toString();
+    }
+
+
+    public static void main(String[] args) {
+        System.out.println(MD5.EncoderByMd5("123456"));
     }
 }
