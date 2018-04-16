@@ -10,10 +10,8 @@
     <title>区域管理</title>
 
     <link rel="stylesheet" type="text/css" href="<%=path%>/vendors/datatable/datatables-bootstrap.min.css"/>
-
-    <script type="text/javascript" src="/vendors/datatable/datatables-all.min.js"></script>
-    <script type="text/javascript" src="/vendors/layer/layer.js"></script>
-    <script type="text/javascript" src="/vendors/jquery/jquery.serializejson.min.js"></script>
+    <script src="<%=path%>/vendors/requireJS/require.js"></script>
+    <script type="text/javascript" src="<%=path%>/vendors/requireJS/require-config.js"></script>
     <script type="text/javascript" src="/script/region.js"></script>
 </head>
 <body>

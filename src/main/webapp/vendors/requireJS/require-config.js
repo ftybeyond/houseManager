@@ -6,7 +6,10 @@ require.config({
         'bootstrap' : 'bootstrap/js/bootstrap.min',
         'main' : 'gentelella/js/custom.min',
         'select2':'select2/select2.min',
-        'datatable':'datatable/datatables.min'
+        'datatable':'datatable/dataTables.min',
+        'dataTables-bs':'datatable/dataTables.bootstrap.min',
+        'jquery-serializejson':'jquery/jquery.serializejson.min',
+        'layer':'layer/layer'
     },
     'shim' : {
         'bootstrap' : {
@@ -15,6 +18,8 @@ require.config({
         'main' : {
             'deps' : ['bootstrap']
         },
-        'select2':['jquery']
+        'layer':['jquery'],
+        'select2':['jquery'],
+        'dataTables-bs':['bootstrap','datatable','layer','jquery-serializejson']
     }
 });
