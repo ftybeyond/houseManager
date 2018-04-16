@@ -43,4 +43,8 @@ public interface StreetMapper {
      * @mbg.generated Fri Apr 13 16:10:18 CST 2018
      */
     int updateByPrimaryKey(Street record);
+
+    List<Street> selectDataTable(Street street);
+
+    int selectDataTableCount(Street street);
 }

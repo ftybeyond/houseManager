@@ -9,7 +9,8 @@ require.config({
         'datatable':'datatable/dataTables.min',
         'dataTables-bs':'datatable/dataTables.bootstrap.min',
         'jquery-serializejson':'jquery/jquery.serializejson.min',
-        'layer':'layer/layer'
+        'layer':'layer/layer',
+        'common':'../script/common'
     },
     'shim' : {
         'bootstrap' : {

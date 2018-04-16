@@ -61,4 +61,38 @@
     select id, name, region
     from street
   </select>
+
+
+  <select id="selectDataTable" resultMap="BaseResultMap" parameterType="com.qth.model.Street">
+    select id, name,region
+    from street
+    <where>
+      <if test="id!=null">
+        id=#{id}
+      </if>
+      <if test="name!=null and name.length()>0">
+        and name LIKE '%${name}%'
+      </if>
+      <if test="region!=null">
+        and region = region
+      </if>
+    </where>
+    limit #{start} ,#{length}
+  </select>
+
+  <select id="selectDataTableCount" resultType="int" parameterType="com.qth.model.Street">
+    select count(*)
+    from street
+    <where>
+      <if test="id!=null">
+        id=#{id}
+      </if>
+      <if test="name!=null and name.length()>0">
+        and name LIKE "%"#{name}"%"
+      </if>
+      <if test="region!=null">
+        and region = region
+      </if>
+    </where>
+  </select>
 </mapper>
