@@ -8,7 +8,7 @@ define(["dataTables-bs"],function () {
         baseUrl:'/rest/',//请求前置URL
         domain:{
             name:'',//实体名称,
-            props:[]//实体属性集合 {name:'name',editable:true,searchable:true,tableShow:true,formType:'datetime|select|string|number|file|date|',showType:'',dateFormat:'yyyy-MM-dd HH:ss:mm',selectKey:'id',selectValue:'name',numberFormate:''}
+            props:[]//实体属性集合 {data:'name',editable:true,searchable:true,tableShow:true,formType:'datetime|select|string|number|file|date|',showType:'',dateFormat:'yyyy-MM-dd HH:ss:mm',selectKey:'id',selectValue:'name',numberFormate:''}
         },//实体信息
         multiSelect:false,
         deleteable:true,
@@ -19,6 +19,7 @@ define(["dataTables-bs"],function () {
         infoFrom:'infoForm',//添加和修改表单ID
         searchBtn:'searchBtn',//查询按钮
         addBtn:'addBtn',//添加按钮
+        customBtns:[],//表格上自定义按钮{label:'自定义按钮',callback:function(index){//行数据id}}
         beforeSaveOrUpdate:null,//保存或更新前回调方法，提供ajax 即将提交的param参数,用于表单校验和参数补充
         afterSyncFormData:null //selectById后同步表单后回调方法，此回调用于不能自动同步到表单项的值的组件,传入当前查询回的对象
     };
@@ -31,18 +32,7 @@ define(["dataTables-bs"],function () {
                 url:getUrl("table")
             },
             searchForm:baseConfig.searchForm,
-            columns:[
-                {'data':"id"},
-                {'data':'name'},
-                {
-                    render:function(data, type, full, meta ){
-                        //最后一列操作按钮渲染
-                        var btnEidt = '<button type="button" data-handle="edit" data-index="'+full.id+'"   class="btn btn-primary btn-xs">编辑</button>';
-                        var btnDel = '<button type="button"  data-handle="del" data-index="'+full.id+'"  class="btn btn-primary btn-xs">删除</button>'
-                        return btnEidt +' '+ btnDel
-                    }
-                }
-            ]
+            columns:generateColumns()
         });
         //查询按钮事件
         $("#"+baseConfig.searchBtn).on("click",function () {
@@ -62,6 +52,12 @@ define(["dataTables-bs"],function () {
                     selectRegionById(index);
                 }else if(handle == "del"){
                     deleteRegion(index)
+                }else if(handle =="custom"){
+                    $.each(baseConfig.customBtns,function (index,item) {
+                        if(index == $(this).attr("data-handle-index")){
+                            item.callback(index)
+                        }
+                    })
                 }
             })
         })
@@ -104,11 +100,58 @@ define(["dataTables-bs"],function () {
          */
         function obj2Form(){
             for (key in handleObj){
-                $("#"+baseConfig.infoFrom+" *[name='"+key+"']").val(handleObj.key);
+                $("#"+baseConfig.infoFrom+" *[name='"+key+"']").val(handleObj[key]);
             }
             if(baseConfig.afterSyncFormData){
                 baseConfig.afterSyncFormData(handleObj)
             }
+        }
+
+        /**
+         * 根据domain配置生成datatables columns属性
+         */
+        function generateColumns() {
+            var columns = new Array();
+            if(baseConfig.multiSelect){
+                //添加复选框
+                columns.push({render:function(data, type, full, meta ){
+                    var checkbox = '<input type="checkbox" data-index="'+full.id+'" name="selectRow">删除</input>'
+                    return checkbox
+                }});
+            }
+            $.each(baseConfig.domain.props,function(index,item){
+                if (item.showable) {
+                    item.data = item.name;
+                    columns.push(item)
+                }
+            })
+
+
+            if (baseConfig.editable||baseConfig.deleteable||baseConfig.customBtns.length > 0) {
+                columns.push({
+                    render: function (data, type, full, meta) {
+                        var btns = '';
+                        //最后一列操作按钮渲染
+                        if (baseConfig.editable) {
+                            var btnEidt = ' <button type="button" data-handle="edit" data-index="' + full.id + '"   class="btn btn-primary btn-xs">编辑</button> ';
+                            btns += btnEidt;
+                        }
+                        if (baseConfig.deleteable) {
+                            var btnDel = ' <button type="button"  data-handle="del" data-index="' + full.id + '"  class="btn btn-primary btn-xs">删除</button> ';
+                            btns += btnDel;
+                        }
+                        if (baseConfig.customBtns.length > 0) {
+                            $.each(baseConfig.customBtns, function (index, item) {
+                                var btnCustom = ' <button type="button"  data-handle="custom" data-handle-index="' + index + '" data-index="' + full.id + '"  class="btn btn-primary btn-xs">item.label</button> ';
+                                btns += btnCustom;
+                            })
+                        }
+                        return btns;
+                    }
+                });
+            }
+
+            return columns;
         }
 
         function selectRegionById(id) {

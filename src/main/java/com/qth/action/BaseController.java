@@ -1,6 +1,6 @@
 package com.qth.action;
 
-import com.qth.util.CommonRsp;
+import com.qth.model.common.CommonRsp;
 
 import java.util.List;
 

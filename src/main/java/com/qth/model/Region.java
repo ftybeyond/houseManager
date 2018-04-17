@@ -1,6 +1,6 @@
 package com.qth.model;
 
-import com.qth.util.DataTableReqWrapper;
+import com.qth.model.common.DataTableReqWrapper;
 
 public class Region extends DataTableReqWrapper{
     /**

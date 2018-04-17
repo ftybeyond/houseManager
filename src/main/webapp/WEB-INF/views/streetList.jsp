@@ -10,12 +10,12 @@
     <title>区域管理</title>
 
     <link rel="stylesheet" type="text/css" href="<%=path%>/vendors/datatable/datatables-bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="<%=path%>/vendors/select2/select2.min.css"/>
     <script src="<%=path%>/vendors/requireJS/require.js"></script>
     <script type="text/javascript" src="<%=path%>/vendors/requireJS/require-config.js"></script>
     <script type="text/javascript">
-        require(["common"],function (main) {
+        require(["common","mySelect"],function (main) {
             var config = {
-                searchForm:'searchForm',
                 domain:{
                     name:'street',
                     props:[
@@ -27,6 +27,7 @@
                 }
             }
             $(function(){
+                $("#regionSelect").mySelect('region');
                 main.init(config);
             })
         })
@@ -37,15 +38,15 @@
 <div class="container" style="padding-left: 0px;" >
     <form id="searchForm" class="form-horizontal" role="form">
         <div class="col-xs-5 form-group">
-            <label class="control-label col-xs-3">区域编码</label>
+            <label class="control-label col-xs-3">街道编码</label>
             <div class="col-xs-9">
-                <input type="text" class="form-control" placeholder="要查询的区域编码" name="id"/>
+                <input type="text" class="form-control" placeholder="要查询的街道编码" name="id"/>
             </div>
         </div>
         <div class="col-xs-5 form-group">
-            <label class="control-label col-xs-3">区域名称</label>
+            <label class="control-label col-xs-3">街道名称</label>
             <div class="col-xs-9">
-                <input type="text" class="form-control" placeholder="要查询的区域名称" name="name"/>
+                <input type="text" class="form-control" placeholder="要查询的街道名称" name="name"/>
             </div>
         </div>
         <div class="col-xs-2 form-group">
@@ -64,8 +65,9 @@
     <table id="datatable" class="table table-striped table-bordered" style="width:100%">
         <thead>
         <tr>
-            <th>区域编码</th>
-            <th>区域名称</th>
+            <th>街道编码</th>
+            <th>街道名称</th>
+            <th>所属区域</th>
             <th>操作</th>
         </tr>
         </thead>
@@ -77,9 +79,15 @@
         <div class="x_content">
             <form id="infoForm" class="form-horizontal form-label-left input_mask">
                 <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">区域名称</label>
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">街道名称</label>
                     <div class="col-md-9 col-sm-9 col-xs-9">
-                        <input type="text" class="form-control" name="name" placeholder="请输入区域名称......">
+                        <input type="text" class="form-control" name="name" placeholder="请输入街道名称......">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">所属区域</label>
+                    <div class="col-md-9 col-sm-9 col-xs-9">
+                        <select id="regionSelect" name="region" class="form-control" style="width:100%;"></select>
                     </div>
                 </div>
             </form>

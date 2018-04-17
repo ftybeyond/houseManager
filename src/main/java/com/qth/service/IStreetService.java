@@ -1,7 +1,7 @@
 package com.qth.service;
 
 import com.qth.model.Street;
-import com.qth.util.DataTableRspWrapper;
+import com.qth.model.common.DataTableRspWrapper;
 
 import java.util.List;
 

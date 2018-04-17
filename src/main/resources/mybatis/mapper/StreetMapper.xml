@@ -10,6 +10,7 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="region" jdbcType="INTEGER" property="region" />
+    <result column="regionName" jdbcType="VARCHAR" property="regionName" />
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     <!--
@@ -64,17 +65,19 @@
 
 
   <select id="selectDataTable" resultMap="BaseResultMap" parameterType="com.qth.model.Street">
-    select id, name,region
-    from street
+    select s.id, s.name,s.region ,r.name as regionName
+    from street s
+    left join Region r
+    on s.region = r.id
     <where>
       <if test="id!=null">
-        id=#{id}
+        s.id=#{id}
       </if>
       <if test="name!=null and name.length()>0">
-        and name LIKE '%${name}%'
+        and s.name LIKE '%${name}%'
       </if>
       <if test="region!=null">
-        and region = region
+        and s.region = region
       </if>
     </where>
     limit #{start} ,#{length}
