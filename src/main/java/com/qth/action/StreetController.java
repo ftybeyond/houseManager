@@ -2,8 +2,8 @@ package com.qth.action;
 
 import com.qth.model.Street;
 import com.qth.service.IStreetService;
-import com.qth.util.CommonRsp;
-import com.qth.util.DataTableRspWrapper;
+import com.qth.model.common.CommonRsp;
+import com.qth.model.common.DataTableRspWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

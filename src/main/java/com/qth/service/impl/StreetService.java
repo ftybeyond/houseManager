@@ -3,7 +3,7 @@ package com.qth.service.impl;
 import com.qth.dao.StreetMapper;
 import com.qth.model.Street;
 import com.qth.service.IStreetService;
-import com.qth.util.DataTableRspWrapper;
+import com.qth.model.common.DataTableRspWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

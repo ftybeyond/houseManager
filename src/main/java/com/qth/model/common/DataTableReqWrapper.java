@@ -1,4 +1,4 @@
-package com.qth.util;
+package com.qth.model.common;
 
 public class DataTableReqWrapper {
     int draw;

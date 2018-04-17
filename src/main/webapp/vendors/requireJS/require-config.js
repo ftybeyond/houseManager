@@ -10,7 +10,9 @@ require.config({
         'dataTables-bs':'datatable/dataTables.bootstrap.min',
         'jquery-serializejson':'jquery/jquery.serializejson.min',
         'layer':'layer/layer',
-        'common':'../script/common'
+        'common':'../script/common',
+        'select2-cn':'select2/zh-CN',
+        'mySelect':'../script/commonSelect'
     },
     'shim' : {
         'bootstrap' : {
@@ -21,6 +23,8 @@ require.config({
         },
         'layer':['jquery'],
         'select2':['jquery'],
+        'select2-cn':['select2'],
+        'mySelect':['select2','select2-cn'],
         'dataTables-bs':['bootstrap','datatable','layer','jquery-serializejson']
     }
 });
