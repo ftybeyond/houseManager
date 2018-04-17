@@ -43,4 +43,8 @@ public interface CompanyMapper {
      * @mbg.generated Fri Apr 13 16:10:18 CST 2018
      */
     int updateByPrimaryKey(Company record);
+
+    List<Company> selectDataTable(Company street);
+
+    int selectDataTableCount(Company street);
 }
