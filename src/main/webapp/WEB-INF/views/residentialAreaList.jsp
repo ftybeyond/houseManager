@@ -25,8 +25,8 @@
 //                        {name:'region',type:'string',showable:true},
                         {name:'street',type:'string',showable:true},
                         {name:'address',type:'string',showable:true},
-                        {name:'areaelevator',type:'string',showable:true},
-                        {name:'areanoelevator',type:'string',showable:true},
+                        {name:'area_elevator',type:'string',showable:true},
+                        {name:'area_noelevator',type:'string',showable:true},
                         {name:'nature',type:'string',showable:true}
                     ]
                 }

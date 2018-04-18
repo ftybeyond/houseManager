@@ -30,7 +30,7 @@
 
     <select id="selectDataTable" resultMap="BaseResultMap" parameterType="com.qth.model.${domain}">
         select id, name
-        from ${domain}
+        from ${domainObj}
         <where>
             <if test="id!=null">
                 id=#{id}
