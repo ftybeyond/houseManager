@@ -74,7 +74,7 @@
                                     <li><a target="main_frame" href="/page/regionList.action">区域管理</a></li>
                                     <li><a href="form_advanced.html">单位管理</a></li>
                                     <li><a target="main_frame" href="/page/streetList.action">街道管理</a></li>
-                                    <li><a href="form_wizards.html">小区管理</a></li>
+                                    <li><a target="main_frame" href="/page/residentialareaList.action">小区管理</a></li>
                                     <li><a href="form_upload.html">楼栋管理</a></li>
                                     <li><a href="form_buttons.html">单元管理</a></li>
                                     <li><a href="form_upload.html">房屋管理</a></li>
