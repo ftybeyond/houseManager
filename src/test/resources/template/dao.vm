@@ -1,0 +1,21 @@
+package com.qth.dao;
+
+import com.qth.model.${domain};
+import java.util.List;
+
+public interface ${domain}Mapper {
+
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(${domain} record);
+
+    ${domain} selectByPrimaryKey(Integer id);
+
+    List<${domain}> selectAll();
+
+    int updateByPrimaryKey(${domain} entity);
+
+    List<${domain}> selectDataTable(${domain} entity);
+
+    int selectDataTableCount(${domain} entity);
+}

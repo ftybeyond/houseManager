@@ -1,36 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.qth.dao.UserMapper">
-    <resultMap id="BaseResultMap" type="com.qth.model.User">
+<mapper namespace="com.qth.dao.${domain}Mapper">
+    <resultMap id="BaseResultMap" type="com.qth.model.${domain}">
         <id column="id" jdbcType="INTEGER" property="id" />
         <result column="name" jdbcType="VARCHAR" property="name" />
     </resultMap>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-        delete from user
+        delete from ${domainObj}
         where id = #{id,jdbcType=INTEGER}
     </delete>
-    <insert id="insert" parameterType="com.qth.model.User">
-        insert into user (id, name)
+    <insert id="insert" parameterType="com.qth.model.${domain}">
+        insert into ${domainObj} (id, name)
         values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR})
     </insert>
-    <update id="updateByPrimaryKey" parameterType="com.qth.model.User">
-        update user
+    <update id="updateByPrimaryKey" parameterType="com.qth.model.${domain}">
+        update ${domainObj}
         set name = #{name,jdbcType=VARCHAR}
         where id = #{id,jdbcType=INTEGER}
     </update>
     <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         select id, name
-        from user
+        from ${domainObj}
         where id = #{id,jdbcType=INTEGER}
     </select>
     <select id="selectAll" resultMap="BaseResultMap">
         select id, name
-        from user
+        from ${domainObj}
     </select>
 
-    <select id="selectDataTable" resultMap="BaseResultMap" parameterType="com.qth.model.User">
+    <select id="selectDataTable" resultMap="BaseResultMap" parameterType="com.qth.model.${domain}">
         select id, name
-        from User
+        from ${domain}
         <where>
             <if test="id!=null">
                 id=#{id}
@@ -41,9 +41,9 @@
         </where>
         limit #{start} ,#{length}
     </select>
-    <select id="selectDataTableCount" resultType="int" parameterType="com.qth.model.User">
+    <select id="selectDataTableCount" resultType="int" parameterType="com.qth.model.${domain}">
         select count(*)
-        from user
+        from ${domainObj}
         <where>
             <if test="id!=null">
                 id=#{id}

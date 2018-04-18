@@ -1,0 +1,21 @@
+package com.qth.service;
+
+import com.qth.model.${domain};
+import com.qth.model.common.DataTableRspWrapper;
+
+import java.util.List;
+
+public interface I${domain}Service
+{
+    public List<${domain}> selectAll();
+
+    public DataTableRspWrapper<${domain}> selectDataTable2Rsp(${domain} ${domainObj});
+
+    public int insert${domain}(${domain} ${domainObj});
+
+    public int update${domain}(${domain} ${domainObj});
+
+    public ${domain} find${domain}ById(int id);
+
+    public int delete${domain}ById(int id);
+}

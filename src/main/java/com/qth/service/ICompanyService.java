@@ -1,7 +1,6 @@
 package com.qth.service;
 
 import com.qth.model.Company;
-import com.qth.model.Region;
 import com.qth.model.common.DataTableRspWrapper;
 
 import java.util.List;
