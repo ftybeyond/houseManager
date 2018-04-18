@@ -184,10 +184,10 @@ define(["dataTables-bs"],function () {
             var title,url,param;
             if(type==1){
                 $("#" + baseConfig.infoFrom)[0].reset();
-                title = "添加区域";
+                title = "添加";
                 url = getUrl("insert");
             }else if(type == 2){
-                title = "修改区域";
+                title = "修改";
                 url = getUrl("update")
             }else{
                 layer.alert("非法弹窗参数!");
@@ -197,9 +197,9 @@ define(["dataTables-bs"],function () {
             var win = layer.open({
                 type: 1,
                 title:title,
-                offset:'100px',
+                offset:'20px',
                 content: $('#popWin'),
-                area: ['400px', '250px'],
+                area: ['500px', '550px'],
                 btn:['确定','取消'],
                 yes:function () {
                     var formdata = $("#" + baseConfig.infoFrom).serializeJSON();

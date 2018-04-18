@@ -17,22 +17,29 @@
         require(["common","mySelect"],function (main) {
             var config = {
                 domain:{
-                    name:'residentialarea',
+                    name:'residentialArea',
                     props:[
                         {name:'id',type:'string',showable:true},
                         {name:'name',type:'string',showable:true},
-                        {name:'company',type:'string',showable:true},
-//                        {name:'region',type:'string',showable:true},
-                        {name:'street',type:'string',showable:true},
+                        {name:'company',type:'string',showable:false},
+                        {name:'companyName',type:'string',showable:true},
+                        {name:'region',type:'string',showable:false},
+                        {name:'regionName',type:'string',showable:true},
+                        {name:'street',type:'string',showable:false},
+                        {name:'streetName',type:'string',showable:true},
                         {name:'address',type:'string',showable:true},
-                        {name:'area_elevator',type:'string',showable:true},
-                        {name:'area_noelevator',type:'string',showable:true},
-                        {name:'nature',type:'string',showable:true}
+                        {name:'areaElevator',type:'string',showable:true},
+                        {name:'areaNoelevator',type:'string',showable:true},
+                        {name:'nature',type:'string',showable:false},
+                        {name:'natureName',type:'string',showable:true}
                     ]
                 }
             }
             $(function(){
-                //$("#regionSelect").mySelect('region');
+                $("#companySelect").mySelect('company');
+                $("#regionSelect").mySelect('region');
+                $("#streetSelect").mySelect('street');
+                $("#natureSelect").mySelect('nature');
                 main.init(config);
             })
         })
@@ -59,7 +66,7 @@
                 <button id="searchBtn" class="btn btn-primary" type="button">查询</button>
             </div>
             <div class="col-xs-6">
-                <button id="addBtn" class="btn btn-primary" type="button">新增</button>
+                <button id="addBtn" class="btn btn-primary" w="1" type="button">新增</button>
             </div>
         </div>
     </form>
@@ -96,9 +103,45 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">公司</label>
+                    <div class="col-md-9 col-sm-9 col-xs-9">
+                        <select id="companySelect" name="company" class="form-control" style="width:100%;"></select>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="control-label col-md-3 col-sm-3 col-xs-3">所属区域</label>
                     <div class="col-md-9 col-sm-9 col-xs-9">
                         <select id="regionSelect" name="region" class="form-control" style="width:100%;"></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">所属街道</label>
+                    <div class="col-md-9 col-sm-9 col-xs-9">
+                        <select id="streetSelect" name="street" class="form-control" style="width:100%;"></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">地址</label>
+                    <div class="col-md-9 col-sm-9 col-xs-9">
+                        <input type="text" class="form-control" name="address" placeholder="请输入小区地址......">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">有电梯面积</label>
+                    <div class="col-md-9 col-sm-9 col-xs-9">
+                        <input type="text" class="form-control" name="area_elevator" placeholder="请输入小区面积......">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">无电梯面积</label>
+                    <div class="col-md-9 col-sm-9 col-xs-9">
+                        <input type="text" class="form-control" name="area_noelevator" placeholder="请输入小区面积......">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">房屋性质</label>
+                    <div class="col-md-9 col-sm-9 col-xs-9">
+                        <select id="natureSelect" name="nature" class="form-control" style="width:100%;"></select>
                     </div>
                 </div>
             </form>
