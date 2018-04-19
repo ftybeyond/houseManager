@@ -40,32 +40,4 @@
     from company
   </select>
 
-  <select id="selectDataTable" resultMap="BaseResultMap" parameterType="com.qth.model.Company">
-    select id, name
-    from company
-    <where>
-      <if test="id!=null">
-        id=#{id}
-      </if>
-      <if test="name!=null and name.length()>0">
-        and name LIKE '%${name}%'
-      </if>
-      <if test="nature!=null">
-        nature=#{nature}
-      </if>
-    </where>
-    limit #{start} ,#{length}
-  </select>
-  <select id="selectDataTableCount" resultType="int" parameterType="com.qth.model.Company">
-    select count(*)
-    from company
-    <where>
-      <if test="id!=null">
-        id=#{id}
-      </if>
-      <if test="nature!=null">
-        nature=#{nature}
-      </if>
-    </where>
-  </select>
 </mapper>

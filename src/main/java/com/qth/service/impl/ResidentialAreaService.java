@@ -1,6 +1,5 @@
 package com.qth.service.impl;
 
-import com.qth.dao.CommonMapper;
 import com.qth.dao.ResidentialAreaMapper;
 import com.qth.model.ResidentialArea;
 import com.qth.model.common.DataTableRspWrapper;

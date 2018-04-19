@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qth.dao.BaseMapper">
+  <resultMap id="Select2Map" type="com.qth.model.common.Select2">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="text" />
+  </resultMap>
+  <select id="getSelect2Data" resultMap="Select2Map" parameterType="java.lang.String">
+    select id, name
+    from ${value}
+  </select>
+  <!--通用更新数据库表-->
+  <update id="updateByMap" parameterType="com.qth.model.common.UpdateMap">
+    UPDATE ${tableName} t SET
+    <foreach collection="cols" item="columnName" index="index" separator=",">
+      t.${columnName} = t.#{props[#{index}]}
+    </foreach>
+    <where>
+      t.id = #{id}
+    </where>
+  </update>
+
+  <!-- 通用查询dataTable数据格式 -->
+  <select id="selectDataTable" parameterType="com.qth.model.common.SelectDataTableMap" resultType="java.util.Map">
+  SELECT
+  <choose>
+    <when test="cols!=null and cols.length >0">
+      <foreach collection="cols" item="columnName" separator="," >
+        t.${columnName}
+      </foreach>
+    </when>
+    <otherwise>
+      *
+    </otherwise>
+  </choose>
+  FROM
+    ${tableName} t
+  <where>
+    <if test="conditions!=null">
+      <foreach collection="conditions" separator="and" index="column" item="val">
+        <choose>
+          <when test="val instanceof String">
+            t.${column} LIKE '%${val}%'
+          </when>
+          <otherwise>
+            t.${column} = #{val}
+          </otherwise>
+        </choose>
+      </foreach>
+    </if>
+  </where>
+  limit #{start} ,#{length}
+</select>
+  <!--通用查询datatable总行数，配合分页-->
+  <select id="selectDataTableCount" parameterType="com.qth.model.common.SelectDataTableMap" resultType="int">
+    SELECT
+      count(*)
+    FROM
+    ${tableName} t
+    <where>
+      <if test="conditions!=null">
+        <foreach collection="conditions" separator="and" index="column" item="val">
+          <choose>
+            <when test="val instanceof String">
+              t.${column} LIKE '%${val}%'
+            </when>
+            <otherwise>
+              t.${column} = #{val}
+            </otherwise>
+          </choose>
+        </foreach>
+      </if>
+    </where>
+  </select>
+</mapper>

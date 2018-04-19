@@ -16,7 +16,8 @@
 
     <!-- 在MBG工作的时候，需要额外加载的依赖包
         location属性指明加载jar/zip包的全路径-->
-    <classPathEntry location="D:\owork\work\20180411 七台河房管局\mysql-connector-java-5.1.46.jar" />
+    <!--<classPathEntry location="D:\owork\work\20180411 七台河房管局\mysql-connector-java-5.1.46.jar" />-->
+    <classPathEntry location="D:\software\mybatisGen\mysql-connector-java-5.1.46.jar" />
 
 
     <!--

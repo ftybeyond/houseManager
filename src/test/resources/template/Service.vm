@@ -1,6 +1,6 @@
 package com.qth.service.impl;
 
-import com.qth.dao.CommonMapper;
+import com.qth.dao.Select2Mapper;
 import com.qth.dao.${domain}Mapper;
 import com.qth.model.${domain};
 import com.qth.model.common.DataTableRspWrapper;

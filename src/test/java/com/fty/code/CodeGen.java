@@ -30,8 +30,6 @@ public class CodeGen {
 
     String basePath = "com/qth";
 
-    String[] domains={"User"};
-
     @Before
     public void engineInit(){
         classpath = this.getClass().getResource("/").getPath();

@@ -5,11 +5,9 @@ import com.qth.model.common.DataTableRspWrapper;
 
 import java.util.List;
 
-public interface ICompanyService
+public interface ICompanyService extends IBaseService<Company>
 {
     public List<Company> selectAll();
-
-    public DataTableRspWrapper<Company> selectDataTable2Rsp(Company company);
 
     public int insertCompany(Company company);
 

@@ -1,6 +1,5 @@
 package com.qth.service.impl;
 
-import com.qth.dao.CommonMapper;
 import com.qth.dao.UserMapper;
 import com.qth.model.User;
 import com.qth.model.common.DataTableRspWrapper;

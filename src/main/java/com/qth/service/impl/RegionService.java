@@ -4,6 +4,7 @@ import com.qth.dao.RegionMapper;
 import com.qth.model.Region;
 import com.qth.service.IRegionService;
 import com.qth.model.common.DataTableRspWrapper;
+import com.qth.util.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,11 +1,11 @@
 package com.qth.model.common;
 
-public class DataTableReqWrapper {
-    int draw;
+public class DataTableReqWrapper{
+    int draw = 0;
 
-    int start;
+    int start = 0;
 
-    int Length;
+    int Length = 10;
 
     public int getDraw() {
         return draw;
