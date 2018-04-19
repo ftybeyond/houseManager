@@ -66,7 +66,7 @@
                 <button id="searchBtn" class="btn btn-primary" type="button">查询</button>
             </div>
             <div class="col-xs-6">
-                <button id="addBtn" class="btn btn-primary" w="1" type="button">新增</button>
+                <button id="addBtn" class="btn btn-primary" type="button">新增</button>
             </div>
         </div>
     </form>
