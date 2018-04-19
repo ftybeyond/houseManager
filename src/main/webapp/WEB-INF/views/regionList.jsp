@@ -15,6 +15,7 @@
     <script type="text/javascript">
         require(["common"],function (main) {
             var config = {
+                popArea:["400px","200px"],
                 domain:{
                     name:'region',
                     props:[

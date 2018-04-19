@@ -16,18 +16,20 @@
     <script type="text/javascript">
         require(["common","mySelect"],function (main) {
             var config = {
+                popArea:['400px','500px'],
                 domain:{
                     name:'company',
                     props:[
                         {name:'id',type:'string',showable:true},
                         {name:'name',type:'string',showable:true},
                         {name:'legalPersonName',type:'string',showable:true},
+                        {name:'legalPersonLicense',type:'string',showable:true},
                         {name:'nature',type:'string',showable:true}
                     ]
                 }
             }
             $(function(){
-                $("#regionSelect").mySelect('region');
+                $("#natureSelect").mySelect('CompanyNature.json',{dictionary:true});
                 main.init(config);
             })
         })
@@ -68,6 +70,7 @@
             <th>单位编码</th>
             <th>单位名称</th>
             <th>单位法人</th>
+            <th>法人证件</th>
             <th>单位性质</th>
             <th>操作</th>
         </tr>
@@ -75,7 +78,7 @@
     </table>
 </div>
 
-<div id="popWin" style="display: none">
+<div id="popWin" style="display: none;">
     <div class="x_panel">
         <div class="x_content">
             <form id="infoForm" class="form-horizontal form-label-left input_mask">
@@ -100,7 +103,7 @@
                 <div class="form-group">
                     <label class="control-label col-md-3 col-sm-3 col-xs-3">单位性质</label>
                     <div class="col-md-9 col-sm-9 col-xs-9">
-                        <select id="regionSelect" name="region" class="form-control" style="width:100%;"></select>
+                        <select id="natureSelect" name="region" class="form-control" style="width:100%;"></select>
                     </div>
                 </div>
             </form>

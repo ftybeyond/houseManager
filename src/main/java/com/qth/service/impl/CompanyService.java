@@ -1,6 +1,5 @@
 package com.qth.service.impl;
 
-import com.qth.dao.CommonMapper;
 import com.qth.dao.CompanyMapper;
 import com.qth.model.Company;
 import com.qth.model.common.DataTableRspWrapper;
@@ -13,7 +12,7 @@ import java.util.List;
 
 @Service
 @Transactional
-public class CompanyService implements ICompanyService{
+public class CompanyService extends BaseService<Company> implements ICompanyService{
 
     @Autowired
     CompanyMapper companyMapper;
@@ -23,16 +22,6 @@ public class CompanyService implements ICompanyService{
         return companyMapper.selectAll();
     }
 
-    @Override
-    public DataTableRspWrapper<Company> selectDataTable2Rsp(Company company) {
-        //声明datatable应答包装类
-        DataTableRspWrapper rspWrapper = new DataTableRspWrapper();
-        //设置分页信息，总条数
-        rspWrapper.setRecordsTotal(companyMapper.selectDataTableCount(company));
-        //设置数据集
-        rspWrapper.setData(companyMapper.selectDataTable(company));
-        return rspWrapper;
-    }
 
     @Override
     public int insertCompany(Company company) {

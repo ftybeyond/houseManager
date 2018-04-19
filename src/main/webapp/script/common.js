@@ -6,6 +6,7 @@ define(["dataTables-bs"],function () {
 
     var baseConfig = {
         baseUrl:'/rest/',//请求前置URL
+        popArea:['500px', '550px'],
         domain:{
             name:'',//实体名称,
             props:[]//实体属性集合 {data:'name',editable:true,searchable:true,tableShow:true,formType:'datetime|select|string|number|file|date|',showType:'',dateFormat:'yyyy-MM-dd HH:ss:mm',selectKey:'id',selectValue:'name',numberFormate:''}
@@ -199,7 +200,7 @@ define(["dataTables-bs"],function () {
                 title:title,
                 offset:'20px',
                 content: $('#popWin'),
-                area: ['500px', '550px'],
+                area: baseConfig.popArea,
                 btn:['确定','取消'],
                 yes:function () {
                     var formdata = $("#" + baseConfig.infoFrom).serializeJSON();

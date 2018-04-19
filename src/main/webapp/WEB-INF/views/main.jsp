@@ -72,7 +72,7 @@
                             <li><a><i class="fa fa-edit"></i> 基础信息管理 <span class="fa fa-chevron-down"></span></a>
                                 <ul class="nav child_menu">
                                     <li><a target="main_frame" href="/page/regionList.action">区域管理</a></li>
-                                    <li><a href="form_advanced.html">单位管理</a></li>
+                                    <li><a target="main_frame" href="/page/companyList.action">单位管理</a></li>
                                     <li><a target="main_frame" href="/page/streetList.action">街道管理</a></li>
                                     <li><a target="main_frame" href="/page/residentialAreaList.action">小区管理</a></li>
                                     <li><a href="form_upload.html">楼栋管理</a></li>
