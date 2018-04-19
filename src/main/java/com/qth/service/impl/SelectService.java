@@ -21,11 +21,11 @@ public class SelectService implements ISelectService {
 
     @Override
     public List<Select2> getStreetByRegion(int region) {
-        return commonMapper.getStreetByRegion(region);
+        return baseMapper.getStreetByRegion(region);
     }
 
     @Override
     public List<Select2> getConfigSelect(String type){
-        return commonMapper.getConfigSelect(type);
+        return baseMapper.getConfigSelect(type);
     }
 }

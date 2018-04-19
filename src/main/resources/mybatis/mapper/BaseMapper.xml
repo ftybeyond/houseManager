@@ -72,4 +72,12 @@
       </if>
     </where>
   </select>
+  <select id="getStreetByRegion" resultMap="Select2Map" parameterType="int">
+    select id, name
+    from street WHERE region=#{id}
+  </select>
+  <select id="getConfigSelect" resultMap="Select2Map" parameterType="java.lang.String">
+    select type_id as id, type_name as name
+    from param_config where type=#{type,jdbcType=VARCHAR}
+  </select>
 </mapper>

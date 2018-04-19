@@ -43,4 +43,8 @@ public interface BaseMapper {
      */
     public int selectDataTableCount(SelectDataTableMap map);
 
+    public List<Select2> getStreetByRegion(Integer region);
+
+    public List<Select2> getConfigSelect(String type);
+
 }
