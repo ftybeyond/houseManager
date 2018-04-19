@@ -20,7 +20,7 @@
       street, address, area_elevator, 
       area_noelevator, nature)
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{company,jdbcType=INTEGER}, 
-      #{street,jdbcType=INTEGER}, #{address,jdbcType=VARCHAR}, #{areaElevator,jdbcType=DOUBLE}, 
+      #{street,jdbcType=INTEGER}, #{address,jdbcType=VARCHAR}, #{areaElevator,jdbcType=DOUBLE},
       #{areaNoelevator,jdbcType=DOUBLE}, #{nature,jdbcType=INTEGER})
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.qth.model.ResidentialArea">

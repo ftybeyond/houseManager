@@ -18,4 +18,14 @@ public class SelectService implements ISelectService {
     public List<Select2> getAll(String table) {
         return commonMapper.getAll(table);
     }
+
+    @Override
+    public List<Select2> getStreetByRegion(int region) {
+        return commonMapper.getStreetByRegion(region);
+    }
+
+    @Override
+    public List<Select2> getConfigSelect(String type){
+        return commonMapper.getConfigSelect(type);
+    }
 }

@@ -47,4 +47,26 @@ public class GlobalController {
         return selectService.getAll(table);
     }
 
+    /**
+     * 通用select2组件数据请求服务
+     * @param region region
+     * @return
+     */
+    @RequestMapping("/rest/selectStreetByRegion/{region}")
+    @ResponseBody
+    public List<Select2> getSelectStreetDataByRegion(@PathVariable Integer region){
+        return selectService.getStreetByRegion(region);
+    }
+
+    /**
+     * 通用select2组件数据请求服务
+     * @param type type
+     * @return
+     */
+    @RequestMapping("/rest/selectConfigSelect/{type}")
+    @ResponseBody
+    public List<Select2> getConfigSelect(@PathVariable String type){
+        return selectService.getConfigSelect(type);
+    }
+
 }

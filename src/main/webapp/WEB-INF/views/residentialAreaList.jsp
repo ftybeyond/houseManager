@@ -37,9 +37,13 @@
             }
             $(function(){
                 $("#companySelect").mySelect('company');
-                $("#regionSelect").mySelect('region');
-                $("#streetSelect").mySelect('street');
-                $("#natureSelect").mySelect('nature');
+                $("#regionSelect").mySelect('region', null, function (region){
+                    $("#streetSelect").loadStreetSelect(region);
+                });
+                $("#regionSelect").change(function(){
+                    $("#streetSelect").loadStreetSelect(this.value);
+                });
+                $("#natureSelect").loadConfigSelect('residential_area.nature');
                 main.init(config);
             })
         })
@@ -129,13 +133,13 @@
                 <div class="form-group">
                     <label class="control-label col-md-3 col-sm-3 col-xs-3">有电梯面积</label>
                     <div class="col-md-9 col-sm-9 col-xs-9">
-                        <input type="text" class="form-control" name="area_elevator" placeholder="请输入小区面积......">
+                        <input type="text" class="form-control" name="areaElevator" placeholder="请输入小区面积......">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label col-md-3 col-sm-3 col-xs-3">无电梯面积</label>
                     <div class="col-md-9 col-sm-9 col-xs-9">
-                        <input type="text" class="form-control" name="area_noelevator" placeholder="请输入小区面积......">
+                        <input type="text" class="form-control" name="areaNoelevator" placeholder="请输入小区面积......">
                     </div>
                 </div>
                 <div class="form-group">

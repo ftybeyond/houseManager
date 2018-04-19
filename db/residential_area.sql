@@ -3,7 +3,7 @@
 -- ----------------------------
 DROP TABLE IF EXISTS `residential_area`;
 CREATE TABLE `residential_area` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) DEFAULT NULL COMMENT '小区名称',
   `company` int(11) DEFAULT NULL,
   `street` int(11) DEFAULT NULL,
