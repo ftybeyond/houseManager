@@ -29,8 +29,8 @@
                 }
             }
             $(function(){
-                $("#natureSelect").mySelect('CompanyNature.json',{dictionary:true});
-                main.init(config);
+                var select = $("#natureSelect").mySelect('CompanyNature.json');
+                var table = main.init(config);
             })
         })
     </script>
@@ -91,19 +91,19 @@
                 <div class="form-group">
                     <label class="control-label col-md-3 col-sm-3 col-xs-3">法人姓名</label>
                     <div class="col-md-9 col-sm-9 col-xs-9">
-                        <input type="text" class="form-control" name="name" placeholder="请输入单位名称......">
+                        <input type="text" class="form-control" name="legalPersonName" placeholder="请输入法人姓名......">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label col-md-3 col-sm-3 col-xs-3">身份证号</label>
                     <div class="col-md-9 col-sm-9 col-xs-9">
-                        <input type="text" class="form-control" name="name" placeholder="请输入单位名称......">
+                        <input type="text" class="form-control" name="legalPersonLicense" placeholder="请输入法人身份证号......">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label col-md-3 col-sm-3 col-xs-3">单位性质</label>
                     <div class="col-md-9 col-sm-9 col-xs-9">
-                        <select id="natureSelect" name="region" class="form-control" style="width:100%;"></select>
+                        <select id="natureSelect" name="nature" class="form-control" style="width:100%;"></select>
                     </div>
                 </div>
             </form>

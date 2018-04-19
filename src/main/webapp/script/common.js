@@ -1,61 +1,61 @@
-define(["dataTables-bs"],function () {
+define(["dataTables-bs"], function () {
     layer.config({
         path: '/vendors/layer/',
-        offset:"100px"
+        offset: "100px"
     });
 
     var baseConfig = {
-        baseUrl:'/rest/',//请求前置URL
-        popArea:['500px', '550px'],
-        domain:{
-            name:'',//实体名称,
-            props:[]//实体属性集合 {data:'name',editable:true,searchable:true,tableShow:true,formType:'datetime|select|string|number|file|date|',showType:'',dateFormat:'yyyy-MM-dd HH:ss:mm',selectKey:'id',selectValue:'name',numberFormate:''}
+        baseUrl: '/rest/',//请求前置URL
+        popArea: ['500px', '550px'],
+        domain: {
+            name: '',//实体名称,
+            props: []//实体属性集合 {data:'name',editable:true,searchable:true,tableShow:true,formType:'datetime|select|string|number|file|date|',showType:'',dateFormat:'yyyy-MM-dd HH:ss:mm',selectKey:'id',selectValue:'name',numberFormate:''}
         },//实体信息
-        multiSelect:false,
-        deleteable:true,
-        editable:true,
-        suffix:'.action',//请求后缀
-        tableId:'datatable',//数据表格ID
-        searchForm:'searchForm',//搜索表单ID
-        infoFrom:'infoForm',//添加和修改表单ID
-        searchBtn:'searchBtn',//查询按钮
-        addBtn:'addBtn',//添加按钮
-        customBtns:[],//表格上自定义按钮{label:'自定义按钮',callback:function(index){//行数据id}}
-        beforeSaveOrUpdate:null,//保存或更新前回调方法，提供ajax 即将提交的param参数,用于表单校验和参数补充
-        afterSyncFormData:null //selectById后同步表单后回调方法，此回调用于不能自动同步到表单项的值的组件,传入当前查询回的对象
+        multiSelect: false,
+        deleteable: true,
+        editable: true,
+        suffix: '.action',//请求后缀
+        tableId: 'datatable',//数据表格ID
+        searchForm: 'searchForm',//搜索表单ID
+        infoFrom: 'infoForm',//添加和修改表单ID
+        searchBtn: 'searchBtn',//查询按钮
+        addBtn: 'addBtn',//添加按钮
+        customBtns: [],//表格上自定义按钮{label:'自定义按钮',callback:function(index){//行数据id}}
+        beforeSaveOrUpdate: null,//保存或更新前回调方法，提供ajax 即将提交的param参数,用于表单校验和参数补充
+        afterSyncFormData: null //selectById后同步表单后回调方法，此回调用于不能自动同步到表单项的值的组件,传入当前查询回的对象
     };
     var handleObj;//当前编辑的Region对象
-    var table ;//表格对象
-    var init = function(config){
-        $.extend(true,baseConfig,config);
-        table = $("#"+baseConfig.tableId).table({
-            ajax:{
-                url:getUrl("table")
+    var table;//表格对象
+    var init = function (config) {
+        $.extend(true, baseConfig, config);
+        table = $("#" + baseConfig.tableId).table({
+            ajax: {
+                url: getUrl("table")
             },
-            searchForm:baseConfig.searchForm,
-            columns:generateColumns()
+            searchForm: baseConfig.searchForm,
+            columns: generateColumns()
         });
         //查询按钮事件
-        $("#"+baseConfig.searchBtn).on("click",function () {
+        $("#" + baseConfig.searchBtn).on("click", function () {
             table.ajax.reload();
         })
 
         //添加按钮时间
-        $("#" + baseConfig.addBtn).on("click",function () {
+        $("#" + baseConfig.addBtn).on("click", function () {
             popWin(1);
         })
 
-        table.on("draw",function () {
-            $("#"+baseConfig.tableId+" td").on("click","button",function () {
+        table.on("draw", function () {
+            $("#" + baseConfig.tableId + " td").on("click", "button", function () {
                 var handle = $(this).attr("data-handle");
                 var index = $(this).attr("data-index");
-                if(handle == "edit"){
+                if (handle == "edit") {
                     selectRegionById(index);
-                }else if(handle == "del"){
+                } else if (handle == "del") {
                     deleteRegion(index)
-                }else if(handle =="custom"){
-                    $.each(baseConfig.customBtns,function (index,item) {
-                        if(index == $(this).attr("data-handle-index")){
+                } else if (handle == "custom") {
+                    $.each(baseConfig.customBtns, function (index, item) {
+                        if (index == $(this).attr("data-handle-index")) {
                             item.callback(index)
                         }
                     })
@@ -68,27 +68,27 @@ define(["dataTables-bs"],function () {
          * @param handle add one delete selectById
          */
         function getUrl(handle) {
-            return baseConfig.baseUrl +baseConfig.domain.name + "/" + handle+baseConfig.suffix;
+            return baseConfig.baseUrl + baseConfig.domain.name + "/" + handle + baseConfig.suffix;
         }
 
-        function deleteRegion(id){
-            layer.confirm('确定删除数据？', {icon: 3, title:'提示'}, function(index){
+        function deleteRegion(id) {
+            layer.confirm('确定删除数据？', {icon: 3, title: '提示'}, function (index) {
                 //删除请求
                 $.ajax({
-                    url:getUrl("delete"),
-                    type:'post',
-                    data:{id:id},
-                    dataType:'json',
-                    success:function (rsp) {
-                        if(rsp.success){
-                            layer.alert("删除成功",{closeBtn:0})
+                    url: getUrl("delete"),
+                    type: 'post',
+                    data: {id: id},
+                    dataType: 'json',
+                    success: function (rsp) {
+                        if (rsp.success) {
+                            layer.alert("删除成功", {closeBtn: 0})
                             table.ajax.reload();
-                        }else {
-                            layer.alert(rsp.description,{closeBtn:0})
+                        } else {
+                            layer.alert(rsp.description, {closeBtn: 0})
                         }
                     },
-                    error:function () {
-                        layer.alert("服务器内部错误!",{closeBtn:0})
+                    error: function () {
+                        layer.alert("服务器内部错误!", {closeBtn: 0})
                     }
                 })
                 layer.close(index);
@@ -99,11 +99,11 @@ define(["dataTables-bs"],function () {
         /**
          * 根据handleObj更新表单信息
          */
-        function obj2Form(){
-            for (key in handleObj){
-                $("#"+baseConfig.infoFrom+" *[name='"+key+"']").val(handleObj[key]);
+        function obj2Form() {
+            for (key in handleObj) {
+                $("#" + baseConfig.infoFrom + " *[name='" + key + "']").val(handleObj[key]);
             }
-            if(baseConfig.afterSyncFormData){
+            if (baseConfig.afterSyncFormData) {
                 baseConfig.afterSyncFormData(handleObj)
             }
         }
@@ -113,14 +113,16 @@ define(["dataTables-bs"],function () {
          */
         function generateColumns() {
             var columns = new Array();
-            if(baseConfig.multiSelect){
+            if (baseConfig.multiSelect) {
                 //添加复选框
-                columns.push({render:function(data, type, full, meta ){
-                    var checkbox = '<input type="checkbox" data-index="'+full.id+'" name="selectRow">删除</input>'
-                    return checkbox
-                }});
+                columns.push({
+                    render: function (data, type, full, meta) {
+                        var checkbox = '<input type="checkbox" data-index="' + full.id + '" name="selectRow">删除</input>'
+                        return checkbox
+                    }
+                });
             }
-            $.each(baseConfig.domain.props,function(index,item){
+            $.each(baseConfig.domain.props, function (index, item) {
                 if (item.showable) {
                     item.data = item.name;
                     columns.push(item)
@@ -128,7 +130,7 @@ define(["dataTables-bs"],function () {
             })
 
 
-            if (baseConfig.editable||baseConfig.deleteable||baseConfig.customBtns.length > 0) {
+            if (baseConfig.editable || baseConfig.deleteable || baseConfig.customBtns.length > 0) {
                 columns.push({
                     render: function (data, type, full, meta) {
                         var btns = '';
@@ -157,95 +159,100 @@ define(["dataTables-bs"],function () {
 
         function selectRegionById(id) {
             $.ajax({
-                url:getUrl("one"),
-                type:'post',
-                data:{id:id},
-                dataType:'json',
-                success:function (rsp) {
-                    if(rsp.success){
+                url: getUrl("one"),
+                type: 'post',
+                data: {id: id},
+                dataType: 'json',
+                success: function (rsp) {
+                    if (rsp.success) {
                         handleObj = rsp.data;
                         //同步表单
                         obj2Form()
                         popWin(2);
-                    }else {
-                        layer.alert(rsp.description,{closeBtn:0})
+                    } else {
+                        layer.alert(rsp.description, {closeBtn: 0})
                     }
                 },
-                error:function () {
-                    layer.alert("服务器内部错误!",{closeBtn:0})
+                error: function () {
+                    layer.alert("服务器内部错误!", {closeBtn: 0})
                 }
             })
         }
+
         /**
          *
          * @param type 1 :添加 2：修改
          */
         function popWin(type) {
             //声明添加和修改页面影响的变量
-            var title,url,param;
-            if(type==1){
+            var title, url, param;
+            if (type == 1) {
                 $("#" + baseConfig.infoFrom)[0].reset();
                 title = "添加";
                 url = getUrl("insert");
-            }else if(type == 2){
+            } else if (type == 2) {
                 title = "修改";
                 url = getUrl("update")
-            }else{
+            } else {
                 layer.alert("非法弹窗参数!");
                 return
             }
             //弹窗
             var win = layer.open({
                 type: 1,
-                title:title,
-                offset:'20px',
+                title: title,
+                offset: '20px',
                 content: $('#popWin'),
                 area: baseConfig.popArea,
-                btn:['确定','取消'],
-                yes:function () {
+                btn: ['确定', '取消'],
+                yes: function () {
                     var formdata = $("#" + baseConfig.infoFrom).serializeJSON();
-                    if(type == 1){
+                    if (type == 1) {
                         //添加时，直接序列化form作为参数
                         param = formdata;
-                    }else {
+                    } else {
                         //更新数据时，需要合并formdata到处理对象,避免未显示数据（如id这类）不能传到后台而被赋值为null
-                        $.extend(handleObj,formdata);
+                        $.extend(handleObj, formdata);
                         param = handleObj
                     }
-                    if(baseConfig.beforeSaveOrUpdate){
+                    if (baseConfig.beforeSaveOrUpdate) {
                         baseConfig.beforeSaveOrUpdate(param)
                     }
                     $.ajax({
-                        url:url,
-                        type:'post',
-                        data:param,
-                        dataType:'json',
-                        success:function (rsp) {
-                            if(rsp.success){
-                                layer.alert("处理成功",{closeBtn:0})
+                        url: url,
+                        type: 'post',
+                        data: param,
+                        dataType: 'json',
+                        success: function (rsp) {
+                            if (rsp.success) {
+                                layer.alert("处理成功", {closeBtn: 0})
                                 table.ajax.reload();
-                            }else {
-                                layer.alert(rsp.description,{closeBtn:0})
+                            } else {
+                                layer.alert(rsp.description, {closeBtn: 0})
                             }
                             layer.close(win);
                         },
-                        error:function () {
-                            layer.alert("服务器内部错误!",{closeBtn:0});
+                        error: function () {
+                            layer.alert("服务器内部错误!", {closeBtn: 0});
                             layer.close(win);
                         }
                     })
                 },
-                btn2:function () {
+                btn2: function () {
                     layer.close(win);
                 }
             });
         }
+        return table;
+    }
+
+    getHandleObj = function () {
+        return handleObj;
     }
 
 
     return {
-        init:init,
-        handleObj:handleObj,
-        tableObj:table
+        init: init,
+        getHandleObj:getHandleObj
     }
 })
