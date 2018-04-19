@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qth.dao.ResidentialAreaMapper">
+  <resultMap id="BaseResultMap" type="com.qth.model.ResidentialArea">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="company" jdbcType="INTEGER" property="company" />
+    <result column="street" jdbcType="INTEGER" property="street" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="area_elevator" jdbcType="DOUBLE" property="areaElevator" />
+    <result column="area_noelevator" jdbcType="DOUBLE" property="areaNoelevator" />
+    <result column="nature" jdbcType="INTEGER" property="nature" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from residential_area
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.qth.model.ResidentialArea">
+    insert into residential_area (id, name, company, 
+      street, address, area_elevator, 
+      area_noelevator, nature)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{company,jdbcType=INTEGER}, 
+      #{street,jdbcType=INTEGER}, #{address,jdbcType=VARCHAR}, #{areaElevator,jdbcType=DOUBLE}, 
+      #{areaNoelevator,jdbcType=DOUBLE}, #{nature,jdbcType=INTEGER})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.qth.model.ResidentialArea">
+    update residential_area
+    set name = #{name,jdbcType=VARCHAR},
+      company = #{company,jdbcType=INTEGER},
+      street = #{street,jdbcType=INTEGER},
+      address = #{address,jdbcType=VARCHAR},
+      area_elevator = #{areaElevator,jdbcType=DOUBLE},
+      area_noelevator = #{areaNoelevator,jdbcType=DOUBLE},
+      nature = #{nature,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, name, company, street, address, area_elevator, area_noelevator, nature
+    from residential_area
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, name, company, street, address, area_elevator, area_noelevator, nature
+    from residential_area
+  </select>
+  <select id="selectDataTable" resultMap="BaseResultMap" parameterType="com.qth.model.ResidentialArea">
+    SELECT
+    r.id,
+    r.name,
+    r.company,
+    c.name AS companyName,
+    sn.region,
+    sn.regionName,
+    r.street,
+    sn.name AS streetName,
+    r.address,
+    r.area_elevator,
+    r.area_noelevator,
+    r.nature,
+    p.type_name AS natureName
+    FROM
+    residential_area r
+    LEFT JOIN param_config p ON r.nature = p.type_id
+    LEFT JOIN company c ON r.company = c.id
+    LEFT JOIN (
+    SELECT
+    s.id,
+    s.name,
+    s.region,
+    n.name AS regionName
+    FROM
+    street s,
+    region n
+    WHERE
+    s.region = n.id
+    ) sn ON r.street = sn.id
+    WHERE
+    p.type = 'residential_area.nature'
+      <if test="id!=null">
+        and r.id=#{id}
+      </if>
+      <if test="name!=null and name.length()>0">
+        and r.name LIKE '%${name}%'
+      </if>
+    limit #{start} ,#{length}
+  </select>
+  <select id="selectDataTableCount" resultType="int" parameterType="com.qth.model.ResidentialArea">
+    select count(*)
+    from residential_area
+    <where>
+      <if test="id!=null">
+        id=#{id}
+      </if>
+      <if test="name!=null and name.length()>0">
+        and name LIKE '%${name}%'
+      </if>
+    </where>
+  </select>
+</mapper>
