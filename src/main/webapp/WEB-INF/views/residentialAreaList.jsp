@@ -37,8 +37,10 @@
             }
             $(function(){
                 $("#companySelect").mySelect('company');
-                $("#regionSelect").mySelect('region', null, function (region){
-                    $("#streetSelect").loadStreetSelect(region);
+                $("#regionSelect").mySelect('region', null, function (data){
+                    if (data && data.length > 0 && data[0].id) {
+                        $("#streetSelect").loadStreetSelect(data[0].id);
+                    }
                 });
                 $("#regionSelect").change(function(){
                     $("#streetSelect").loadStreetSelect(this.value);
