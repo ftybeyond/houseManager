@@ -30,7 +30,7 @@
                                 {name:'legalPersonLicense',type:'string',showable:true},
                                 {name:'nature',type:'string',showable:true,render:function (row, type, full, meta) {
                                     //console.log(main.findArrayValue(full.id,data["CompanyNature.json"]))
-                                    return main.findArrayValue(full.id,data["CompanyNature.json"]).text;
+                                    return main.findArrayValue(full.nature,data["CompanyNature.json"]).text;
                                 }}
                             ]
                         }
