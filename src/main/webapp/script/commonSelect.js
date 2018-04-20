@@ -10,8 +10,8 @@
             type:'post',
             success:function (data) {
                 baseOpt.data = data;
-                if (backfun && data.length > 0 && data[0].id) {
-                    backfun(data[0].id);
+                if (backfun && data) {
+                    backfun(data);
                 }
                 if (settings) {
                     $.extend(true, settings, baseOpt);
