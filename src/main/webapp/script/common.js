@@ -246,13 +246,70 @@ define(["dataTables-bs"], function () {
         return table;
     }
 
-    getHandleObj = function () {
+    var getHandleObj = function () {
         return handleObj;
     }
 
+    var loadedDatas={};
+    var taskComplated = 0;
+    var waitTask;
+    /**
+     * 加载依赖远程数据，加载dictionary目录以*.json结尾、 通用下拉列表数据 "表名"、 自主调用数据/rest/xxx
+     * @param deps eg("CompanyNature","region","/rest/getStreetByRegion.action")
+     * @callback 依赖数据加载完毕回调
+     */
+    var loadDeps = function (deps,callback) {
+        if(deps && (deps instanceof Array)){
+            var url;
+            $.each(deps, function (index, item) {
+                if (item.indexOf(".json") > 0) {
+                    url = "/dictionary/" + item;
+                } else if (item.indexOf("/") > 0) {
+                    url = item;
+                } else {
+                    url = '/rest/select/' + item + '.action';
+                }
+                $.ajax({
+                    url: url,
+                    dataType: 'json',
+                    type: 'post',
+                    success: function (data) {
+                        loadedDatas[item] = data;
+                        taskComplated++;
+                    }
+                })
+            })
+
+            waitTask = setInterval(waitForSynch,500)
+        }
+
+        function waitForSynch() {
+            console.log("等待异步任务" + deps.length +"个，当前完成" +taskComplated + "个");
+            if(taskComplated == deps.length){
+                taskComplated = 0;
+                if(callback){
+                    callback(loadedDatas)
+                }
+                clearInterval(waitTask);
+            }
+        }
+    }
+
+    var findArrayValue = function(id ,arr){
+        var result;
+        $.each(arr,function(index,item){
+            if(item.id==id){
+                result = item;
+                return false;
+            }
+        })
+        return result
+    }
 
     return {
         init: init,
-        getHandleObj:getHandleObj
+        loadDeps:loadDeps,
+        getHandleObj:getHandleObj,
+        findArrayValue:findArrayValue
     }
 })

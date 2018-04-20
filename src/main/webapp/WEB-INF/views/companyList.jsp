@@ -14,23 +14,30 @@
     <script src="<%=path%>/vendors/requireJS/require.js"></script>
     <script type="text/javascript" src="<%=path%>/vendors/requireJS/require-config.js"></script>
     <script type="text/javascript">
-        require(["common","mySelect"],function (main) {
-            var config = {
-                popArea:['400px','500px'],
-                domain:{
-                    name:'company',
-                    props:[
-                        {name:'id',type:'string',showable:true},
-                        {name:'name',type:'string',showable:true},
-                        {name:'legalPersonName',type:'string',showable:true},
-                        {name:'legalPersonLicense',type:'string',showable:true},
-                        {name:'nature',type:'string',showable:true}
-                    ]
-                }
-            }
+        require(["common","select2"],function (main) {
             $(function(){
-                var select = $("#natureSelect").mySelect('CompanyNature.json');
-                var table = main.init(config);
+                //var select = $("#natureSelect").mySelect('CompanyNature.json');
+                main.loadDeps(["CompanyNature.json"],function (data) {
+                    $("#natureSelect").select2({data:data["CompanyNature.json"]})
+                    var config = {
+                        popArea:['400px','300px'],
+                        domain:{
+                            name:'company',
+                            props:[
+                                {name:'id',type:'string',showable:true},
+                                {name:'name',type:'string',showable:true},
+                                {name:'legalPersonName',type:'string',showable:true},
+                                {name:'legalPersonLicense',type:'string',showable:true},
+                                {name:'nature',type:'string',showable:true,render:function (row, type, full, meta) {
+                                    //console.log(main.findArrayValue(full.id,data["CompanyNature.json"]))
+                                    return main.findArrayValue(full.id,data["CompanyNature.json"]).text;
+                                }}
+                            ]
+                        }
+                    }
+                    var table = main.init(config);
+                })
+
             })
         })
     </script>
