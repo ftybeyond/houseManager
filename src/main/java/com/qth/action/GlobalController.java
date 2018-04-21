@@ -60,6 +60,17 @@ public class GlobalController {
 
     /**
      * 通用select2组件数据请求服务
+     * @param street street
+     * @return
+     */
+    @RequestMapping("/rest/selectResidentialAreaByStreet/{street}")
+    @ResponseBody
+    public List<Select2> getResidentialAreaDataByRegion(@PathVariable Integer street){
+        return selectService.getResidentialAreaByRegion(street);
+    }
+
+    /**
+     * 通用select2组件数据请求服务
      * @param type type
      * @return
      */

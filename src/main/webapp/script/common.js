@@ -101,10 +101,15 @@ define(["dataTables-bs"], function () {
          */
         function obj2Form() {
             for (key in handleObj) {
+                // console.log(JSON.stringify(handleObj));
                 $("#" + baseConfig.infoFrom + " *[name='" + key + "']").val(handleObj[key]);
+                $("#" + baseConfig.infoFrom + " *[name='" + key + "']").change();
             }
             if (baseConfig.afterSyncFormData) {
                 baseConfig.afterSyncFormData(handleObj)
+            }
+            if (typeof(obj2FormBackfun) == "function") {
+                obj2FormBackfun(baseConfig, handleObj);
             }
         }
 

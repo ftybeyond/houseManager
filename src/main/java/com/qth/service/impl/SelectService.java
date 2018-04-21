@@ -25,6 +25,15 @@ public class SelectService implements ISelectService {
     }
 
     @Override
+    public List<Select2> getResidentialAreaByRegion(int street) {
+        if (street == 0) {
+            return baseMapper.getResidentialArea();
+        } else {
+            return baseMapper.getResidentialAreaByRegion(street);
+        }
+    }
+
+    @Override
     public List<Select2> getConfigSelect(String type){
         return baseMapper.getConfigSelect(type);
     }

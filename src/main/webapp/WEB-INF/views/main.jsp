@@ -75,9 +75,9 @@
                                     <li><a target="main_frame" href="/page/companyList.action">单位管理</a></li>
                                     <li><a target="main_frame" href="/page/streetList.action">街道管理</a></li>
                                     <li><a target="main_frame" href="/page/residentialAreaList.action">小区管理</a></li>
-                                    <li><a href="form_upload.html">楼栋管理</a></li>
-                                    <li><a href="form_buttons.html">单元管理</a></li>
-                                    <li><a href="form_upload.html">房屋管理</a></li>
+                                    <li><a target="main_frame" href="/page/buildingList.action">楼栋管理</a></li>
+                                    <li><a target="main_frame" href="/page/unitAreaList.action">单元管理</a></li>
+                                    <li><a target="main_frame" href="/page/houseList.action">房屋管理</a></li>
                                     <li><a href="form_buttons.html">批量导入</a></li>
                                 </ul>
                             </li>

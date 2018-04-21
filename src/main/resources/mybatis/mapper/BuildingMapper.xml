@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qth.dao.BuildingMapper">
+  <resultMap id="BaseResultMap" type="com.qth.model.Building">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="residential_area" jdbcType="INTEGER" property="residentialArea" />
+    <result column="units" jdbcType="INTEGER" property="units" />
+    <result column="has_elevator" jdbcType="INTEGER" property="hasElevator" />
+    <result column="has_underground" jdbcType="INTEGER" property="hasUnderground" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from building
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.qth.model.Building">
+    insert into building (id, name, residential_area, 
+      units, has_elevator, has_underground
+      )
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{residentialArea,jdbcType=INTEGER}, 
+      #{units,jdbcType=INTEGER}, #{hasElevator,jdbcType=INTEGER}, #{hasUnderground,jdbcType=INTEGER}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.qth.model.Building">
+    update building
+    set name = #{name,jdbcType=VARCHAR},
+      residential_area = #{residentialArea,jdbcType=INTEGER},
+      units = #{units,jdbcType=INTEGER},
+      has_elevator = #{hasElevator,jdbcType=INTEGER},
+      has_underground = #{hasUnderground,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select b.id, b.name, b.residential_area, b.units, b.has_elevator, b.has_underground
+    from building b
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, name, residential_area, units, has_elevator, has_underground
+    from building
+  </select>
+  <select id="selectDataTable" resultMap="BaseResultMap" parameterType="com.qth.model.Building">
+    SELECT
+    b.id,
+    b.name,
+    b.residential_area,
+    r.name AS residentialAreaName,
+    b.units,
+    b.has_elevator,
+    p.type_name AS hasElevatorName,
+    b.has_underground,
+    p2.type_name AS hasUndergroundName
+    FROM
+    building b
+    LEFT JOIN residential_area r ON b.residential_area = r.id
+    LEFT JOIN param_config p ON b.has_elevator = p.type_id
+    LEFT JOIN param_config p2 ON b.has_underground = p2.type_id
+    WHERE
+    p.type = 'hasornot'
+    AND p2.type = 'hasornot'
+    <if test="id!=null">
+      and b.id=#{id}
+    </if>
+    <if test="residentialArea!=null">
+      and b.residential_area=#{residentialArea}
+    </if>
+    <if test="name!=null and name.length()>0">
+      and b.name LIKE '%${name}%'
+    </if>
+    limit #{start} ,#{length}
+  </select>
+  <select id="selectDataTableCount" resultType="int" parameterType="com.qth.model.Building">
+    select count(*)
+    from building
+    <where>
+      <if test="id!=null">
+        id=#{id}
+      </if>
+      <if test="name!=null and name.length()>0">
+        and name LIKE '%${name}%'
+      </if>
+    </where>
+  </select>
+</mapper>
