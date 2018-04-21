@@ -54,13 +54,21 @@
         <property name="mapperLocations" value="classpath:mybatis/mapper/*.xml" />
     </bean>
 
-<!--    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
-        <constructor-arg index="0" ref="sqlSessionFactory" />
-    </bean>-->
 
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
         <property name="basePackage" value="com.qth.dao"/>
+    </bean>
+
+    <bean class="com.qth.model.common.TableMapping">
+        <property name="mapping">
+            <map>
+                <entry key="AlgorithmSwitch" value="algorithm_switch"></entry>
+                <entry key="ChargeCriterion" value="charge_criterion"></entry>
+                <entry key="ResidentialArea" value="residential_area"></entry>
+                <entry key="MoneyRate" value="money_rate"></entry>
+            </map>
+        </property>
     </bean>
 
     <!-- (事务管理)transaction manager, use JtaTransactionManager for global tx -->

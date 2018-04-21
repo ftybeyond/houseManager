@@ -29,15 +29,20 @@
                          <value>application/json</value>
                      </list>
                  </property>
-                 <property name="features">
-                     <list>
-                         <value>WriteMapNullValue</value>
-                         <value>QuoteFieldNames</value>
-                     </list>
+                 <property name="fastJsonConfig" ref="fastJsonConfig">
                  </property>
-                 <property name="dateFormat" value="yyyy-MM-dd HH:mm:ss"/>
              </bean>
 	   </mvc:message-converters>
 	</mvc:annotation-driven>
+    <bean id="fastJsonConfig" class="com.alibaba.fastjson.support.config.FastJsonConfig">
+        <property name="serializerFeatures">
+            <list>
+                <value>WriteMapNullValue</value>
+                <value>QuoteFieldNames</value>
+                <value>WriteDateUseDateFormat</value>
+                <value>WriteBigDecimalAsPlain</value>
+            </list>
+        </property>
 
+    </bean>
 </beans>

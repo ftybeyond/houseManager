@@ -101,7 +101,13 @@ define(["dataTables-bs"], function () {
          */
         function obj2Form() {
             for (key in handleObj) {
-                $("#" + baseConfig.infoFrom + " *[name='" + key + "']").val(handleObj[key]);
+                if($("#" + baseConfig.infoFrom + " input[name='" + key + "']").size()>0){
+                    $("#" + baseConfig.infoFrom + " input[name='" + key + "']").val(handleObj[key]);
+                }else if($("#" + baseConfig.infoFrom + " select[name='" + key + "']").size()>0){
+                    $("#" + baseConfig.infoFrom + " select[name='" + key + "']").select2('val',''+handleObj[key]);
+                }else{
+                    //..陆续补充
+                }
             }
             if (baseConfig.afterSyncFormData) {
                 baseConfig.afterSyncFormData(handleObj)
@@ -188,6 +194,10 @@ define(["dataTables-bs"], function () {
             var title, url, param;
             if (type == 1) {
                 $("#" + baseConfig.infoFrom)[0].reset();
+                if($("#" + baseConfig.infoFrom　+" select").size()>0){
+                    //清空select
+                    $("#" + baseConfig.infoFrom　+" select").select2("val","all")
+                }
                 title = "添加";
                 url = getUrl("insert");
             } else if (type == 2) {
