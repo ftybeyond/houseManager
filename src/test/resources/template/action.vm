@@ -24,39 +24,40 @@ I${domain}Service ${domainObj}Service;
 */
 @RequestMapping(path="table")
 public DataTableRspWrapper<${domain}> table(${domain} ${domainObj}){
+
     DataTableRspWrapper<${domain}> rspWrapper = ${domainObj}Service.selectDataTable2Rsp(${domainObj});
         //赋值绘制时序标识
         rspWrapper.setDraw(${domainObj}.getDraw());
         return rspWrapper;
-        }
+    }
 
-        /**
-        * 添加区域信息
-        * @param ${domainObj}
-        * @return
-        */
-        @RequestMapping(value = "insert")
-        public CommonRsp insert(${domain} ${domainObj}){
+    /**
+    * 添加区域信息
+    * @param ${domainObj}
+    * @return
+    */
+    @RequestMapping(value = "insert")
+    public CommonRsp insert(${domain} ${domainObj}){
         int effect = ${domainObj}Service.insert${domain}(${domainObj});
         return dbEffect2Rsp(effect);
-        }
+    }
 
-        @RequestMapping(value = "update")
-        public CommonRsp update(${domain} ${domainObj}){
+    @RequestMapping(value = "update")
+    public CommonRsp update(${domain} ${domainObj}){
         int effect = ${domainObj}Service.update${domain}(${domainObj});
         return dbEffect2Rsp(effect);
-        }
+    }
 
-        @RequestMapping(value = "one")
-        public CommonRsp selectOne(Integer id){
+    @RequestMapping(value = "one")
+    public CommonRsp selectOne(Integer id){
         ${domain} ${domainObj} = ${domainObj}Service.find${domain}ById(id);
         return data2Rsp(${domainObj});
-        }
+    }
 
-        @RequestMapping(value = "delete")
-        public CommonRsp deleteById(Integer id){
+    @RequestMapping(value = "delete")
+    public CommonRsp deleteById(Integer id){
         int effect = ${domainObj}Service.delete${domain}ById(id);
         return dbEffect2Rsp(effect);
-        }
+    }
 
-        }
+}

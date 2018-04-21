@@ -2,7 +2,6 @@ package com.qth.service.impl;
 
 import com.qth.dao.CompanyMapper;
 import com.qth.model.Company;
-import com.qth.model.common.DataTableRspWrapper;
 import com.qth.service.ICompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +20,6 @@ public class CompanyService extends BaseService<Company> implements ICompanyServ
     public List<Company> selectAll() {
         return companyMapper.selectAll();
     }
-
 
     @Override
     public int insertCompany(Company company) {
