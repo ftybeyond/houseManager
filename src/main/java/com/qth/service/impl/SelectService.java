@@ -20,13 +20,13 @@ public class SelectService implements ISelectService {
     }
 
     @Override
-    public List<Select2> getStreetByRegion(int region) {
+    public List<Select2> getStreetByRegion(Integer region) {
         return baseMapper.getStreetByRegion(region);
     }
 
     @Override
-    public List<Select2> getResidentialAreaByRegion(int street) {
-        if (street == 0) {
+    public List<Select2> getResidentialAreaByRegion(Integer street) {
+        if (street == null || street == 0) {
             return baseMapper.getResidentialArea();
         } else {
             return baseMapper.getResidentialAreaByRegion(street);
@@ -34,7 +34,16 @@ public class SelectService implements ISelectService {
     }
 
     @Override
-    public List<Select2> getConfigSelect(String type){
+    public List<Select2> getBuildingDataByResidentialArea(Integer residentialArea) {
+        if (residentialArea == null || residentialArea == 0) {
+            return baseMapper.getBuilding();
+        } else {
+            return baseMapper.getBuildingByResidentialArea(residentialArea);
+        }
+    }
+
+    @Override
+    public List<Select2> getConfigSelect(String type) {
         return baseMapper.getConfigSelect(type);
     }
 }

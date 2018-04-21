@@ -73,6 +73,17 @@ public class GlobalController {
 
     /**
      * 通用select2组件数据请求服务
+     * @param residentialArea residentialArea
+     * @return
+     */
+    @RequestMapping("/rest/selectBuildingByResidentialArea/{residentialArea}")
+    @ResponseBody
+    public List<Select2> getBuildingDataByResidentialArea(@PathVariable Integer residentialArea){
+        return selectService.getBuildingDataByResidentialArea(residentialArea);
+    }
+
+    /**
+     * 通用select2组件数据请求服务
      *
      * @param type type
      * @return

@@ -45,10 +45,14 @@ public interface BaseMapper {
 
     public List<Select2> getStreetByRegion(Integer region);
 
-    public List<Select2> getResidentialAreaByRegion(Integer street);
-
     public List<Select2> getResidentialArea();
 
+    public List<Select2> getResidentialAreaByRegion(Integer street);
+
     public List<Select2> getConfigSelect(String type);
+
+    public List<Select2> getBuilding();
+
+    public List<Select2> getBuildingByResidentialArea(Integer residentialArea);
 
 }

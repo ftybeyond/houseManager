@@ -76,13 +76,21 @@
     select id, name
     from street WHERE region=#{id}
   </select>
+  <select id="getResidentialArea" resultMap="Select2Map">
+    select id, name
+    from residential_area
+  </select>
   <select id="getResidentialAreaByRegion" resultMap="Select2Map" parameterType="int">
     select id, name
     from residential_area WHERE street=#{id}
   </select>
-  <select id="getResidentialArea" resultMap="Select2Map">
+  <select id="getBuilding" resultMap="Select2Map">
     select id, name
-    from residential_area
+    from building
+  </select>
+  <select id="getBuildingByResidentialArea" resultMap="Select2Map" parameterType="int">
+    select id, name
+    from building WHERE residential_area=#{id}
   </select>
   <select id="getConfigSelect" resultMap="Select2Map" parameterType="java.lang.String">
     select type_id as id, type_name as name

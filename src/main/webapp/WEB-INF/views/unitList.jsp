@@ -17,7 +17,12 @@
         require(["common", "mySelect"], function (main) {
             $(function () {
                 //var select = $("#natureSelect").mySelect('CompanyNature.json');
-                $("#queryResidentialAreaSelect").loadResidentialAreaSelect(0);
+                $("#queryResidentialAreaSelect").genSelectWithAll('residential_area');
+                $("#queryResidentialAreaSelect").change(function () {
+                    $("#queryBuildingSelect").loadBuildingSelect(this.value);
+                });
+                $("#queryResidentialAreaSelect").change();
+
                 $("#residentialAreaSelect").mySelect('residential_area', null, function (data) {
                     if (data && data.length > 0 && data[0].id) {
                         $("#buildingSelect").loadBuildingSelect(data[0].id);

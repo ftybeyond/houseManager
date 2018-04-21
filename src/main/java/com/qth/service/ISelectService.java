@@ -9,9 +9,12 @@ public interface ISelectService {
 
     public List<Select2> getAll(String table);
 
-    public List<Select2> getStreetByRegion(int region);
+    public List<Select2> getStreetByRegion(Integer region);
 
-    public List<Select2> getResidentialAreaByRegion(int street);
+    public List<Select2> getResidentialAreaByRegion(Integer street);
+
+    public List<Select2> getBuildingDataByResidentialArea(Integer residentialArea);
 
     public List<Select2> getConfigSelect(String type);
+
 }
