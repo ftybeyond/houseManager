@@ -17,15 +17,15 @@
         require(["common", "mySelect"], function (main) {
             $(function () {
                 //var select = $("#natureSelect").mySelect('CompanyNature.json');
-//                $("#queryResidentialAreaSelect").loadResidentialAreaSelect(0);
-//                $("#residentialAreaSelect").mySelect('residential_area', null, function (data) {
-//                    if (data && data.length > 0 && data[0].id) {
-//                        $("#buildingSelect").loadBuildingSelect(data[0].id);
-//                    }
-//                });
-//                $("#residentialAreaSelect").change(function () {
-//                    $("#buildingSelect").loadBuildingSelect(this.value);
-//                });
+                $("#queryResidentialAreaSelect").loadResidentialAreaSelect(0);
+                $("#residentialAreaSelect").mySelect('residential_area', null, function (data) {
+                    if (data && data.length > 0 && data[0].id) {
+                        $("#buildingSelect").loadBuildingSelect(data[0].id);
+                    }
+                });
+                $("#residentialAreaSelect").change(function () {
+                    $("#buildingSelect").loadBuildingSelect(this.value);
+                });
 
                 var config = {
                     popArea: ['400px', '500px'],

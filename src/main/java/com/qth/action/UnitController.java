@@ -12,50 +12,52 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping(value = "rest/unit")
 @ResponseBody
-public class UnitController extends BaseController{
+public class UnitController extends BaseController {
 
-@Autowired
-IUnitService unitService;
+    @Autowired
+    IUnitService unitService;
 
-/**
-* 区域表格数据请求
-* @param unit
-* @return
-*/
-@RequestMapping(path="table")
-public DataTableRspWrapper<Unit> table(Unit unit){
+    /**
+     * 区域表格数据请求
+     *
+     * @param unit
+     * @return
+     */
+    @RequestMapping(path = "table")
+    public DataTableRspWrapper<Unit> table(Unit unit) {
 
-    DataTableRspWrapper<Unit> rspWrapper = unitService.selectDataTable2Rsp(unit);
+        DataTableRspWrapper<Unit> rspWrapper = unitService.selectDataTable2Rsp(unit);
         //赋值绘制时序标识
         rspWrapper.setDraw(unit.getDraw());
         return rspWrapper;
     }
 
     /**
-    * 添加区域信息
-    * @param unit
-    * @return
-    */
+     * 添加区域信息
+     *
+     * @param unit
+     * @return
+     */
     @RequestMapping(value = "insert")
-    public CommonRsp insert(Unit unit){
+    public CommonRsp insert(Unit unit) {
         int effect = unitService.insertUnit(unit);
         return dbEffect2Rsp(effect);
     }
 
     @RequestMapping(value = "update")
-    public CommonRsp update(Unit unit){
+    public CommonRsp update(Unit unit) {
         int effect = unitService.updateUnit(unit);
         return dbEffect2Rsp(effect);
     }
 
     @RequestMapping(value = "one")
-    public CommonRsp selectOne(Integer id){
+    public CommonRsp selectOne(Integer id) {
         Unit unit = unitService.findUnitById(id);
         return data2Rsp(unit);
     }
 
     @RequestMapping(value = "delete")
-    public CommonRsp deleteById(Integer id){
+    public CommonRsp deleteById(Integer id) {
         int effect = unitService.deleteUnitById(id);
         return dbEffect2Rsp(effect);
     }
