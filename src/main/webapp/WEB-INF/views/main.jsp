@@ -64,9 +64,9 @@
                         <ul class="nav side-menu">
                             <li><a><i class="fa fa-home"></i> 政策管理 <span class="fa fa-chevron-down"></span></a>
                                 <ul class="nav child_menu">
-                                    <li><a href="index.html">房产算法开关</a></li>
-                                    <li><a href="index2.html">基金缴存标准</a></li>
-                                    <li><a href="index3.html">利率管理</a></li>
+                                    <li><a target="main_frame" href="/page/algorithmSwitch.action">房产算法开关</a></li>
+                                    <li><a target="main_frame" href="/page/chargeCriterion.action">基金缴存标准</a></li>
+                                    <li><a target="main_frame" href="/page/moneyRate.action">利率管理</a></li>
                                 </ul>
                             </li>
                             <li><a><i class="fa fa-edit"></i> 基础信息管理 <span class="fa fa-chevron-down"></span></a>

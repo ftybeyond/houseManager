@@ -19,7 +19,7 @@ import java.util.List;
 @Controller
 public class GlobalController {               
 
-   /**    
+    /**
      * 全局异常处理
      */
     @ExceptionHandler({Exception.class})
@@ -38,23 +38,25 @@ public class GlobalController {
 
     /**
      * 通用select2组件数据请求服务
+     *
      * @param table 数据字典表明
      * @return
      */
     @RequestMapping("/rest/select/{table}")
     @ResponseBody
-    public List<Select2> getSelectData(@PathVariable String table){
+    public List<Select2> getSelectData(@PathVariable String table) {
         return selectService.getAll(table);
     }
 
     /**
      * 通用select2组件数据请求服务
+     *
      * @param region region
      * @return
      */
     @RequestMapping("/rest/selectStreetByRegion/{region}")
     @ResponseBody
-    public List<Select2> getSelectStreetDataByRegion(@PathVariable Integer region){
+    public List<Select2> getSelectStreetDataByRegion(@PathVariable Integer region) {
         return selectService.getStreetByRegion(region);
     }
 
@@ -71,12 +73,13 @@ public class GlobalController {
 
     /**
      * 通用select2组件数据请求服务
+     *
      * @param type type
      * @return
      */
     @RequestMapping("/rest/selectConfigSelect/{type}")
     @ResponseBody
-    public List<Select2> getConfigSelect(@PathVariable String type){
+    public List<Select2> getConfigSelect(@PathVariable String type) {
         return selectService.getConfigSelect(type);
     }
 

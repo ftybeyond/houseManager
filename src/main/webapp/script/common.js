@@ -101,9 +101,13 @@ define(["dataTables-bs"], function () {
          */
         function obj2Form() {
             for (key in handleObj) {
-                // console.log(JSON.stringify(handleObj));
-                $("#" + baseConfig.infoFrom + " *[name='" + key + "']").val(handleObj[key]);
-                $("#" + baseConfig.infoFrom + " *[name='" + key + "']").change();
+                if($("#" + baseConfig.infoFrom + " input[name='" + key + "']").size()>0){
+                    $("#" + baseConfig.infoFrom + " input[name='" + key + "']").val(handleObj[key]);
+                }else if($("#" + baseConfig.infoFrom + " select[name='" + key + "']").size()>0){
+                    $("#" + baseConfig.infoFrom + " select[name='" + key + "']").select2('val',''+handleObj[key]);
+                }else{
+                    //..陆续补充
+                }
             }
             if (baseConfig.afterSyncFormData) {
                 baseConfig.afterSyncFormData(handleObj)

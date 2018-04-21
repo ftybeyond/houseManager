@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qth.dao.MoneyRateMapper">
+  <resultMap id="BaseResultMap" type="com.qth.model.MoneyRate">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="term" jdbcType="DATE" property="term" />
+    <result column="rate" jdbcType="DECIMAL" property="rate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from money_rate
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.qth.model.MoneyRate">
+    insert into money_rate (id, term, rate)
+    values (#{id,jdbcType=INTEGER}, #{term,jdbcType=DATE}, #{rate,jdbcType=DECIMAL})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.qth.model.MoneyRate">
+    update money_rate
+    set term = #{term,jdbcType=DATE},
+      rate = #{rate,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, term, rate
+    from money_rate
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, term, rate
+    from money_rate
+  </select>
+</mapper>

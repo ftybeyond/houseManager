@@ -1,10 +1,7 @@
 package com.qth.service.impl;
 
 import com.qth.dao.BaseMapper;
-import com.qth.model.common.DataTableRspWrapper;
-import com.qth.model.common.Select2;
-import com.qth.model.common.SelectDataTableMap;
-import com.qth.model.common.UpdateMap;
+import com.qth.model.common.*;
 import com.qth.service.IBaseService;
 import com.qth.util.BeanUtil;
 import org.apache.ibatis.mapping.ResultMapping;
@@ -25,6 +22,9 @@ public class BaseService<T> implements IBaseService<T> {
     @Autowired
     private SqlSessionFactory sqlSessionFactory;
 
+    @Autowired
+    private TableMapping tableMapping;
+
     public BaseService() {
         // 得到被泛型的实体的class
         clazz = (Class<T>)getSuperClassGenricType(this.getClass(), 0);
@@ -40,6 +40,8 @@ public class BaseService<T> implements IBaseService<T> {
         DataTableRspWrapper rspWrapper = new DataTableRspWrapper();
         List<ResultMapping> resultMappings = sqlSessionFactory.getConfiguration().getResultMap("com.qth.dao." +clazz.getSimpleName()+"Mapper.BaseResultMap" ).getResultMappings();
         SelectDataTableMap map = BeanUtil.searchBean2Map(entity,resultMappings);
+        //获取表名
+        map.setTableName(tableMapping.getTableName(clazz));
         List<T> data = (List<T>) BeanUtil.convertByResultMap(baseMapper.selectDataTable(map),resultMappings,clazz);
         rspWrapper.setData(data);
         rspWrapper.setRecordsTotal(baseMapper.selectDataTableCount(map));

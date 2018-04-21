@@ -1,7 +1,8 @@
 ;(function(){
     jQuery.fn.mySelect = function(table,settings,backfun){
         var baseOpt = {
-            language: "zh-CN"
+            language: "zh-CN",
+            placeholder:'--请选择--'
         }
         var _this = $(this)
         $.ajax({
@@ -24,8 +25,19 @@
             }
         })
     }
-    jQuery.fn.loadStreetSelect = function(region,settings,backfun){
+
+    jQuery.fn.mySelect2 = function(settings){
         var baseOpt = {
+            language: "zh-CN",
+            placeholder:'--请选择--'
+        }
+        $.extend(true, settings, baseOpt);
+        var select = $(this).select2(settings);
+        select.select2("val","all")
+        return select;
+    }
+
+    jQuery.fn.loadStreetSelect = function(region,settings,backfun){
             language: "zh-CN"
         }
         var _this = $(this)

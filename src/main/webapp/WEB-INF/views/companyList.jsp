@@ -14,13 +14,13 @@
     <script src="<%=path%>/vendors/requireJS/require.js"></script>
     <script type="text/javascript" src="<%=path%>/vendors/requireJS/require-config.js"></script>
     <script type="text/javascript">
-        require(["common","select2"],function (main) {
+        require(["common","mySelect"],function (main) {
             $(function(){
                 //var select = $("#natureSelect").mySelect('CompanyNature.json');
                 main.loadDeps(["CompanyNature.json"],function (data) {
-                    $("#natureSelect").select2({data:data["CompanyNature.json"]})
+                    $("#natureSelect").mySelect2({data:data["CompanyNature.json"]})
                     var config = {
-                        popArea:['400px','300px'],
+                        popArea:['400px','350px'],
                         domain:{
                             name:'company',
                             props:[
@@ -29,15 +29,14 @@
                                 {name:'legalPersonName',type:'string',showable:true},
                                 {name:'legalPersonLicense',type:'string',showable:true},
                                 {name:'nature',type:'string',showable:true,render:function (row, type, full, meta) {
-                                    //console.log(main.findArrayValue(full.id,data["CompanyNature.json"]))
-                                    return main.findArrayValue(full.nature,data["CompanyNature.json"]).text;
+                                    var dic = main.findArrayValue(full.nature,data["CompanyNature.json"])
+                                    return dic&&dic.text?dic.text:"";
                                 }}
                             ]
                         }
                     }
                     var table = main.init(config);
                 })
-
             })
         })
     </script>

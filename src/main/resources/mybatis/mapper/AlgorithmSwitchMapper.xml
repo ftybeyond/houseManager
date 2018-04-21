@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qth.dao.AlgorithmSwitchMapper">
+  <resultMap id="BaseResultMap" type="com.qth.model.AlgorithmSwitch">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="charge_switch" jdbcType="INTEGER" property="chargeSwitch" />
+    <result column="pay_switch" jdbcType="INTEGER" property="paySwitch" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from algorithm_switch
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.qth.model.AlgorithmSwitch">
+    insert into algorithm_switch (id, name, charge_switch, 
+      pay_switch)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{chargeSwitch,jdbcType=INTEGER}, 
+      #{paySwitch,jdbcType=INTEGER})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.qth.model.AlgorithmSwitch">
+    update algorithm_switch
+    set name = #{name,jdbcType=VARCHAR},
+      charge_switch = #{chargeSwitch,jdbcType=INTEGER},
+      pay_switch = #{paySwitch,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, name, charge_switch, pay_switch
+    from algorithm_switch
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, name, charge_switch, pay_switch
+    from algorithm_switch
+  </select>
+</mapper>

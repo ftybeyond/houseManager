@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qth.dao.ChargeCriterionMapper">
+  <resultMap id="BaseResultMap" type="com.qth.model.ChargeCriterion">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="term" jdbcType="DATE" property="term" />
+    <result column="house_type" jdbcType="INTEGER" property="houseType" />
+    <result column="charge_type" jdbcType="INTEGER" property="chargeType" />
+    <result column="elevator_sign" jdbcType="INTEGER" property="elevatorSign" />
+    <result column="price_ratio" jdbcType="INTEGER" property="priceRatio" />
+    <result column="area_ratio" jdbcType="INTEGER" property="areaRatio" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from charge_criterion
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.qth.model.ChargeCriterion">
+    insert into charge_criterion (id, term, house_type, 
+      charge_type, elevator_sign, price_ratio, 
+      area_ratio)
+    values (#{id,jdbcType=INTEGER}, #{term,jdbcType=DATE}, #{houseType,jdbcType=INTEGER}, 
+      #{chargeType,jdbcType=INTEGER}, #{elevatorSign,jdbcType=INTEGER}, #{priceRatio,jdbcType=INTEGER}, 
+      #{areaRatio,jdbcType=INTEGER})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.qth.model.ChargeCriterion">
+    update charge_criterion
+    set term = #{term,jdbcType=DATE},
+      house_type = #{houseType,jdbcType=INTEGER},
+      charge_type = #{chargeType,jdbcType=INTEGER},
+      elevator_sign = #{elevatorSign,jdbcType=INTEGER},
+      price_ratio = #{priceRatio,jdbcType=INTEGER},
+      area_ratio = #{areaRatio,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, term, house_type, charge_type, elevator_sign, price_ratio, area_ratio
+    from charge_criterion
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, term, house_type, charge_type, elevator_sign, price_ratio, area_ratio
+    from charge_criterion
+  </select>
+</mapper>

@@ -12,7 +12,11 @@ require.config({
         'layer':'layer/layer',
         'common':'../script/common',
         'select2-cn':'select2/zh-CN',
-        'mySelect':'../script/commonSelect'
+        'mySelect':'../script/commonSelect',
+        'datetimepicker-common':'bootstrap-datetimepicker/bootstrap-datetimepicker.min',
+        'datetimepicker':'bootstrap-datetimepicker/locales/bootstrap-datetimepicker.zh-CN',
+        'my97date':'My97DatePicker/WdatePicker',
+        'moment':'moment/moment.min',
     },
     'shim' : {
         'bootstrap' : {
@@ -25,6 +29,7 @@ require.config({
         'select2':['jquery'],
         'select2-cn':['select2'],
         'mySelect':['select2','select2-cn'],
-        'dataTables-bs':['bootstrap','datatable','layer','jquery-serializejson']
+        'dataTables-bs':['bootstrap','datatable','layer','jquery-serializejson'],
+        'datetimepicker':['bootstrap','moment','datetimepicker-common']
     }
 });

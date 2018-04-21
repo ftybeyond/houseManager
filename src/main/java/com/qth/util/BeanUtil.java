@@ -131,7 +131,6 @@ public class BeanUtil{
         if(entity == null){
             return null;
         }
-
         try {
             Map<String, String> map = new HashMap<>();
 
@@ -152,7 +151,7 @@ public class BeanUtil{
 
             }
 
-            return new SelectDataTableMap(toLowerCaseFirstOne(entity.getClass().getSimpleName()),null,map);
+            return new SelectDataTableMap("",null,map);
         } catch (SecurityException e) {
             e.printStackTrace();
         } catch (IllegalArgumentException e) {
