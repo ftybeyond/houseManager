@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : local
-Source Server Version : 50721
+Source Server         : localhost whf
+Source Server Version : 80011
 Source Host           : localhost:3306
 Source Database       : qth_house
 
 Target Server Type    : MYSQL
-Target Server Version : 50721
+Target Server Version : 80011
 File Encoding         : 65001
 
-Date: 2018-04-20 21:10:31
+Date: 2018-04-21 11:14:51
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -21,17 +21,11 @@ SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS `building`;
 CREATE TABLE `building` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `code` varchar(50) NOT NULL COMMENT '编码唯一',
+  `name` varchar(50) NOT NULL COMMENT '楼栋编码',
   `residential_area` int(11) DEFAULT NULL COMMENT '所属小区',
-  `floors` int(11) DEFAULT NULL COMMENT '楼层数',
-  `units` int(11) DEFAULT NULL COMMENT '单元数',
-  `houses` int(11) DEFAULT NULL COMMENT '单元户数',
-  `elevator_sign` int(11) DEFAULT NULL COMMENT '电梯标志',
-  `basement` int(11) DEFAULT NULL COMMENT '地下室层数',
+  `units` int(11) DEFAULT NULL COMMENT '单元数(不准)',
+  `has_elevator` int(1) DEFAULT NULL COMMENT '有电梯1,无电梯0(不准)',
+  `has_underground` int(1) DEFAULT '0' COMMENT '有1,无0',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `buliding_code_index` (`code`) USING HASH
+  UNIQUE KEY `building_unique_index` (`name`,`residential_area`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of building
--- ----------------------------

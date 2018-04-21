@@ -27,7 +27,7 @@ CREATE TABLE `residential_area` (
   `address` varchar(500) DEFAULT NULL,
   `area_elevator` decimal(10,0) DEFAULT NULL,
   `area_noelevator` decimal(10,0) DEFAULT NULL,
-  `nature` int(10) NOT NULL COMMENT '房屋性质 商品房、已购公用住房、旧有已购住房、旧有住房',
+  `nature` int(10) DEFAULT NULL COMMENT '房屋性质 商品房、已购公用住房、旧有已购住房、旧有住房',
   PRIMARY KEY (`id`),
   KEY `residential_area_name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
