@@ -30,9 +30,9 @@ CREATE TABLE `house` (
   `nature` int(10) DEFAULT NULL COMMENT '房屋性质 商品房、已购公用住房、旧有已购住房、旧有住房',
   `type` int(10) DEFAULT NULL COMMENT '住宅、商服、车库',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `house_unique_index` (`unit`,`floor`,`name`)
-  UNIQUE KEY `house_unique_index2` (`code`),
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  UNIQUE KEY `house_unique_index` (`unit`,`floor`,`name`),
+  UNIQUE KEY `house_unique_index2` (`code`)
+) ENGINE=InnoDB AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of house

@@ -134,7 +134,6 @@ define(["dataTables-bs"], function () {
                 }
             })
 
-
             if (baseConfig.editable || baseConfig.deleteable || baseConfig.customBtns.length > 0) {
                 columns.push({
                     render: function (data, type, full, meta) {
@@ -158,7 +157,6 @@ define(["dataTables-bs"], function () {
                     }
                 });
             }
-
             return columns;
         }
 

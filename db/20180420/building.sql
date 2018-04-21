@@ -28,4 +28,4 @@ CREATE TABLE `building` (
   `has_underground` int(1) DEFAULT '0' COMMENT '有1,无0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `building_unique_index` (`name`,`residential_area`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8;

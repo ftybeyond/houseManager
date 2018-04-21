@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qth.dao.UnitMapper">
+  <resultMap id="BaseResultMap" type="com.qth.model.Unit">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="building" jdbcType="INTEGER" property="building" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="total_floor" jdbcType="INTEGER" property="totalFloor" />
+    <result column="house_per_floor" jdbcType="INTEGER" property="housePerFloor" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from unit
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.qth.model.Unit">
+    insert into unit (id, name, building, 
+      code, total_floor, house_per_floor
+      )
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{building,jdbcType=INTEGER}, 
+      #{code,jdbcType=VARCHAR}, #{totalFloor,jdbcType=INTEGER}, #{housePerFloor,jdbcType=INTEGER}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.qth.model.Unit">
+    update unit
+    set name = #{name,jdbcType=VARCHAR},
+      building = #{building,jdbcType=INTEGER},
+      code = #{code,jdbcType=VARCHAR},
+      total_floor = #{totalFloor,jdbcType=INTEGER},
+      house_per_floor = #{housePerFloor,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, name, building, code, total_floor, house_per_floor
+    from unit
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, name, building, code, total_floor, house_per_floor
+    from unit
+  </select>
+  <select id="selectDataTable" resultMap="BaseResultMap" parameterType="com.qth.model.Unit">
+    SELECT
+    u.id,
+    u.name,
+    rb.residentialArea,
+    rb.residentialAreaName,
+    u.building,
+    rb.buildingName,
+    u.total_floor,
+    u.house_per_floor
+    FROM
+    unit u
+    LEFT JOIN (
+    SELECT
+    r.id AS residentialArea,
+    r. NAME AS residentialAreaName,
+    b.id AS building,
+    b. NAME AS buildingName
+    FROM
+    residential_area r,
+    building b
+    WHERE
+    r.id = b.residential_area
+    ) rb ON u.building = rb.building
+    <if test="id!=null">
+      and u.id=#{id}
+    </if>
+    <if test="residentialArea!=null">
+      and rb.residential_area=#{residentialArea}
+    </if>
+    <if test="name!=null">
+      and rb.building=#{name}
+    </if>
+    limit #{start} ,#{length}
+  </select>
+  <select id="selectDataTableCount" resultType="int" parameterType="com.qth.model.Unit">
+    select count(*)
+    from unit u
+    LEFT JOIN (
+    SELECT
+    r.id AS residentialArea,
+    r. NAME AS residentialAreaName,
+    b.id AS building,
+    b. NAME AS buildingName
+    FROM
+    residential_area r,
+    building b
+    WHERE
+    r.id = b.residential_area
+    ) rb ON u.building = rb.building
+    <if test="id!=null">
+      and u.id=#{id}
+    </if>
+    <if test="residentialArea!=null">
+      and rb.residential_area=#{residentialArea}
+    </if>
+    <if test="name!=null">
+      and rb.building=#{name}
+    </if>
+  </select>
+</mapper>
