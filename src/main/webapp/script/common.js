@@ -112,6 +112,9 @@ define(["dataTables-bs"], function () {
             if (baseConfig.afterSyncFormData) {
                 baseConfig.afterSyncFormData(handleObj)
             }
+            if (typeof(obj2FormBackfun) == "function") {
+                obj2FormBackfun(baseConfig, handleObj);
+            }
         }
 
         /**
@@ -194,10 +197,6 @@ define(["dataTables-bs"], function () {
             var title, url, param;
             if (type == 1) {
                 $("#" + baseConfig.infoFrom)[0].reset();
-                if($("#" + baseConfig.infoFrom　+" select").size()>0){
-                    //清空select
-                    $("#" + baseConfig.infoFrom　+" select").select2("val","all")
-                }
                 title = "添加";
                 url = getUrl("insert");
             } else if (type == 2) {

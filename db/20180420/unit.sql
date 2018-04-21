@@ -21,11 +21,13 @@ SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS `unit`;
 CREATE TABLE `unit` (
   `id` int(11) NOT NULL,
-  `residential_area` int(255) DEFAULT NULL COMMENT '所属小区',
+  `name` varchar(50) NOT NULL COMMENT '单元编号',
+  `building` int(11) DEFAULT NULL COMMENT '所属楼栋',
   `code` varchar(10) DEFAULT NULL COMMENT '唯一编码',
-  `floors` int(255) DEFAULT NULL COMMENT '楼层数',
-  `houses` int(255) DEFAULT NULL COMMENT '楼层户数',
-  PRIMARY KEY (`id`)
+  `total_floor` int(4) DEFAULT 0 COMMENT '楼层数(不准)',
+  `house_per_floor` int(4) DEFAULT 0 COMMENT '每楼层户数(不准)',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unit_unique_index` (`name`,`building`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------

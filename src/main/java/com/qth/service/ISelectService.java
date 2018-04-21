@@ -11,5 +11,7 @@ public interface ISelectService {
 
     public List<Select2> getStreetByRegion(int region);
 
+    public List<Select2> getResidentialAreaByRegion(int street);
+
     public List<Select2> getConfigSelect(String type);
 }

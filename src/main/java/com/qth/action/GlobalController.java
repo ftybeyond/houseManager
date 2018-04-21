@@ -3,6 +3,7 @@ package com.qth.action;
 import com.qth.model.common.CommonRsp;
 import com.qth.model.common.Select2;
 import com.qth.service.ISelectService;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,7 +17,7 @@ import java.util.List;
  * 全局管控controller
  */
 @Controller
-public class GlobalController {
+public class GlobalController {               
 
     /**
      * 全局异常处理
@@ -57,6 +58,17 @@ public class GlobalController {
     @ResponseBody
     public List<Select2> getSelectStreetDataByRegion(@PathVariable Integer region) {
         return selectService.getStreetByRegion(region);
+    }
+
+    /**
+     * 通用select2组件数据请求服务
+     * @param street street
+     * @return
+     */
+    @RequestMapping("/rest/selectResidentialAreaByStreet/{street}")
+    @ResponseBody
+    public List<Select2> getResidentialAreaDataByRegion(@PathVariable Integer street){
+        return selectService.getResidentialAreaByRegion(street);
     }
 
     /**

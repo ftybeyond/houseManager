@@ -21,18 +21,17 @@ SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS `house`;
 CREATE TABLE `house` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `code` varchar(255) DEFAULT NULL COMMENT '小区编号+楼栋编号+单元编号+层号+房号 唯一',
-  `num` varchar(255) DEFAULT NULL COMMENT '编码',
-  `residential_area` int(255) DEFAULT NULL COMMENT '所属小区',
-  `building` int(255) DEFAULT NULL COMMENT '楼栋',
-  `unit` int(255) DEFAULT NULL COMMENT '单元',
-  `floor` int(255) DEFAULT NULL COMMENT '楼层',
+  `name` varchar(255) DEFAULT NULL COMMENT '房号',
+  `unit` int(11) DEFAULT NULL COMMENT '单元',
+  `floor` varchar(255) DEFAULT NULL COMMENT '层号',
+  `code` varchar(255) DEFAULT NULL COMMENT '产业代码，小区编号+楼栋编号+单元编号+层号+房号 唯一',
   `area` decimal(11,2) DEFAULT NULL COMMENT '面积',
-  `elevator_sign` int(255) DEFAULT NULL COMMENT '电梯标志 无电梯、有电梯',
-  `nature` int(255) DEFAULT NULL COMMENT '房屋性质 商品房、已购公用住房、旧有已购住房、旧有住房',
-  `type` int(255) DEFAULT NULL COMMENT '住宅、商服、车库',
+  `has_elevator` int(1) DEFAULT NULL COMMENT '电梯标志,有1无0',
+  `nature` int(10) DEFAULT NULL COMMENT '房屋性质 商品房、已购公用住房、旧有已购住房、旧有住房',
+  `type` int(10) DEFAULT NULL COMMENT '住宅、商服、车库',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `house_code` (`code`) USING HASH
+  UNIQUE KEY `house_unique_index` (`unit`,`floor`,`name`)
+  UNIQUE KEY `house_unique_index2` (`code`),
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------

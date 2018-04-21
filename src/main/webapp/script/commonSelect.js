@@ -37,8 +37,7 @@
         return select;
     }
 
-    jQuery.fn.loadStreetSelect = function(region,settings){
-        var baseOpt = {
+    jQuery.fn.loadStreetSelect = function(region,settings,backfun){
             language: "zh-CN"
         }
         var _this = $(this)
@@ -48,6 +47,37 @@
             type:'post',
             success:function (data) {
                 baseOpt.data = data;
+                if (backfun && data) {
+                    backfun(data);
+                }
+                if (settings) {
+                    $.extend(true, settings, baseOpt);
+                    _this.html("");
+                    return _this.select2(settings);
+                }else{
+                    _this.html("");
+                    return _this.select2(baseOpt);
+                }
+            }
+        })
+    }
+    jQuery.fn.loadResidentialAreaSelect = function(street,settings,backfun){
+        var baseOpt = {
+            language: "zh-CN"
+        }
+        var _this = $(this)
+        $.ajax({
+            url: '/rest/selectResidentialAreaByStreet/'+street+'.action',
+            dataType: 'json',
+            type:'post',
+            success:function (data) {
+                if (street == 0) {
+                    data.unshift({"id" : "", "text" : "全部"});
+                }
+                baseOpt.data = data;
+                if (backfun && data) {
+                    backfun(data);
+                }
                 if (settings) {
                     $.extend(true, settings, baseOpt);
                     _this.html("");

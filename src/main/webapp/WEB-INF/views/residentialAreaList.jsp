@@ -49,6 +49,21 @@
                 main.init(config);
             })
         })
+
+        function obj2FormBackfun(baseConfig, handleObj){
+//            $("#" + baseConfig.infoFrom + " *[name='" + key + "']").val(handleObj[key]);
+//            $("#" + baseConfig.infoFrom + " *[name='region']").change();
+
+//            $("#streetSelect").loadStreetSelect(handleObj['region'], null, function (data){
+//                if (data) {
+//                    alert(handleObj["street"]);
+//                    $("#streetSelect").val(handleObj["street"]);
+//                    $("#streetSelect").change();
+//                    alert($("#streetSelect").val());
+//
+//                }
+//            });
+        }
     </script>
 </head>
 <body>
