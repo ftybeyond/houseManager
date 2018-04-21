@@ -1,9 +1,7 @@
 package com.qth.service.impl;
 
-import com.qth.dao.Select2Mapper;
 import com.qth.dao.${domain}Mapper;
 import com.qth.model.${domain};
-import com.qth.model.common.DataTableRspWrapper;
 import com.qth.service.I${domain}Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +11,7 @@ import java.util.List;
 
 @Service
 @Transactional
-public class ${domain}Service implements I${domain}Service{
+public class ${domain}Service extends BaseService<${domain}> implements I${domain}Service{
 
     @Autowired
     ${domain}Mapper ${domainObj}Mapper;
@@ -21,17 +19,6 @@ public class ${domain}Service implements I${domain}Service{
     @Override
     public List<${domain}> selectAll() {
         return ${domainObj}Mapper.selectAll();
-    }
-
-    @Override
-    public DataTableRspWrapper<${domain}> selectDataTable2Rsp(${domain} ${domainObj}) {
-        //声明datatable应答包装类
-        DataTableRspWrapper rspWrapper = new DataTableRspWrapper();
-        //设置分页信息，总条数
-        rspWrapper.setRecordsTotal(${domainObj}Mapper.selectDataTableCount(${domainObj}));
-        //设置数据集
-        rspWrapper.setData(${domainObj}Mapper.selectDataTable(${domainObj}));
-        return rspWrapper;
     }
 
     @Override

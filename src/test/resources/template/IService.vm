@@ -1,15 +1,12 @@
 package com.qth.service;
 
 import com.qth.model.${domain};
-import com.qth.model.common.DataTableRspWrapper;
 
 import java.util.List;
 
-public interface I${domain}Service
+public interface I${domain}Service extends IBaseService<${domain}>
 {
     public List<${domain}> selectAll();
-
-    public DataTableRspWrapper<${domain}> selectDataTable2Rsp(${domain} ${domainObj});
 
     public int insert${domain}(${domain} ${domainObj});
 
