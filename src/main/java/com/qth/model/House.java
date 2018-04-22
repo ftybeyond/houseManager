@@ -1,6 +1,7 @@
 package com.qth.model;
 
 import com.qth.model.common.DataTableReqWrapper;
+
 import java.math.BigDecimal;
 
 public class House extends DataTableReqWrapper {
@@ -8,7 +9,17 @@ public class House extends DataTableReqWrapper {
 
     private String name;
 
+    private Integer residentialArea;
+
+    private String residentialAreaName;
+
+    private Integer building;
+
+    private String buildingName;
+
     private Integer unit;
+
+    private String unitName;
 
     private String floor;
 
@@ -18,9 +29,15 @@ public class House extends DataTableReqWrapper {
 
     private Integer hasElevator;
 
+    private String hasElevatorName;
+
     private Integer nature;
 
+    private String natureName;
+
     private Integer type;
+
+    private String typeName;
 
     public Integer getId() {
         return id;
@@ -38,12 +55,52 @@ public class House extends DataTableReqWrapper {
         this.name = name;
     }
 
+    public Integer getResidentialArea() {
+        return residentialArea;
+    }
+
+    public void setResidentialArea(Integer residentialArea) {
+        this.residentialArea = residentialArea;
+    }
+
+    public String getResidentialAreaName() {
+        return residentialAreaName;
+    }
+
+    public void setResidentialAreaName(String residentialAreaName) {
+        this.residentialAreaName = residentialAreaName;
+    }
+
+    public Integer getBuilding() {
+        return building;
+    }
+
+    public void setBuilding(Integer building) {
+        this.building = building;
+    }
+
+    public String getBuildingName() {
+        return buildingName;
+    }
+
+    public void setBuildingName(String buildingName) {
+        this.buildingName = buildingName;
+    }
+
     public Integer getUnit() {
         return unit;
     }
 
     public void setUnit(Integer unit) {
         this.unit = unit;
+    }
+
+    public String getUnitName() {
+        return unitName;
+    }
+
+    public void setUnitName(String unitName) {
+        this.unitName = unitName;
     }
 
     public String getFloor() {
@@ -78,6 +135,14 @@ public class House extends DataTableReqWrapper {
         this.hasElevator = hasElevator;
     }
 
+    public String getHasElevatorName() {
+        return hasElevatorName;
+    }
+
+    public void setHasElevatorName(String hasElevatorName) {
+        this.hasElevatorName = hasElevatorName;
+    }
+
     public Integer getNature() {
         return nature;
     }
@@ -86,11 +151,27 @@ public class House extends DataTableReqWrapper {
         this.nature = nature;
     }
 
+    public String getNatureName() {
+        return natureName;
+    }
+
+    public void setNatureName(String natureName) {
+        this.natureName = natureName;
+    }
+
     public Integer getType() {
         return type;
     }
 
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
     }
 }

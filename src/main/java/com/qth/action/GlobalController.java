@@ -84,6 +84,28 @@ public class GlobalController {
 
     /**
      * 通用select2组件数据请求服务
+     * @param building building
+     * @return
+     */
+    @RequestMapping("/rest/selectUnitByBuilding/{building}")
+    @ResponseBody
+    public List<Select2> getUnitDataByBuilding(@PathVariable Integer building){
+        return selectService.getUnitDataByBuilding(building);
+    }
+
+
+    /**
+     * 通用select2组件数据请求服务
+     * @param unit unit
+     * @return
+     */
+    @RequestMapping("/rest/selectFloorByUnit/{unit}")
+    @ResponseBody
+    public List<Select2> getFloorDataByUnit(@PathVariable Integer unit){
+        return selectService.getFloorDataByUnit(unit);
+    }
+    /**
+     * 通用select2组件数据请求服务
      *
      * @param type type
      * @return

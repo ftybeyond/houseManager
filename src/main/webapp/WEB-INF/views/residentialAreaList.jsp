@@ -15,26 +15,6 @@
     <script type="text/javascript" src="<%=path%>/vendors/requireJS/require-config.js"></script>
     <script type="text/javascript">
         require(["common","mySelect"],function (main) {
-            var config = {
-                domain:{
-                    name:'residentialArea',
-                    props:[
-                        {name:'id',type:'string',showable:true},
-                        {name:'name',type:'string',showable:true},
-                        {name:'company',type:'string',showable:false},
-                        {name:'companyName',type:'string',showable:true},
-                        {name:'region',type:'string',showable:false},
-                        {name:'regionName',type:'string',showable:true},
-                        {name:'street',type:'string',showable:false},
-                        {name:'streetName',type:'string',showable:true},
-                        {name:'address',type:'string',showable:true},
-                        {name:'areaElevator',type:'string',showable:true},
-                        {name:'areaNoelevator',type:'string',showable:true},
-                        {name:'nature',type:'string',showable:false},
-                        {name:'natureName',type:'string',showable:true}
-                    ]
-                }
-            }
             $(function(){
                 $("#companySelect").mySelect('company');
                 $("#regionSelect").mySelect('region', null, function (data){
@@ -46,23 +26,37 @@
                     $("#streetSelect").loadStreetSelect(this.value);
                 });
                 $("#natureSelect").loadConfigSelect('residential_area.nature');
+
+                var config = {
+                    domain:{
+                        name:'residentialArea',
+                        props:[
+                            {name:'id',type:'string',showable:true},
+                            {name:'name',type:'string',showable:true},
+                            {name:'company',type:'string',showable:false},
+                            {name:'companyName',type:'string',showable:true},
+                            {name:'region',type:'string',showable:false},
+                            {name:'regionName',type:'string',showable:true},
+                            {name:'street',type:'string',showable:false},
+                            {name:'streetName',type:'string',showable:true},
+                            {name:'address',type:'string',showable:true},
+                            {name:'areaElevator',type:'string',showable:true},
+                            {name:'areaNoelevator',type:'string',showable:true},
+                            {name:'nature',type:'string',showable:false},
+                            {name:'natureName',type:'string',showable:true}
+                        ]
+                    }
+                }
                 main.init(config);
             })
         })
 
         function obj2FormBackfun(baseConfig, handleObj){
-//            $("#" + baseConfig.infoFrom + " *[name='" + key + "']").val(handleObj[key]);
-//            $("#" + baseConfig.infoFrom + " *[name='region']").change();
+            $("#regionSelect").val(handleObj["region"]).change();
 
-//            $("#streetSelect").loadStreetSelect(handleObj['region'], null, function (data){
-//                if (data) {
-//                    alert(handleObj["street"]);
-//                    $("#streetSelect").val(handleObj["street"]);
-//                    $("#streetSelect").change();
-//                    alert($("#streetSelect").val());
-//
-//                }
-//            });
+            $("#streetSelect").loadStreetSelect(handleObj["region"], null, function (data) {
+                $("#streetSelect").val(handleObj["street"]).change();
+            });
         }
     </script>
 </head>

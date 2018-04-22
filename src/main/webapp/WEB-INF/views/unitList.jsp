@@ -51,6 +51,13 @@
                 var table = main.init(config);
             })
         })
+        function obj2FormBackfun(baseConfig, handleObj) {
+            $("#residentialAreaSelect").val(handleObj["residentialArea"]).change();
+
+            $("#buildingSelect").loadBuildingSelect(handleObj["residentialArea"], null, function (data) {
+                $("#buildingSelect").val(handleObj["building"]).change();
+            });
+        }
     </script>
 </head>
 <body>
@@ -131,7 +138,7 @@
                 <div class="form-group">
                     <label class="control-label col-md-3 col-sm-3 col-xs-3">每层户数</label>
                     <div class="col-md-9 col-sm-9 col-xs-9">
-                        <input type="text" class="form-control" name="roomsPerFloor" placeholder="请输入每层户数......">
+                        <input type="text" class="form-control" name="housePerFloor" placeholder="请输入每层户数......">
                     </div>
                 </div>
             </form>

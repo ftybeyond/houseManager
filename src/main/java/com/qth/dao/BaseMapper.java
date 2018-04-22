@@ -55,4 +55,11 @@ public interface BaseMapper {
 
     public List<Select2> getBuildingByResidentialArea(Integer residentialArea);
 
+    public List<Select2> getUnit();
+
+    public List<Select2> getUnitByBuilding(Integer building);
+
+    public List<Select2> getFloor();
+
+    public List<Select2> getFloorByUnit(Integer unit);
 }

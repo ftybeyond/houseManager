@@ -11,16 +11,16 @@
             type: 'post',
             success: function (data) {
                 baseOpt.data = data;
-                if (backfun && data) {
-                    backfun(data);
-                }
                 if (settings) {
                     $.extend(true, settings, baseOpt);
                     _this.html("");
-                    return _this.select2(settings);
+                    _this.select2(settings);
                 } else {
                     _this.html("");
-                    return _this.select2(baseOpt);
+                    _this.select2(baseOpt);
+                }
+                if (backfun && data) {
+                    backfun(data);
                 }
             }
         })
@@ -38,16 +38,16 @@
             success: function (data) {
                 data.unshift({"id": "", "text": "全部"});
                 baseOpt.data = data;
-                if (backfun && data) {
-                    backfun(data);
-                }
                 if (settings) {
                     $.extend(true, settings, baseOpt);
                     _this.html("");
-                    return _this.select2(settings);
+                    _this.select2(settings);
                 } else {
                     _this.html("");
-                    return _this.select2(baseOpt);
+                    _this.select2(baseOpt);
+                }
+                if (backfun && data) {
+                    backfun(data);
                 }
             }
         })
@@ -65,7 +65,9 @@
     }
 
     jQuery.fn.loadStreetSelect = function (region, settings, backfun) {
-        language: "zh-CN"
+        var baseOpt = {
+            language: "zh-CN"
+        }
         var _this = $(this)
         $.ajax({
             url: '/rest/selectStreetByRegion/' + region + '.action',
@@ -73,16 +75,16 @@
             type: 'post',
             success: function (data) {
                 baseOpt.data = data;
-                if (backfun && data) {
-                    backfun(data);
-                }
                 if (settings) {
                     $.extend(true, settings, baseOpt);
                     _this.html("");
-                    return _this.select2(settings);
+                    _this.select2(settings);
                 } else {
                     _this.html("");
-                    return _this.select2(baseOpt);
+                    _this.select2(baseOpt);
+                }
+                if (backfun && data) {
+                    backfun(data);
                 }
             }
         })
@@ -101,16 +103,16 @@
                     data.unshift({"id": "", "text": "全部"});
                 }
                 baseOpt.data = data;
-                if (backfun && data) {
-                    backfun(data);
-                }
                 if (settings) {
                     $.extend(true, settings, baseOpt);
                     _this.html("");
-                    return _this.select2(settings);
+                    _this.select2(settings);
                 } else {
                     _this.html("");
-                    return _this.select2(baseOpt);
+                    _this.select2(baseOpt);
+                }
+                if (backfun && data) {
+                    backfun(data);
                 }
             }
         })
@@ -129,16 +131,66 @@
                     data.unshift({"id": "", "text": "全部"});
                 }
                 baseOpt.data = data;
-                if (backfun && data) {
-                    backfun(data);
-                }
                 if (settings) {
                     $.extend(true, settings, baseOpt);
                     _this.html("");
-                    return _this.select2(settings);
+                    _this.select2(settings);
                 } else {
                     _this.html("");
-                    return _this.select2(baseOpt);
+                    _this.select2(baseOpt);
+                }
+                if (backfun && data) {
+                    backfun(data);
+                }
+            }
+        })
+    }
+    jQuery.fn.loadUnitSelect = function (building, settings, backfun) {
+        var baseOpt = {
+            language: "zh-CN"
+        }
+        var _this = $(this)
+        $.ajax({
+            url: '/rest/selectUnitByBuilding/' + building + '.action',
+            dataType: 'json',
+            type: 'post',
+            success: function (data) {
+                baseOpt.data = data;
+                if (settings) {
+                    $.extend(true, settings, baseOpt);
+                    _this.html("");
+                    _this.select2(settings);
+                } else {
+                    _this.html("");
+                    _this.select2(baseOpt);
+                }
+                if (backfun && data) {
+                    backfun(data);
+                }
+            }
+        })
+    }
+    jQuery.fn.loadFloorSelect = function (unit, settings, backfun) {
+        var baseOpt = {
+            language: "zh-CN"
+        }
+        var _this = $(this)
+        $.ajax({
+            url: '/rest/selectFloorByUnit/' + unit + '.action',
+            dataType: 'json',
+            type: 'post',
+            success: function (data) {
+                baseOpt.data = data;
+                if (settings) {
+                    $.extend(true, settings, baseOpt);
+                    _this.html("");
+                    _this.select2(settings);
+                } else {
+                    _this.html("");
+                    _this.select2(baseOpt);
+                }
+                if (backfun && data) {
+                    backfun(data);
                 }
             }
         })

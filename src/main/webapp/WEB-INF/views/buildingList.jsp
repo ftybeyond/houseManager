@@ -154,7 +154,7 @@
                 <div class="form-group">
                     <label class="control-label col-md-3 col-sm-3 col-xs-3">有无地下室</label>
                     <div class="col-md-9 col-sm-9 col-xs-9">
-                        <select id="hasUndergroundSelect" name="hasUnderground" class="form-control"
+                        <select id="hasUndergroundSelect" name="street" class="form-control"
                                 style="width:100%;"></select>
                     </div>
                 </div>

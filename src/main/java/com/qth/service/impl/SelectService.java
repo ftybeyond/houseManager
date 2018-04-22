@@ -43,6 +43,24 @@ public class SelectService implements ISelectService {
     }
 
     @Override
+    public List<Select2> getUnitDataByBuilding(Integer building) {
+        if (building == null || building == 0) {
+            return baseMapper.getUnit();
+        } else {
+            return baseMapper.getUnitByBuilding(building);
+        }
+    }
+
+    @Override
+    public List<Select2> getFloorDataByUnit(Integer unit) {
+        if (unit == null || unit == 0) {
+            return baseMapper.getFloor();
+        } else {
+            return baseMapper.getFloorByUnit(unit);
+        }
+    }
+
+    @Override
     public List<Select2> getConfigSelect(String type) {
         return baseMapper.getConfigSelect(type);
     }

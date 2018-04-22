@@ -15,6 +15,10 @@ public interface ISelectService {
 
     public List<Select2> getBuildingDataByResidentialArea(Integer residentialArea);
 
+    public List<Select2> getUnitDataByBuilding(Integer building);
+
+    public List<Select2> getFloorDataByUnit(Integer unit);
+
     public List<Select2> getConfigSelect(String type);
 
 }

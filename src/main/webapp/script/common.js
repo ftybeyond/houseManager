@@ -42,7 +42,16 @@ define(["dataTables-bs"], function () {
 
         //添加按钮时间
         $("#" + baseConfig.addBtn).on("click", function () {
-            popWin(1);
+            if (typeof(addBtnBefore) == "function") {
+                    if (addBtnBefore()){
+                    popWin(1);
+                }
+            } else {
+                popWin(1);
+            }
+            if (typeof(addBtnAfter) == "function") {
+                addBtnAfter();
+            }
         })
 
         table.on("draw", function () {
@@ -104,7 +113,7 @@ define(["dataTables-bs"], function () {
                 if($("#" + baseConfig.infoFrom + " input[name='" + key + "']").size()>0){
                     $("#" + baseConfig.infoFrom + " input[name='" + key + "']").val(handleObj[key]);
                 }else if($("#" + baseConfig.infoFrom + " select[name='" + key + "']").size()>0){
-                    $("#" + baseConfig.infoFrom + " select[name='" + key + "']").select2('val',''+handleObj[key]);
+                    $("#" + baseConfig.infoFrom + " select[name='" + key + "']").val(handleObj[key]).change();
                 }else{
                     //..陆续补充
                 }
@@ -176,6 +185,9 @@ define(["dataTables-bs"], function () {
                         //同步表单
                         obj2Form()
                         popWin(2);
+                        if (typeof(editRecordAfter) == "function") {
+                            editRecordAfter();
+                        }
                     } else {
                         layer.alert(rsp.description, {closeBtn: 0})
                     }

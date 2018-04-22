@@ -1,6 +1,8 @@
 package com.qth.dao;
 
 import com.qth.model.House;
+import com.qth.model.Unit;
+
 import java.util.List;
 
 public interface HouseMapper {
@@ -13,4 +15,8 @@ public interface HouseMapper {
     List<House> selectAll();
 
     int updateByPrimaryKey(House record);
+
+    List<Unit> selectDataTable(House entity);
+
+    int selectDataTableCount(House entity);
 }

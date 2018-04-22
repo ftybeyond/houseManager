@@ -31,9 +31,25 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select b.id, b.name, b.residential_area, b.units, b.has_elevator, b.has_underground
-    from building b
-    where id = #{id,jdbcType=INTEGER}
+    SELECT
+    b.id,
+    b.name,
+    b.residential_area,
+    r.name AS residentialAreaName,
+    b.units,
+    b.has_elevator,
+    p.type_name AS hasElevatorName,
+    b.has_underground,
+    p2.type_name AS hasUndergroundName
+    FROM
+    building b
+    LEFT JOIN residential_area r ON b.residential_area = r.id
+    LEFT JOIN param_config p ON b.has_elevator = p.type_id
+    LEFT JOIN param_config p2 ON b.has_underground = p2.type_id
+    WHERE
+    p.type = 'hasornot'
+    AND p2.type = 'hasornot'
+    where b.id = #{id,jdbcType=INTEGER}
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
     select id, name, residential_area, units, has_elevator, has_underground

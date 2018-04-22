@@ -39,12 +39,123 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select id, name, unit, floor, code, area, has_elevator, nature, type
-    from house
-    where id = #{id,jdbcType=INTEGER}
+    SELECT
+    h.id,
+    h.`code`,
+    rbu.residentialArea,
+    rbu.residentialAreaName,
+    rbu.building,
+    rbu.buildingName,
+    rbu.unit,
+    rbu.unitName,
+    h.floor,
+    h.`name`,
+    h.area,
+    h.has_elevator,
+    h.nature,
+    h.type
+    FROM
+    house h
+    INNER JOIN (
+    SELECT
+    r.id AS residentialArea,
+    r.`name` AS residentialAreaName,
+    b.id AS building,
+    b.`name` AS buildingName,
+    u.id AS unit,
+    u.`name` AS unitName
+    FROM
+    residential_area r,
+    building b,
+    unit u
+    WHERE
+    r.id = b.residential_area
+    AND b.id = u.building
+    ) rbu ON h.unit = rbu.unit
+    where h.id = #{id,jdbcType=INTEGER}
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
     select id, name, unit, floor, code, area, has_elevator, nature, type
     from house
+  </select>
+  <select id="selectDataTable" resultMap="BaseResultMap" parameterType="com.qth.model.House">
+    SELECT
+    h.id,
+    h.`code`,
+    rbu.residentialArea,
+    rbu.residentialAreaName,
+    rbu.building,
+    rbu.buildingName,
+    rbu.unit,
+    rbu.unitName,
+    h.floor,
+    h.`name`,
+    h.area,
+    h.has_elevator,
+    p.type_name AS hasElevatorName,
+    h.nature,
+    p2.type_name AS natureName,
+    h.type,
+    p3.type_name AS typeName
+    FROM
+    house h
+    INNER JOIN (
+    SELECT
+    r.id AS residentialArea,
+    r.`name` AS residentialAreaName,
+    b.id AS building,
+    b.`name` AS buildingName,
+    u.id AS unit,
+    u.`name` AS unitName
+    FROM
+    residential_area r,
+    building b,
+    unit u
+    WHERE
+    r.id = b.residential_area
+    AND b.id = u.building
+    ) rbu ON h.unit = rbu.unit
+    LEFT JOIN param_config p ON h.has_elevator = p.type_id
+    LEFT JOIN param_config p2 ON h.nature = p2.type_id
+    LEFT JOIN param_config p3 ON h.type = p2.type_id
+    WHERE
+    p.type = 'hasornot'
+    AND p2.type = 'house.nature'
+    AND p3.type = 'house.type'
+    <if test="code!=null">
+      and h.code=#{code,jdbcType=VARCHAR}
+    </if>
+    limit #{start} ,#{length}
+  </select>
+  <select id="selectDataTableCount" resultType="int" parameterType="com.qth.model.House">
+    select count(*)
+    FROM
+    house h
+    INNER JOIN (
+    SELECT
+    r.id AS residentialArea,
+    r.`name` AS residentialAreaName,
+    b.id AS building,
+    b.`name` AS buildingName,
+    u.id AS unit,
+    u.`name` AS unitName
+    FROM
+    residential_area r,
+    building b,
+    unit u
+    WHERE
+    r.id = b.residential_area
+    AND b.id = u.building
+    ) rbu ON h.unit = rbu.unit
+    LEFT JOIN param_config p ON h.has_elevator = p.type_id
+    LEFT JOIN param_config p2 ON h.nature = p2.type_id
+    LEFT JOIN param_config p3 ON h.type = p2.type_id
+    WHERE
+    p.type = 'hasornot'
+    AND p2.type = 'house.nature'
+    AND p3.type = 'house.type'
+    <if test="code!=null">
+      and h.code=#{code,jdbcType=VARCHAR}
+    </if>
   </select>
 </mapper>

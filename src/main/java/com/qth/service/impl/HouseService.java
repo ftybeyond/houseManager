@@ -2,6 +2,8 @@ package com.qth.service.impl;
 
 import com.qth.dao.HouseMapper;
 import com.qth.model.House;
+import com.qth.model.Unit;
+import com.qth.model.common.DataTableRspWrapper;
 import com.qth.service.IHouseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,17 @@ public class HouseService extends BaseService<House> implements IHouseService{
 
     @Autowired
     HouseMapper houseMapper;
+
+    @Override
+    public DataTableRspWrapper<House> selectDataTable2Rsp(House house) {
+        //声明datatable应答包装类
+        DataTableRspWrapper rspWrapper = new DataTableRspWrapper();
+        //设置分页信息，总条数
+        rspWrapper.setRecordsTotal(houseMapper.selectDataTableCount(house));
+        //设置数据集
+        rspWrapper.setData(houseMapper.selectDataTable(house));
+        return rspWrapper;
+    }
 
     @Override
     public List<House> selectAll() {

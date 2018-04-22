@@ -24,7 +24,7 @@ CREATE TABLE `house` (
   `name` varchar(255) DEFAULT NULL COMMENT '房号',
   `unit` int(11) DEFAULT NULL COMMENT '单元',
   `floor` varchar(255) DEFAULT NULL COMMENT '层号',
-  `code` varchar(255) DEFAULT NULL COMMENT '产业代码，小区编号+楼栋编号+单元编号+层号+房号 唯一',
+  `code` varchar(255) DEFAULT NULL COMMENT '产业代码，小区id+楼栋name+单元name+层号name+房号name 唯一',
   `area` decimal(11,2) DEFAULT NULL COMMENT '面积',
   `has_elevator` int(1) DEFAULT NULL COMMENT '电梯标志,有1无0',
   `nature` int(10) DEFAULT NULL COMMENT '房屋性质 商品房、已购公用住房、旧有已购住房、旧有住房',
