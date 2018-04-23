@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qth.dao.AccountLogMapper">
+  <resultMap id="BaseResultMap" type="com.qth.model.AccountLog">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="house_code" jdbcType="VARCHAR" property="houseCode" />
+    <result column="house_owner" jdbcType="VARCHAR" property="houseOwner" />
+    <result column="balance" jdbcType="DECIMAL" property="balance" />
+    <result column="trade_money" jdbcType="DECIMAL" property="tradeMoney" />
+    <result column="trade_time" jdbcType="TIMESTAMP" property="tradeTime" />
+    <result column="trade_type" jdbcType="INTEGER" property="tradeType" />
+    <result column="handler" jdbcType="VARCHAR" property="handler" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from account_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.qth.model.AccountLog">
+    insert into account_log (id, house_code, house_owner, 
+      balance, trade_money, trade_time, 
+      trade_type, handler)
+    values (#{id,jdbcType=INTEGER}, #{houseCode,jdbcType=VARCHAR}, #{houseOwner,jdbcType=VARCHAR}, 
+      #{balance,jdbcType=DECIMAL}, #{tradeMoney,jdbcType=DECIMAL}, #{tradeTime,jdbcType=TIMESTAMP}, 
+      #{tradeType,jdbcType=INTEGER}, #{handler,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.qth.model.AccountLog">
+    update account_log
+    set house_code = #{houseCode,jdbcType=VARCHAR},
+      house_owner = #{houseOwner,jdbcType=VARCHAR},
+      balance = #{balance,jdbcType=DECIMAL},
+      trade_money = #{tradeMoney,jdbcType=DECIMAL},
+      trade_time = #{tradeTime,jdbcType=TIMESTAMP},
+      trade_type = #{tradeType,jdbcType=INTEGER},
+      handler = #{handler,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, house_code, house_owner, balance, trade_money, trade_time, trade_type, 
+    handler
+    from account_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, house_code, house_owner, balance, trade_money, trade_time, trade_type, 
+    handler
+    from account_log
+  </select>
+</mapper>

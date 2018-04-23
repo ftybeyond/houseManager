@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qth.dao.InvoiceLogMapper">
+  <resultMap id="BaseResultMap" type="com.qth.model.InvoiceLog">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="invoice_num" jdbcType="VARCHAR" property="invoiceNum" />
+    <result column="event_type" jdbcType="INTEGER" property="eventType" />
+    <result column="stamp" jdbcType="TIMESTAMP" property="stamp" />
+    <result column="bill" jdbcType="INTEGER" property="bill" />
+    <result column="handler" jdbcType="VARCHAR" property="handler" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from invoice_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.qth.model.InvoiceLog">
+    insert into invoice_log (id, invoice_num, event_type, 
+      stamp, bill, handler, 
+      remark)
+    values (#{id,jdbcType=INTEGER}, #{invoiceNum,jdbcType=VARCHAR}, #{eventType,jdbcType=INTEGER}, 
+      #{stamp,jdbcType=TIMESTAMP}, #{bill,jdbcType=INTEGER}, #{handler,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.qth.model.InvoiceLog">
+    update invoice_log
+    set invoice_num = #{invoiceNum,jdbcType=VARCHAR},
+      event_type = #{eventType,jdbcType=INTEGER},
+      stamp = #{stamp,jdbcType=TIMESTAMP},
+      bill = #{bill,jdbcType=INTEGER},
+      handler = #{handler,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, invoice_num, event_type, stamp, bill, handler, remark
+    from invoice_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, invoice_num, event_type, stamp, bill, handler, remark
+    from invoice_log
+  </select>
+</mapper>

@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50721
 File Encoding         : 65001
 
-Date: 2018-04-23 11:25:44
+Date: 2018-04-23 18:25:02
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -31,6 +31,7 @@ CREATE TABLE `repair_record` (
   `money_sum` decimal(11,2) DEFAULT NULL,
   `share_type` int(11) DEFAULT NULL COMMENT '分摊方式 1：按面积 2 按价格',
   `handler` varchar(50) DEFAULT NULL,
+  `state` int(255) DEFAULT NULL COMMENT '登帐状态 0 未登账，1 已登帐',
   `stamp` datetime DEFAULT NULL COMMENT '受理时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='维修记录';
