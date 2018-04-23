@@ -3,7 +3,7 @@
 <mapper namespace="com.qth.dao.RepairRecordMapper">
   <resultMap id="BaseResultMap" type="com.qth.model.RepairRecord">
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="resideential_area" jdbcType="INTEGER" property="resideentialArea" />
+    <result column="residential_area" jdbcType="INTEGER" property="residentialArea" />
     <result column="address" jdbcType="VARCHAR" property="address" />
     <result column="developer" jdbcType="VARCHAR" property="developer" />
     <result column="property_company" jdbcType="VARCHAR" property="propertyCompany" />
@@ -21,12 +21,12 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.qth.model.RepairRecord">
-    insert into repair_record (id, resideential_area, address, 
+    insert into repair_record (id, residential_area, address, 
       developer, property_company, property_company_tel, 
       owners, owners_tel, money_sum, 
       share_type, handler, state, 
       stamp)
-    values (#{id,jdbcType=INTEGER}, #{resideentialArea,jdbcType=INTEGER}, #{address,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{residentialArea,jdbcType=INTEGER}, #{address,jdbcType=VARCHAR}, 
       #{developer,jdbcType=VARCHAR}, #{propertyCompany,jdbcType=VARCHAR}, #{propertyCompanyTel,jdbcType=VARCHAR}, 
       #{owners,jdbcType=VARCHAR}, #{ownersTel,jdbcType=VARCHAR}, #{moneySum,jdbcType=DECIMAL}, 
       #{shareType,jdbcType=INTEGER}, #{handler,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER}, 
@@ -34,7 +34,7 @@
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.qth.model.RepairRecord">
     update repair_record
-    set resideential_area = #{resideentialArea,jdbcType=INTEGER},
+    set residential_area = #{residentialArea,jdbcType=INTEGER},
       address = #{address,jdbcType=VARCHAR},
       developer = #{developer,jdbcType=VARCHAR},
       property_company = #{propertyCompany,jdbcType=VARCHAR},
@@ -49,13 +49,13 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select id, resideential_area, address, developer, property_company, property_company_tel, 
+    select id, residential_area, address, developer, property_company, property_company_tel, 
     owners, owners_tel, money_sum, share_type, handler, state, stamp
     from repair_record
     where id = #{id,jdbcType=INTEGER}
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
-    select id, resideential_area, address, developer, property_company, property_company_tel, 
+    select id, residential_area, address, developer, property_company, property_company_tel, 
     owners, owners_tel, money_sum, share_type, handler, state, stamp
     from repair_record
   </select>

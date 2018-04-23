@@ -21,7 +21,7 @@ SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS `repair_record`;
 CREATE TABLE `repair_record` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `resideential_area` int(255) DEFAULT NULL COMMENT '小区名称',
+  `residential_area` int(255) DEFAULT NULL COMMENT '小区标识',
   `address` varchar(255) DEFAULT NULL,
   `developer` varchar(255) DEFAULT NULL COMMENT '开发商',
   `property_company` varchar(50) DEFAULT NULL COMMENT '物业公司',

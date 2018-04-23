@@ -7,7 +7,7 @@ import java.util.Date;
 public class RepairRecord extends DataTableReqWrapper {
     private Integer id;
 
-    private Integer resideentialArea;
+    private Integer residentialArea;
 
     private String address;
 
@@ -39,12 +39,12 @@ public class RepairRecord extends DataTableReqWrapper {
         this.id = id;
     }
 
-    public Integer getResideentialArea() {
-        return resideentialArea;
+    public Integer getResidentialArea() {
+        return residentialArea;
     }
 
-    public void setResideentialArea(Integer resideentialArea) {
-        this.resideentialArea = resideentialArea;
+    public void setResidentialArea(Integer residentialArea) {
+        this.residentialArea = residentialArea;
     }
 
     public String getAddress() {
