@@ -123,7 +123,25 @@
     AND p2.type = 'house.nature'
     AND p3.type = 'house.type'
     <if test="code!=null">
-      and h.code=#{code,jdbcType=VARCHAR}
+      and h.code LIKE '%${code}%'
+    </if>
+    <if test="residentialArea!=null">
+      and rbu.residentialArea=#{residentialArea,jdbcType=VARCHAR}
+    </if>
+    <if test="building!=null">
+      and rbu.building=#{building,jdbcType=VARCHAR}
+    </if>
+    <if test="unit!=null">
+      and rbu.unit=#{unit,jdbcType=VARCHAR}
+    </if>
+    <if test="floor!=null and floor!=''">
+      and h.floor=#{floor,jdbcType=VARCHAR}
+    </if>
+    <if test="name!=null and name!=''">
+      and h.name=#{name,jdbcType=VARCHAR}
+    </if>
+    <if test="hasElevator!=null and hasElevator!=''">
+      and h.has_elevator=#{hasElevator,jdbcType=VARCHAR}
     </if>
     limit #{start} ,#{length}
   </select>
@@ -155,7 +173,25 @@
     AND p2.type = 'house.nature'
     AND p3.type = 'house.type'
     <if test="code!=null">
-      and h.code=#{code,jdbcType=VARCHAR}
+      and h.code LIKE '%${code}%'
+    </if>
+    <if test="residentialArea!=null">
+      and rbu.residentialArea=#{residentialArea,jdbcType=VARCHAR}
+    </if>
+    <if test="building!=null">
+      and rbu.building=#{building,jdbcType=VARCHAR}
+    </if>
+    <if test="unit!=null">
+      and rbu.unit=#{unit,jdbcType=VARCHAR}
+    </if>
+    <if test="floor!=null and floor!=''">
+      and h.floor=#{floor,jdbcType=VARCHAR}
+    </if>
+    <if test="name!=null and name!=''">
+      and h.name=#{name,jdbcType=VARCHAR}
+    </if>
+    <if test="hasElevator!=null and hasElevator!=''">
+      and h.has_elevator=#{hasElevator,jdbcType=VARCHAR}
     </if>
   </select>
 </mapper>

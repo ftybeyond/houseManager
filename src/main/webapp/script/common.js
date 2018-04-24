@@ -113,7 +113,7 @@ define(["dataTables-bs"], function () {
                 if($("#" + baseConfig.infoFrom + " input[name='" + key + "']").size()>0){
                     $("#" + baseConfig.infoFrom + " input[name='" + key + "']").val(handleObj[key]);
                 }else if($("#" + baseConfig.infoFrom + " select[name='" + key + "']").size()>0){
-                    $("#" + baseConfig.infoFrom + " select[name='" + key + "']").val(handleObj[key]).change();
+                    $("#" + baseConfig.infoFrom + " select[name='" + key + "']").val(handleObj[key]);
                 }else{
                     //..陆续补充
                 }

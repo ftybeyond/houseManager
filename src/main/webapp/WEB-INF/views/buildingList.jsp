@@ -40,7 +40,7 @@
                         $("#residentialAreaSelect").loadResidentialAreaSelect(this.value);
                     });
 
-                    $("#queryResidentialAreaSelect").loadResidentialAreaSelect(0);
+                    $("#queryResidentialAreaSelect").loadResidentialAreaSelect("", null, null, true);
 
                     var config = {
                         popArea: ['400px', '500px'],

@@ -16,7 +16,28 @@
     <script type="text/javascript">
         require(["common", "mySelect", "select2"], function (main) {
             $(function () {
-                main.loadDeps(["hasornot.json", "HouseNature.json", "HouseType.json"], function (data) {
+                main.loadDeps(["hasornot.json", "hasornotWithall.json", "HouseNature.json", "HouseType.json"], function (data) {
+                    $("#queryResidentialAreaSelect").genSelectWithAll('residential_area');
+                    $("#queryResidentialAreaSelect").change(function () {
+                        $("#queryBuildingSelect").loadBuildingSelect(this.value, null, null, true);
+                    });
+                    $("#queryBuildingSelect").change(function () {
+                        $("#queryUnitSelect").loadUnitSelect(this.value, null, null, true);
+                    });
+                    $("#queryUnitSelect").change(function () {
+                        $("#queryFloorSelect").loadFloorSelect(this.value, null, null, true);
+                        $("#queryNameSelect").loadHouseNameSelect($("#queryUnitSelect").val(), $("#queryFloorSelect").val(), null, null, true);
+                    });
+                    $("#queryFloorSelect").change(function () {
+                        $("#queryNameSelect").loadHouseNameSelect($("#queryUnitSelect").val(), $("#queryFloorSelect").val(), null, null, true);
+                    });
+
+                    $("#queryResidentialAreaSelect").change();
+                    $("#queryBuildingSelect").change();
+                    $("#queryUnitSelect").change();
+                    $("#queryFloorSelect").change();
+
+
                     $("#hasElevatorSelect").select2({data: data["hasornot.json"]});
                     $("#natureSelect").select2({data: data["HouseNature.json"]});
                     $("#typeSelect").select2({data: data["HouseType.json"]});
@@ -125,24 +146,45 @@
 <!--查询表单-->
 <div class="container" style="padding-left: 0px;">
     <form id="searchForm" class="form-horizontal" role="form">
-        <%--<div class="col-xs-5 form-group">--%>
-        <%--<label class="control-label col-md-3 col-sm-3 col-xs-3">小区</label>--%>
-        <%--<div class="col-md-9 col-sm-9 col-xs-9">--%>
-        <%--<select id="queryResidentialAreaSelect" name="residentialArea" class="form-control"--%>
-        <%--style="width:100%;"></select>--%>
-        <%--</div>--%>
-        <%--</div>--%>
-        <%--<div class="col-xs-5 form-group">--%>
-        <%--<label class="control-label col-xs-3">楼栋</label>--%>
-        <%--<div class="col-md-9 col-sm-9 col-xs-9">--%>
-        <%--<select id="queryBuildingSelect" name="building" class="form-control"--%>
-        <%--style="width:100%;"></select>--%>
-        <%--</div>--%>
-        <%--</div>--%>
         <div class="col-xs-5 form-group">
             <label class="control-label col-xs-3">产业代码</label>
             <div class="col-xs-9">
-                <input type="text" class="form-control" placeholder="要查询的产业代码" name="queryCode"/>
+                <input type="text" class="form-control" placeholder="要查询的产业代码" name="code"/>
+            </div>
+        </div>
+        <div class="col-xs-5 form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-3">小区</label>
+            <div class="col-md-9 col-sm-9 col-xs-9">
+                <select id="queryResidentialAreaSelect" name="residentialArea" class="form-control"
+                        style="width:100%;"></select>
+            </div>
+        </div>
+        <div class="col-xs-5 form-group">
+            <label class="control-label col-xs-3">楼栋</label>
+            <div class="col-md-9 col-sm-9 col-xs-9">
+                <select id="queryBuildingSelect" name="building" class="form-control"
+                        style="width:100%;"></select>
+            </div>
+        </div>
+        <div class="col-xs-5 form-group">
+            <label class="control-label col-xs-3">单元</label>
+            <div class="col-md-9 col-sm-9 col-xs-9">
+                <select id="queryUnitSelect" name="unit" class="form-control"
+                        style="width:100%;"></select>
+            </div>
+        </div>
+        <div class="col-xs-5 form-group">
+            <label class="control-label col-xs-3">楼层</label>
+            <div class="col-md-9 col-sm-9 col-xs-9">
+                <select id="queryFloorSelect" name="floor" class="form-control"
+                        style="width:100%;"></select>
+            </div>
+        </div>
+        <div class="col-xs-5 form-group">
+            <label class="control-label col-xs-3">房号</label>
+            <div class="col-md-9 col-sm-9 col-xs-9">
+                <select id="queryNameSelect" name="name" class="form-control"
+                        style="width:100%;"></select>
             </div>
         </div>
         <div class="col-xs-2 form-group">
