@@ -241,7 +241,7 @@
                 if (withall != null && withall == true) {
                     data.unshift({"id": "", "text": "全部"});
                 }
-                console.log(data);
+                // console.log(data);
                 baseOpt.data = data;
                 if (settings) {
                     $.extend(true, settings, baseOpt);

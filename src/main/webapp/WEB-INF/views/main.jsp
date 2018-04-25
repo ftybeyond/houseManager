@@ -81,17 +81,17 @@
                                     <li><a href="form_buttons.html">批量导入</a></li>
                                 </ul>
                             </li>
-                            <li><a><i class="fa fa-desktop"></i> UI Elements <span class="fa fa-chevron-down"></span></a>
+                            <li><a><i class="fa fa-desktop"></i> 基金收缴管理 <span class="fa fa-chevron-down"></span></a>
                                 <ul class="nav child_menu">
-                                    <li><a href="general_elements.html">General Elements</a></li>
-                                    <li><a href="media_gallery.html">Media Gallery</a></li>
-                                    <li><a href="typography.html">Typography</a></li>
-                                    <li><a href="icons.html">Icons</a></li>
-                                    <li><a href="glyphicons.html">Glyphicons</a></li>
-                                    <li><a href="widgets.html">Widgets</a></li>
-                                    <li><a href="invoice.html">Invoice</a></li>
-                                    <li><a href="inbox.html">Inbox</a></li>
-                                    <li><a href="calendar.html">Calendar</a></li>
+                                    <li><a target="main_frame" href="/page/houseOwnerAddList.action">业主增加</a></li>
+                                    <li><a target="main_frame" href="/page/houseOwnerList.action">业主变更</a></li>
+                                    <li><a target="main_frame" href="/page/.action">业主收缴</a></li>
+                                    <li><a target="main_frame" href="/page/.action">业主补缴</a></li>
+                                    <li><a target="main_frame" href="/page/.action">收缴退回</a></li>
+                                    <li><a target="main_frame" href="/page/.action">收缴登账</a></li>
+                                    <li><a target="main_frame" href="/page/.action">基金返还</a></li>
+                                    <li><a target="main_frame" href="/page/.action">基金计息</a></li>
+                                    <li><a target="main_frame" href="/page/.action">计息登账</a></li>
                                 </ul>
                             </li>
                             <li><a><i class="fa fa-table"></i> Tables <span class="fa fa-chevron-down"></span></a>

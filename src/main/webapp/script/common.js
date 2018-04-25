@@ -43,7 +43,7 @@ define(["dataTables-bs"], function () {
         //添加按钮时间
         $("#" + baseConfig.addBtn).on("click", function () {
             if (typeof(addBtnBefore) == "function") {
-                    if (addBtnBefore()){
+                if (addBtnBefore()) {
                     popWin(1);
                 }
             } else {
@@ -58,14 +58,16 @@ define(["dataTables-bs"], function () {
             $("#" + baseConfig.tableId + " td").on("click", "button", function () {
                 var handle = $(this).attr("data-handle");
                 var index = $(this).attr("data-index");
+                var handleIndex = $(this).attr("data-handle-index");
+
                 if (handle == "edit") {
-                    selectRegionById(index);
+                    selectOneById(index);
                 } else if (handle == "del") {
-                    deleteRegion(index)
+                    deleteOneById(index)
                 } else if (handle == "custom") {
-                    $.each(baseConfig.customBtns, function (index, item) {
-                        if (index == $(this).attr("data-handle-index")) {
-                            item.callback(index)
+                    $.each(baseConfig.customBtns, function (customIndex, item) {
+                        if (customIndex == handleIndex) {
+                            item.callback(index);
                         }
                     })
                 }
@@ -80,7 +82,7 @@ define(["dataTables-bs"], function () {
             return baseConfig.baseUrl + baseConfig.domain.name + "/" + handle + baseConfig.suffix;
         }
 
-        function deleteRegion(id) {
+        function deleteOneById(id) {
             layer.confirm('确定删除数据？', {icon: 3, title: '提示'}, function (index) {
                 //删除请求
                 $.ajax({
@@ -110,11 +112,12 @@ define(["dataTables-bs"], function () {
          */
         function obj2Form() {
             for (key in handleObj) {
-                if($("#" + baseConfig.infoFrom + " input[name='" + key + "']").size()>0){
+                if ($("#" + baseConfig.infoFrom + " input[name='" + key + "']").size() > 0) {
                     $("#" + baseConfig.infoFrom + " input[name='" + key + "']").val(handleObj[key]);
-                }else if($("#" + baseConfig.infoFrom + " select[name='" + key + "']").size()>0){
+                } else if ($("#" + baseConfig.infoFrom + " select[name='" + key + "']").size() > 0) {
                     $("#" + baseConfig.infoFrom + " select[name='" + key + "']").val(handleObj[key]);
-                }else{
+                    $("#" + baseConfig.infoFrom + " select[name='" + key + "']").change();
+                } else {
                     //..陆续补充
                 }
             }
@@ -162,7 +165,7 @@ define(["dataTables-bs"], function () {
                         }
                         if (baseConfig.customBtns.length > 0) {
                             $.each(baseConfig.customBtns, function (index, item) {
-                                var btnCustom = ' <button type="button"  data-handle="custom" data-handle-index="' + index + '" data-index="' + full.id + '"  class="btn btn-primary btn-xs">item.label</button> ';
+                                var btnCustom = ' <button type="button"  data-handle="custom" data-handle-index="' + index + '" data-index="' + full.id + '"  class="btn btn-primary btn-xs">' + item.label + '</button> ';
                                 btns += btnCustom;
                             })
                         }
@@ -173,7 +176,7 @@ define(["dataTables-bs"], function () {
             return columns;
         }
 
-        function selectRegionById(id) {
+        function selectOneById(id) {
             $.ajax({
                 url: getUrl("one"),
                 type: 'post',
@@ -262,6 +265,7 @@ define(["dataTables-bs"], function () {
                 }
             });
         }
+
         return table;
     }
 
@@ -269,7 +273,7 @@ define(["dataTables-bs"], function () {
         return handleObj;
     }
 
-    var loadedDatas={};
+    var loadedDatas = {};
     var taskComplated = 0;
     var waitTask;
     /**
@@ -277,8 +281,8 @@ define(["dataTables-bs"], function () {
      * @param deps eg("CompanyNature","region","/rest/getStreetByRegion.action")
      * @callback 依赖数据加载完毕回调
      */
-    var loadDeps = function (deps,callback) {
-        if(deps && (deps instanceof Array)){
+    var loadDeps = function (deps, callback) {
+        if (deps && (deps instanceof Array)) {
             var url;
             $.each(deps, function (index, item) {
                 if (item.indexOf(".json") > 0) {
@@ -299,14 +303,14 @@ define(["dataTables-bs"], function () {
                 })
             })
 
-            waitTask = setInterval(waitForSynch,500)
+            waitTask = setInterval(waitForSynch, 500)
         }
 
         function waitForSynch() {
-            console.log("等待异步任务" + deps.length +"个，当前完成" +taskComplated + "个");
-            if(taskComplated == deps.length){
+            console.log("等待异步任务" + deps.length + "个，当前完成" + taskComplated + "个");
+            if (taskComplated == deps.length) {
                 taskComplated = 0;
-                if(callback){
+                if (callback) {
                     callback(loadedDatas)
                 }
                 clearInterval(waitTask);
@@ -314,10 +318,10 @@ define(["dataTables-bs"], function () {
         }
     }
 
-    var findArrayValue = function(id ,arr){
+    var findArrayValue = function (id, arr) {
         var result;
-        $.each(arr,function(index,item){
-            if(item.id==id){
+        $.each(arr, function (index, item) {
+            if (item.id == id) {
                 result = item;
                 return false;
             }
@@ -327,8 +331,8 @@ define(["dataTables-bs"], function () {
 
     return {
         init: init,
-        loadDeps:loadDeps,
-        getHandleObj:getHandleObj,
-        findArrayValue:findArrayValue
+        loadDeps: loadDeps,
+        getHandleObj: getHandleObj,
+        findArrayValue: findArrayValue
     }
 })

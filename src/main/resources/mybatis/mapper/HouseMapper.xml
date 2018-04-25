@@ -11,6 +11,11 @@
     <result column="has_elevator" jdbcType="INTEGER" property="hasElevator" />
     <result column="nature" jdbcType="INTEGER" property="nature" />
     <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="building_rise" jdbcType="INTEGER" property="buildingRise" />
+    <result column="unit_price" jdbcType="DECIMAL" property="unitPrice" />
+    <result column="owner_name" jdbcType="VARCHAR" property="ownerName" />
+    <result column="owner_psptid" jdbcType="INTEGER" property="ownerPsptid" />
+    <result column="account_balance" jdbcType="DECIMAL" property="accountBalance" />
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from house
@@ -19,12 +24,14 @@
   <insert id="insert" parameterType="com.qth.model.House">
     insert into house (id, name, unit, 
       floor, code, area, 
-      has_elevator, nature, type
-      )
-    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{unit,jdbcType=INTEGER}, 
-      #{floor,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, #{area,jdbcType=DECIMAL}, 
-      #{hasElevator,jdbcType=INTEGER}, #{nature,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}
-      )
+      has_elevator, nature, type,
+      building_rise, unit_price, owner_name,
+      owner_psptid, account_balance)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{unit,jdbcType=INTEGER},
+      #{floor,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, #{area,jdbcType=DECIMAL},
+      #{hasElevator,jdbcType=INTEGER}, #{nature,jdbcType=INTEGER}, #{type,jdbcType=INTEGER},
+      #{buildingRise,jdbcType=INTEGER}, #{unitPrice,jdbcType=DECIMAL}, #{ownerName,jdbcType=INTEGER},
+      #{ownerPsptid,jdbcType=INTEGER}, #{accountBalance,jdbcType=DECIMAL})
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.qth.model.House">
     update house
@@ -35,7 +42,12 @@
       area = #{area,jdbcType=DECIMAL},
       has_elevator = #{hasElevator,jdbcType=INTEGER},
       nature = #{nature,jdbcType=INTEGER},
-      type = #{type,jdbcType=INTEGER}
+      type = #{type,jdbcType=INTEGER},
+      building_rise = #{buildingRise,jdbcType=INTEGER},
+      unit_price = #{unitPrice,jdbcType=DECIMAL},
+      owner_name = #{ownerName,jdbcType=INTEGER},
+      owner_psptid = #{ownerPsptid,jdbcType=INTEGER},
+      account_balance = #{accountBalance,jdbcType=DECIMAL}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -53,7 +65,12 @@
     h.area,
     h.has_elevator,
     h.nature,
-    h.type
+    h.type,
+    h.building_rise,
+    h.unit_price,
+    h.owner_name,
+    h.owner_psptid,
+    h.account_balance
     FROM
     house h
     INNER JOIN (
@@ -75,7 +92,8 @@
     where h.id = #{id,jdbcType=INTEGER}
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
-    select id, name, unit, floor, code, area, has_elevator, nature, type
+    select id, name, unit, floor, code, area, has_elevator, nature, type, building_rise,
+    unit_price, owner_name, owner_psptid, account_balance
     from house
   </select>
   <select id="selectDataTable" resultMap="BaseResultMap" parameterType="com.qth.model.House">
@@ -96,7 +114,12 @@
     h.nature,
     p2.type_name AS natureName,
     h.type,
-    p3.type_name AS typeName
+    p3.type_name AS typeName,
+    h.building_rise,
+    h.unit_price,
+    h.owner_name,
+    h.owner_psptid,
+    h.account_balance
     FROM
     house h
     INNER JOIN (
@@ -117,7 +140,7 @@
     ) rbu ON h.unit = rbu.unit
     LEFT JOIN param_config p ON h.has_elevator = p.type_id
     LEFT JOIN param_config p2 ON h.nature = p2.type_id
-    LEFT JOIN param_config p3 ON h.type = p2.type_id
+    LEFT JOIN param_config p3 ON h.type = p3.type_id
     WHERE
     p.type = 'hasornot'
     AND p2.type = 'house.nature'
@@ -167,7 +190,7 @@
     ) rbu ON h.unit = rbu.unit
     LEFT JOIN param_config p ON h.has_elevator = p.type_id
     LEFT JOIN param_config p2 ON h.nature = p2.type_id
-    LEFT JOIN param_config p3 ON h.type = p2.type_id
+    LEFT JOIN param_config p3 ON h.type = p3.type_id
     WHERE
     p.type = 'hasornot'
     AND p2.type = 'house.nature'
