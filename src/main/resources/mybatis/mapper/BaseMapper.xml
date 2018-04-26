@@ -101,12 +101,28 @@
     from unit WHERE building=#{id}
   </select>
   <select id="getFloor" resultMap="Select2Map">
-    select DISTINCT floor
+    select DISTINCT floor as id, floor as name
     from house
   </select>
   <select id="getFloorByUnit" resultMap="Select2Map" parameterType="int">
-    select DISTINCT floor
+    select DISTINCT floor as id, floor as name
     from house WHERE unit=#{id}
+  </select>
+  <select id="getHouseName" resultType="com.qth.model.common.SelectIdstring">
+    select DISTINCT name as id, name as text
+    from house
+  </select>
+  <select id="getHouseNameByUnitFloor" resultType="com.qth.model.common.SelectIdstring" parameterType="com.qth.model.House">
+    select DISTINCT name as id, name as text
+    from house
+    <where>
+    <if test="unit!=null">
+      unit=#{unit,jdbcType=INTEGER}
+    </if>
+    <if test="floor!=null">
+      and floor=#{floor,jdbcType=VARCHAR}
+    </if>
+    </where>
   </select>
   <select id="getConfigSelect" resultMap="Select2Map" parameterType="java.lang.String">
     select type_id as id, type_name as name

@@ -89,7 +89,7 @@
             }
         })
     }
-    jQuery.fn.loadResidentialAreaSelect = function (street, settings, backfun) {
+    jQuery.fn.loadResidentialAreaSelect = function (street, settings, backfun, withall) {
         var baseOpt = {
             language: "zh-CN"
         }
@@ -99,7 +99,7 @@
             dataType: 'json',
             type: 'post',
             success: function (data) {
-                if (street == 0) {
+                if (withall != null && withall == true) {
                     data.unshift({"id": "", "text": "全部"});
                 }
                 baseOpt.data = data;
@@ -117,7 +117,7 @@
             }
         })
     }
-    jQuery.fn.loadBuildingSelect = function (residentialArea, settings, backfun) {
+    jQuery.fn.loadBuildingSelect = function (residentialArea, settings, backfun, withall) {
         var baseOpt = {
             language: "zh-CN"
         }
@@ -127,7 +127,7 @@
             dataType: 'json',
             type: 'post',
             success: function (data) {
-                if (residentialArea == 0) {
+                if (withall != null && withall == true) {
                     data.unshift({"id": "", "text": "全部"});
                 }
                 baseOpt.data = data;
@@ -145,16 +145,17 @@
             }
         })
     }
-    jQuery.fn.loadUnitSelect = function (building, settings, backfun) {
+    jQuery.fn.loadBuildingSelectWithAll = function (residentialArea, settings, backfun) {
         var baseOpt = {
             language: "zh-CN"
         }
         var _this = $(this)
         $.ajax({
-            url: '/rest/selectUnitByBuilding/' + building + '.action',
+            url: '/rest/selectBuildingByResidentialArea/' + residentialArea + '.action',
             dataType: 'json',
             type: 'post',
             success: function (data) {
+                data.unshift({"id": "", "text": "全部"});
                 baseOpt.data = data;
                 if (settings) {
                     $.extend(true, settings, baseOpt);
@@ -170,7 +171,35 @@
             }
         })
     }
-    jQuery.fn.loadFloorSelect = function (unit, settings, backfun) {
+    jQuery.fn.loadUnitSelect = function (building, settings, backfun, withall) {
+        var baseOpt = {
+            language: "zh-CN"
+        }
+        var _this = $(this)
+        $.ajax({
+            url: '/rest/selectUnitByBuilding/' + building + '.action',
+            dataType: 'json',
+            type: 'post',
+            success: function (data) {
+                if (withall != null && withall == true) {
+                    data.unshift({"id": "", "text": "全部"});
+                }
+                baseOpt.data = data;
+                if (settings) {
+                    $.extend(true, settings, baseOpt);
+                    _this.html("");
+                    _this.select2(settings);
+                } else {
+                    _this.html("");
+                    _this.select2(baseOpt);
+                }
+                if (backfun && data) {
+                    backfun(data);
+                }
+            }
+        })
+    }
+    jQuery.fn.loadFloorSelect = function (unit, settings, backfun, withall) {
         var baseOpt = {
             language: "zh-CN"
         }
@@ -180,6 +209,39 @@
             dataType: 'json',
             type: 'post',
             success: function (data) {
+                if (withall != null && withall == true) {
+                    data.unshift({"id": "", "text": "全部"});
+                }
+                baseOpt.data = data;
+                if (settings) {
+                    $.extend(true, settings, baseOpt);
+                    _this.html("");
+                    _this.select2(settings);
+                } else {
+                    _this.html("");
+                    _this.select2(baseOpt);
+                }
+                if (backfun && data) {
+                    backfun(data);
+                }
+            }
+        })
+    }
+    jQuery.fn.loadHouseNameSelect = function (unit, floor, settings, backfun, withall) {
+        var baseOpt = {
+            language: "zh-CN"
+        }
+        var _this = $(this)
+        $.ajax({
+            url: '/rest/selectHouseNameByUnitFloor/get.action',
+            dataType: 'json',
+            data: {unit: unit, floor: floor},
+            type: 'post',
+            success: function (data) {
+                if (withall != null && withall == true) {
+                    data.unshift({"id": "", "text": "全部"});
+                }
+                // console.log(data);
                 baseOpt.data = data;
                 if (settings) {
                     $.extend(true, settings, baseOpt);

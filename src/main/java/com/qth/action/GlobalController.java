@@ -1,7 +1,9 @@
 package com.qth.action;
 
+import com.qth.model.House;
 import com.qth.model.common.CommonRsp;
 import com.qth.model.common.Select2;
+import com.qth.model.common.SelectIdstring;
 import com.qth.service.ISelectService;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -103,6 +106,16 @@ public class GlobalController {
     @ResponseBody
     public List<Select2> getFloorDataByUnit(@PathVariable Integer unit){
         return selectService.getFloorDataByUnit(unit);
+    }
+    /**
+     * 通用select2组件数据请求服务
+     * @param house house
+     * @return
+     */
+    @RequestMapping("/rest/selectHouseNameByUnitFloor/get")
+    @ResponseBody
+    public List<SelectIdstring> getHouseNameByUnitFloor(House house){
+        return selectService.getHouseNameDataByUnitFloor(house);
     }
     /**
      * 通用select2组件数据请求服务

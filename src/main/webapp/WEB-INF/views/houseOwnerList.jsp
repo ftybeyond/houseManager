@@ -7,7 +7,7 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 
-    <title>房屋管理</title>
+    <title>业主变更</title>
 
     <link rel="stylesheet" type="text/css" href="<%=path%>/vendors/datatable/datatables-bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="<%=path%>/vendors/select2/select2.min.css"/>
@@ -94,13 +94,23 @@
                                 {name: 'name', type: 'string', showable: true},
                                 {name: 'area', type: 'string', showable: true},
                                 {name: 'hasElevator', type: 'string', showable: false},
-                                {name: 'hasElevatorName', type: 'string', showable: true},
+                                {name: 'hasElevatorName', type: 'string', showable: false},
                                 {name: 'nature', type: 'string', showable: false},
-                                {name: 'natureName', type: 'string', showable: true},
+                                {name: 'natureName', type: 'string', showable: false},
                                 {name: 'type', type: 'string', showable: false},
-                                {name: 'typeName', type: 'string', showable: true}
+                                {name: 'typeName', type: 'string', showable: false},
+                                {name: 'unitPrice', type: 'string', showable: true},
+                                {name: 'ownerName', type: 'string', showable: true},
                             ]
-                        }
+                        },
+                        editable: false,
+                        deleteable: false,
+                        customBtns: [
+                            {
+                                label: '自定义按钮', callback: function (index) {
+                            }
+                            }
+                        ]
                     }
                     var table = main.init(config);
                 })
@@ -190,9 +200,6 @@
             <div class="col-xs-6">
                 <button id="searchBtn" class="btn btn-primary" type="button">查询</button>
             </div>
-            <div class="col-xs-6">
-                <button id="addBtn" class="btn btn-primary" type="button">新增</button>
-            </div>
         </div>
     </form>
 </div>
@@ -209,9 +216,8 @@
             <th>楼层</th>
             <th>房号</th>
             <th>面积</th>
-            <th>是否有电梯</th>
-            <th>房屋性质</th>
-            <th>住宅类型</th>
+            <th>单价</th>
+            <th>业主姓名</th>
             <th>操作</th>
         </tr>
         </thead>
@@ -233,61 +239,81 @@
                 <div class="form-group">
                     <label class="control-label col-md-3 col-sm-3 col-xs-3">小区</label>
                     <div class="col-md-9 col-sm-9 col-xs-9">
-                        <select id="residentialAreaSelect" name="residentialArea" class="form-control"
+                        <select id="residentialAreaSelect" name="residentialArea" class="form-control" disabled="ture"
                                 style="width:100%;"></select>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label col-md-3 col-sm-3 col-xs-3">楼栋</label>
                     <div class="col-md-9 col-sm-9 col-xs-9">
-                        <select id="buildingSelect" name="building" class="form-control"
+                        <select id="buildingSelect" name="building" class="form-control" disabled="ture"
                                 style="width:100%;"></select>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label col-md-3 col-sm-3 col-xs-3">单元编号</label>
                     <div class="col-md-9 col-sm-9 col-xs-9">
-                        <select id="unitSelect" id="unit" name="unit" class="form-control"
+                        <select id="unitSelect" id="unit" name="unit" class="form-control" disabled="ture"
                                 style="width:100%;"></select>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label col-md-3 col-sm-3 col-xs-3">层号</label>
                     <div class="col-md-9 col-sm-9 col-xs-9">
-                        <input type="text" class="form-control" id="floor" name="floor" placeholder="请输入层号......">
+                        <input type="text" class="form-control" id="floor" name="floor" disabled="ture"
+                               placeholder="请输入层号......">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label col-md-3 col-sm-3 col-xs-3">房号</label>
                     <div class="col-md-9 col-sm-9 col-xs-9">
-                        <input type="text" class="form-control" id="name" name="name" placeholder="请输入房号......">
+                        <input type="text" class="form-control" id="name" name="name" disabled="ture"
+                               placeholder="请输入房号......">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label col-md-3 col-sm-3 col-xs-3">面积</label>
                     <div class="col-md-9 col-sm-9 col-xs-9">
-                        <input type="text" class="form-control" name="area" placeholder="请输入面积......">
+                        <input type="text" class="form-control" name="area" disabled="ture" placeholder="请输入面积......">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label col-md-3 col-sm-3 col-xs-3">是否有电梯</label>
                     <div class="col-md-9 col-sm-9 col-xs-9">
-                        <select id="hasElevatorSelect" name="hasElevator" class="form-control"
+                        <select id="hasElevatorSelect" name="hasElevator" class="form-control" disabled="ture"
                                 style="width:100%;"></select>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label col-md-3 col-sm-3 col-xs-3">房屋性质</label>
                     <div class="col-md-9 col-sm-9 col-xs-9">
-                        <select id="natureSelect" name="nature" class="form-control"
+                        <select id="natureSelect" name="nature" class="form-control" disabled="ture"
                                 style="width:100%;"></select>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label col-md-3 col-sm-3 col-xs-3">住宅类型</label>
                     <div class="col-md-9 col-sm-9 col-xs-9">
-                        <select id="typeSelect" name="type" class="form-control"
+                        <select id="typeSelect" name="type" class="form-control" disabled="ture"
                                 style="width:100%;"></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">单价</label>
+                    <div class="col-md-9 col-sm-9 col-xs-9">
+                        <input type="text" class="form-control" name="unitPrice" placeholder="请输入单价......">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">业主姓名</label>
+                    <div class="col-md-9 col-sm-9 col-xs-9">
+                        <input type="text" class="form-control" name="ownerName" placeholder="请输入业主姓名......">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">身份证号码</label>
+                    <div class="col-md-9 col-sm-9 col-xs-9">
+                        <input type="text" class="form-control" name="ownerPsptid" placeholder="请输入身份证号码......">
                     </div>
                 </div>
             </form>

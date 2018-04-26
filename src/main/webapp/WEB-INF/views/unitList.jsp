@@ -25,7 +25,7 @@
 
                 $("#residentialAreaSelect").mySelect('residential_area', null, function (data) {
                     if (data && data.length > 0 && data[0].id) {
-                        $("#buildingSelect").loadBuildingSelect(data[0].id);
+                        $("#buildingSelect").loadBuildingSelect(data[0].id, null, null, true);
                     }
                 });
                 $("#residentialAreaSelect").change(function () {

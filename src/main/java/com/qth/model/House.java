@@ -39,6 +39,16 @@ public class House extends DataTableReqWrapper {
 
     private String typeName;
 
+    private Integer buildingRise;
+
+    private BigDecimal unitPrice;
+
+    private String ownerName;
+
+    private Integer ownerPsptid;
+
+    private BigDecimal accountBalance;
+
     public Integer getId() {
         return id;
     }
@@ -173,5 +183,45 @@ public class House extends DataTableReqWrapper {
 
     public void setTypeName(String typeName) {
         this.typeName = typeName;
+    }
+
+    public Integer getBuildingRise() {
+        return buildingRise;
+    }
+
+    public void setBuildingRise(Integer buildingRise) {
+        this.buildingRise = buildingRise;
+    }
+
+    public BigDecimal getUnitPrice() {
+        return unitPrice;
+    }
+
+    public void setUnitPrice(BigDecimal unitPrice) {
+        this.unitPrice = unitPrice;
+    }
+
+    public String getOwnerName() {
+        return ownerName;
+    }
+
+    public void setOwnerName(String ownerName) {
+        this.ownerName = ownerName;
+    }
+
+    public Integer getOwnerPsptid() {
+        return ownerPsptid;
+    }
+
+    public void setOwnerPsptid(Integer ownerPsptid) {
+        this.ownerPsptid = ownerPsptid;
+    }
+
+    public BigDecimal getAccountBalance() {
+        return accountBalance;
+    }
+
+    public void setAccountBalance(BigDecimal accountBalance) {
+        this.accountBalance = accountBalance;
     }
 }
