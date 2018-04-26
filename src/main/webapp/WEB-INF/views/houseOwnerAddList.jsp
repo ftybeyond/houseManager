@@ -7,7 +7,7 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 
-    <title>业主变更</title>
+    <title>业主增加</title>
 
     <link rel="stylesheet" type="text/css" href="<%=path%>/vendors/datatable/datatables-bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="<%=path%>/vendors/select2/select2.min.css"/>

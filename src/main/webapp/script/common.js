@@ -14,6 +14,7 @@ define(["dataTables-bs"], function () {
         multiSelect: false,
         deleteable: true,
         editable: true,
+        customedit1: false,
         suffix: '.action',//请求后缀
         tableId: 'datatable',//数据表格ID
         searchForm: 'searchForm',//搜索表单ID
@@ -150,14 +151,24 @@ define(["dataTables-bs"], function () {
                 }
             })
 
-            if (baseConfig.editable || baseConfig.deleteable || baseConfig.customBtns.length > 0) {
+            if (baseConfig.editable || baseConfig.customedit1 ||  baseConfig.deleteable || baseConfig.customBtns.length > 0) {
                 columns.push({
                     render: function (data, type, full, meta) {
                         var btns = '';
                         //最后一列操作按钮渲染
                         if (baseConfig.editable) {
-                            var btnEidt = ' <button type="button" data-handle="edit" data-index="' + full.id + '"   class="btn btn-primary btn-xs">编辑</button> ';
-                            btns += btnEidt;
+                            var btnEdit = ' <button type="button" data-handle="edit" data-index="' + full.id + '"   class="btn btn-primary btn-xs">编辑</button> ';
+                            btns += btnEdit;
+                        }
+                        if (baseConfig.customedit1) {
+                            var label = '';
+                            if (full.ownerName == null || full.ownerName == "") {
+                                label = '增加';
+                            } else {
+                                label = '变更';
+                            }
+                            var btnEdit = ' <button type="button" data-handle="edit" data-index="' + full.id + '"   class="btn btn-primary btn-xs">' + label + '</button> ';
+                            btns += btnEdit;
                         }
                         if (baseConfig.deleteable) {
                             var btnDel = ' <button type="button"  data-handle="del" data-index="' + full.id + '"  class="btn btn-primary btn-xs">删除</button> ';
