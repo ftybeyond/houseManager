@@ -133,9 +133,9 @@ public class BeanUtil{
         }
         try {
             Map<String, String> map = new HashMap<>();
-
-            Field[] declaredFields = entity.getClass().getDeclaredFields();
-            for (Field field : declaredFields) {
+            List<Field> list = new ArrayList<>();
+            getAllField(entity.getClass(),list);
+            for (Field field : list) {
                 field.setAccessible(true);
                 if(field.get(entity)!= null){
                     for(ResultMapping resultMapping:resultMappings){
@@ -163,6 +163,21 @@ public class BeanUtil{
     }
 
 
+    /**
+     * 输出所有成员，包括父类中的成员（通过递归实现）
+     */
+    public static void getAllField(Class clazz,List<Field> list) {
+        Field[] fields = clazz.getDeclaredFields();
+        if(fields != null && fields.length > 0) {
+            for(Field field : fields) {
+                list.add(field);
+            }
+        }
+        Class superClazz = clazz.getSuperclass();
+        if(superClazz != Object.class) { // 结束递归
+            getAllField(superClazz,list); // 递归
+        }
+    }
 
     public static String toLowerCaseFirstOne(String word){
         if(Character.isLowerCase(word.charAt(0)))

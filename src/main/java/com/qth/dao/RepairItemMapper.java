@@ -13,4 +13,8 @@ public interface RepairItemMapper {
     List<RepairItem> selectAll();
 
     int updateByPrimaryKey(RepairItem record);
+
+    int deleteByRecord(Integer record);
+
+    List<RepairItem> selectByRecord(Integer id);
 }

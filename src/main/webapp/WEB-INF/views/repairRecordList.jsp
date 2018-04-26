@@ -10,7 +10,8 @@
     <title>维修记录</title>
 
     <link rel="stylesheet" type="text/css" href="<%=path%>/vendors/datatable/datatables-bootstrap.min.css"/>
-    <link rel="stylesheet" type="text/css" href="<%=path%>/vendors/select2/select2.min.css"/>
+    <link rel="stylesheet" type="text/css" href="<%=path%>/vendors/select2/select2.min.css"
+    <!--[if lt IE 8 ]><script src="<%=path%>/vendors/json2.min.js"></script><![endif]-->
     <script src="<%=path%>/vendors/requireJS/require.js"></script>
     <script type="text/javascript" src="<%=path%>/vendors/requireJS/require-config.js"></script>
     <script type="text/javascript">
@@ -50,16 +51,34 @@
                                         return dic && dic.text ? dic.text : "";
                                     }
                                 }
-                            ],
-                            beforePopWin:function(type){
-                                $("#popWin .addItemDiv").remove()
-                                if(type == 1){
-
-                                }else if(type == 2){
-                                    //load itemsList
-                                    console.log()
-                                }
-
+                            ]
+                        },
+                        beforePopWin:function(type){
+                            if(type == 1){
+                                $("#infoForm div.addItemDiv").remove();
+                            }
+                        },
+                        afterSyncFormData:function (rsp) {
+                            $("#infoForm div.addItemDiv").remove();
+                            //展示表单数据，载入维修事项列表
+                            if(rsp.attr&& rsp.attr.repairItems){
+                                $.each(rsp.attr.repairItems,function (index,item) {
+                                    //添加维修事项
+                                    $("#infoForm").append(genItem(item))
+                                })
+                            }
+                        },
+                        beforeSaveOrUpdate:function (param,type) {
+                            //追加维修项目参数
+                            var repairItems = new Array();
+                            $("#infoForm div.addItemDiv").each(function (index) {
+                                var remark = $(this).find("textarea[name=remark]").val()
+                                var price = $(this).find("input[name=price]").val()
+                                repairItems.push({remark:remark,price:price})
+                            })
+                            if (repairItems.length>0) {
+                                var supplement = JSON.stringify(repairItems);
+                                param.supplement = supplement
                             }
                         }
                     }
@@ -67,24 +86,23 @@
                     $(".x_content").on("click",".delItemBtn",function () {
                         $(this).parents(".addItemDiv").remove();
                     })
-                    var items = 0;
                     $("#addItemBtn").on("click", function () {
-                        $("#infoForm").after(genItem())
-                        items++;
+                        //添加维修事项
+                        $("#infoForm").append(genItem())
                     })
 
-                    function genItem(){
+                    function genItem(item){
                         var div = '<div class="addItemDiv">' +
                             '               <div class="col-xs-6 row" style="margin-left:3px">' +
                             '                    <label class="control-label col-xs-3">事项描述</label>' +
                             '                    <div class="col-xs-9">' +
-                            '                        <textarea type="text" class="form-control" name="items.remark" placeholder="具体维修内容...">112323</textarea>' +
+                            '                        <textarea type="text" class="form-control" name="remark" placeholder="具体维修内容...">'+(item?item.remark:'')+'</textarea>' +
                             '                    </div>' +
                             '                </div>' +
                             '                <div class="col-xs-6 form-group">' +
                             '                    <label class="control-label col-xs-3">项目价格</label>' +
                             '                    <div class="col-xs-7">' +
-                            '                        <input type="text" class="form-control" name="items.price" placeholder="项目价格...">' +
+                            '                        <input type="text" class="form-control" name="price" placeholder="项目价格..." value="'+(item?item.price:'')+'">' +
                             '                    </div>' +
                             '                    <div class="col-xs-2">' +
                             '                        <button class="btn btn-primary btn-xs delItemBtn" type="button">删除事项</button>' +

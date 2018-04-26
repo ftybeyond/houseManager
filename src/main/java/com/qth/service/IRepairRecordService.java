@@ -15,4 +15,5 @@ public interface IRepairRecordService extends IBaseService<RepairRecord>
     public RepairRecord findRepairRecordById(int id);
 
     public int deleteRepairRecordById(int id);
+
 }

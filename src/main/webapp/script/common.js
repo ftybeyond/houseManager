@@ -111,7 +111,7 @@ define(["dataTables-bs"], function () {
         /**
          * 根据handleObj更新表单信息
          */
-        function obj2Form() {
+        function obj2Form(rsp) {
             for (key in handleObj) {
                 if ($("#" + baseConfig.infoFrom + " input[name='" + key + "']").size() > 0) {
                     $("#" + baseConfig.infoFrom + " input[name='" + key + "']").val(handleObj[key]);
@@ -122,8 +122,9 @@ define(["dataTables-bs"], function () {
                     //..陆续补充
                 }
             }
-            if (baseConfig.afterSyncFormData) {
-                baseConfig.afterSyncFormData(handleObj)
+            if (typeof (baseConfig.afterSyncFormData)=='function') {
+                //表单同步数据后的回调，用于补充不支持自动填充的表单项,传递ajax返回对象
+                baseConfig.afterSyncFormData(rsp)
             }
             if (typeof(obj2FormBackfun) == "function") {
                 obj2FormBackfun(baseConfig, handleObj);
@@ -187,7 +188,7 @@ define(["dataTables-bs"], function () {
                     if (rsp.success) {
                         handleObj = rsp.data;
                         //同步表单
-                        obj2Form()
+                        obj2Form(rsp)
                         popWin(2);
                         if (typeof(editRecordAfter) == "function") {
                             editRecordAfter();
@@ -221,6 +222,9 @@ define(["dataTables-bs"], function () {
                 layer.alert("非法弹窗参数!");
                 return
             }
+            if(typeof (baseConfig.beforePopWin) == 'function' ){
+                baseConfig.beforePopWin(type)
+            }
             //弹窗
             var win = layer.open({
                 type: 1,
@@ -239,8 +243,8 @@ define(["dataTables-bs"], function () {
                         $.extend(handleObj, formdata);
                         param = handleObj
                     }
-                    if (baseConfig.beforeSaveOrUpdate) {
-                        baseConfig.beforeSaveOrUpdate(param)
+                    if (typeof (baseConfig.beforeSaveOrUpdate)=='function') {
+                        baseConfig.beforeSaveOrUpdate(param,type)
                     }
                     $.ajax({
                         url: url,
@@ -277,7 +281,7 @@ define(["dataTables-bs"], function () {
     var loadedDatas = {};
     var taskComplated = 0;
     var waitTask;
-    var loadingMask
+    var loadingMask;
     /**
      * 加载依赖远程数据，加载dictionary目录以*.json结尾、 通用下拉列表数据 "表名"、 自主调用数据/rest/xxx
      * @param deps eg("CompanyNature","region","/rest/getStreetByRegion.action")

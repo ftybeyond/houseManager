@@ -21,6 +21,9 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.qth.model.RepairRecord">
+    <selectKey resultType="java.lang.Integer" keyProperty="id">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
     insert into repair_record (id, residential_area, address, 
       developer, property_company, property_company_tel, 
       owners, owners_tel, money_sum, 
