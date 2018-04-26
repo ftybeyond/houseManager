@@ -33,4 +33,14 @@
     select id, repair_record, remark, price
     from repair_item
   </select>
+
+  <delete id="deleteByRecord" parameterType="java.lang.Integer">
+    delete from repair_item
+    where repair_record = #{record,jdbcType=INTEGER}
+  </delete>
+
+  <select id="selectByRecord" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select * from repair_item ri
+    where ri.repair_record = #{record,jdbcType=INTEGER}
+  </select>
 </mapper>

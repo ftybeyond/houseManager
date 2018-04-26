@@ -12,7 +12,7 @@ import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.Map;
 
-public class BaseService<T> implements IBaseService<T> {
+public class BaseService<T extends DataTableReqWrapper> implements IBaseService<T> {
 
     protected Class<T> clazz;
 
@@ -40,6 +40,10 @@ public class BaseService<T> implements IBaseService<T> {
         DataTableRspWrapper rspWrapper = new DataTableRspWrapper();
         List<ResultMapping> resultMappings = sqlSessionFactory.getConfiguration().getResultMap("com.qth.dao." +clazz.getSimpleName()+"Mapper.BaseResultMap" ).getResultMappings();
         SelectDataTableMap map = BeanUtil.searchBean2Map(entity,resultMappings);
+        //补全分页信息
+        map.setStart(entity.getStart());
+        map.setLength(entity.getLength());
+        map.setDraw(entity.getDraw());
         //获取表名
         map.setTableName(tableMapping.getTableName(clazz));
         List<T> data = (List<T>) BeanUtil.convertByResultMap(baseMapper.selectDataTable(map),resultMappings,clazz);

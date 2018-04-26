@@ -7,7 +7,7 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 
-    <title>区域管理</title>
+    <title>单位管理</title>
 
     <link rel="stylesheet" type="text/css" href="<%=path%>/vendors/datatable/datatables-bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="<%=path%>/vendors/select2/select2.min.css"/>

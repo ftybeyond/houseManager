@@ -46,12 +46,5 @@ public class BaseController {
         rsp.setDataList(list);
         return rsp;
     }
-
-//    @InitBinder
-//    protected void initBinder(HttpServletRequest request,
-//                              ServletRequestDataBinder binder) throws Exception {
-//        binder.registerCustomEditor(Date.class,
-//                new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true));
-//    }
 }
 

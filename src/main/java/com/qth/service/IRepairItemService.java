@@ -15,4 +15,6 @@ public interface IRepairItemService extends IBaseService<RepairItem>
     public RepairItem findRepairItemById(int id);
 
     public int deleteRepairItemById(int id);
+
+    public List<RepairItem> selectByRecord(Integer record);
 }

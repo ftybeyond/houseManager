@@ -1,6 +1,7 @@
 package com.qth.model.common;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * by fty
@@ -22,6 +23,9 @@ public class CommonRsp {
 
     //对象数据
     Object data;
+
+    //补充数据
+    Map attr;
 
     public CommonRsp() {
         
@@ -71,5 +75,13 @@ public class CommonRsp {
 
     public void setData(Object data) {
         this.data = data;
+    }
+
+    public Map getAttr() {
+        return attr;
+    }
+
+    public void setAttr(Map attr) {
+        this.attr = attr;
     }
 }

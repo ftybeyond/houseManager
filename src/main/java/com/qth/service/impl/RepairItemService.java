@@ -40,4 +40,9 @@ public class RepairItemService extends BaseService<RepairItem> implements IRepai
     public int deleteRepairItemById(int id) {
         return repairItemMapper.deleteByPrimaryKey(id);
     }
+
+    @Override
+    public List<RepairItem> selectByRecord(Integer record) {
+        return repairItemMapper.selectByRecord(record);
+    }
 }

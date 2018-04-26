@@ -10,7 +10,6 @@
     <title>缴费规则管理</title>
 
     <link rel="stylesheet" type="text/css" href="<%=path%>/vendors/datatable/datatables-bootstrap.min.css"/>
-    <link rel="stylesheet" type="text/css" href="<%=path%>/vendors/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css"/>
     <link rel="stylesheet" type="text/css" href="<%=path%>/vendors/select2/select2.min.css"/>
     <script src="<%=path%>/vendors/requireJS/require.js"></script>
     <script type="text/javascript" src="<%=path%>/vendors/requireJS/require-config.js"></script>
