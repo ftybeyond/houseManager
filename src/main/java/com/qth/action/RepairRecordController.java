@@ -1,5 +1,7 @@
 package com.qth.action;
 
+import com.qth.model.RepairItem;
+import com.qth.model.User;
 import com.qth.model.common.CommonRsp;
 import com.qth.model.RepairRecord;
 import com.qth.service.IRepairRecordService;
@@ -7,7 +9,12 @@ import com.qth.model.common.DataTableRspWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpSession;
+import java.util.Date;
+import java.util.List;
 
 @Controller
 @RequestMapping(value = "rest/repairRecord")
@@ -37,7 +44,12 @@ public DataTableRspWrapper<RepairRecord> table(RepairRecord repairRecord){
     * @return
     */
     @RequestMapping(value = "insert")
-    public CommonRsp insert(RepairRecord repairRecord){
+    public CommonRsp insert(RepairRecord repairRecord, @RequestParam(value = "items")RepairItem[] items, HttpSession session){
+
+//        User user = (User) session.getAttribute("login_user");
+//        repairRecord.setHandler(user.getRealName());
+        repairRecord.setStamp(new Date());
+        repairRecord.setState(0);
         int effect = repairRecordService.insertRepairRecord(repairRecord);
         return dbEffect2Rsp(effect);
     }

@@ -67,6 +67,11 @@
                 <entry key="ChargeCriterion" value="charge_criterion"></entry>
                 <entry key="ResidentialArea" value="residential_area"></entry>
                 <entry key="MoneyRate" value="money_rate"></entry>
+                <entry key="RepairRecord" value="repair_record"></entry>
+                <entry key="IepairItem" value="repair_item"></entry>
+                <entry key="InvoiceLog" value="invoice_log"></entry>
+                <entry key="ChargeBill" value="charge_bill"></entry>
+                <entry key="AccountLog" value="account_log"></entry>
             </map>
         </property>
     </bean>

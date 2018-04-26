@@ -22,7 +22,8 @@ define(["dataTables-bs"], function () {
         addBtn: 'addBtn',//添加按钮
         customBtns: [],//表格上自定义按钮{label:'自定义按钮',callback:function(index){//行数据id}}
         beforeSaveOrUpdate: null,//保存或更新前回调方法，提供ajax 即将提交的param参数,用于表单校验和参数补充
-        afterSyncFormData: null //selectById后同步表单后回调方法，此回调用于不能自动同步到表单项的值的组件,传入当前查询回的对象
+        afterSyncFormData: null, //selectById后同步表单后回调方法，此回调用于不能自动同步到表单项的值的组件,传入当前查询回的对象
+        beforePopWin:null
     };
     var handleObj;//当前编辑的Region对象
     var table;//表格对象
@@ -207,6 +208,7 @@ define(["dataTables-bs"], function () {
             var title, url, param;
             if (type == 1) {
                 $("#" + baseConfig.infoFrom)[0].reset();
+                $("#" + baseConfig.infoFrom +" select").select2("val","all")
                 title = "添加";
                 url = getUrl("insert");
             } else if (type == 2) {
@@ -215,6 +217,10 @@ define(["dataTables-bs"], function () {
             } else {
                 layer.alert("非法弹窗参数!");
                 return
+            }
+
+            if(baseConfig.beforePopWin && typeof(baseConfig.beforePopWin) == "function"){
+                baseConfig.beforePopWin(type);
             }
             //弹窗
             var win = layer.open({
@@ -272,12 +278,14 @@ define(["dataTables-bs"], function () {
     var loadedDatas={};
     var taskComplated = 0;
     var waitTask;
+    var loadingMask
     /**
      * 加载依赖远程数据，加载dictionary目录以*.json结尾、 通用下拉列表数据 "表名"、 自主调用数据/rest/xxx
      * @param deps eg("CompanyNature","region","/rest/getStreetByRegion.action")
      * @callback 依赖数据加载完毕回调
      */
     var loadDeps = function (deps,callback) {
+        loadingMask = layer.msg('拼命加载中......', {shade: [0.8, '#393D49'], time: 3000, icon: 16});
         if(deps && (deps instanceof Array)){
             var url;
             $.each(deps, function (index, item) {
@@ -310,6 +318,7 @@ define(["dataTables-bs"], function () {
                     callback(loadedDatas)
                 }
                 clearInterval(waitTask);
+                layer.close(loadingMask)
             }
         }
     }

@@ -43,9 +43,7 @@
       owners_tel = #{ownersTel,jdbcType=VARCHAR},
       money_sum = #{moneySum,jdbcType=DECIMAL},
       share_type = #{shareType,jdbcType=INTEGER},
-      handler = #{handler,jdbcType=VARCHAR},
-      state = #{state,jdbcType=INTEGER},
-      stamp = #{stamp,jdbcType=TIMESTAMP}
+      handler = #{handler,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
