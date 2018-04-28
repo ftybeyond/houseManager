@@ -12,8 +12,12 @@ define(["dataTables-bs"], function () {
             props: []//实体属性集合 {data:'name',editable:true,searchable:true,tableShow:true,formType:'datetime|select|string|number|file|date|',showType:'',dateFormat:'yyyy-MM-dd HH:ss:mm',selectKey:'id',selectValue:'name',numberFormate:''}
         },//实体信息
         multiSelect: false,
-        deleteable: true,
-        editable: true,
+        deleteable:  function(data, type, full, meta){
+            return true;
+        },
+        editable: function(data, type, full, meta){
+            return true;
+        },
         customedit1: false,
         suffix: '.action',//请求后缀
         tableId: 'datatable',//数据表格ID
@@ -158,7 +162,7 @@ define(["dataTables-bs"], function () {
                     render: function (data, type, full, meta) {
                         var btns = '';
                         //最后一列操作按钮渲染
-                        if (baseConfig.editable) {
+                        if (typeof (baseConfig.editable)=="function" && baseConfig.editable(data, type, full, meta)) {
                             var btnEdit = ' <button type="button" data-handle="edit" data-index="' + full.id + '"   class="btn btn-primary btn-xs">编辑</button> ';
                             btns += btnEdit;
                         }
@@ -172,7 +176,7 @@ define(["dataTables-bs"], function () {
                             var btnEdit = ' <button type="button" data-handle="edit" data-index="' + full.id + '"   class="btn btn-primary btn-xs">' + label + '</button> ';
                             btns += btnEdit;
                         }
-                        if (baseConfig.deleteable) {
+                        if (typeof (baseConfig.deleteable)=="function" && baseConfig.deleteable(data, type, full, meta)) {
                             var btnDel = ' <button type="button"  data-handle="del" data-index="' + full.id + '"  class="btn btn-primary btn-xs">删除</button> ';
                             btns += btnDel;
                         }
