@@ -217,4 +217,9 @@
       and h.has_elevator=#{hasElevator,jdbcType=VARCHAR}
     </if>
   </select>
+
+  <update id="updateBalance" parameterType="com.qth.model.House">
+    UPDATE house set account_balance = #{accountBalance} where id = #{id}
+
+  </update>
 </mapper>

@@ -2,6 +2,8 @@ package com.qth.service;
 
 import com.qth.model.RepairRecord;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.List;
 
 public interface IRepairRecordService extends IBaseService<RepairRecord>
@@ -12,8 +14,8 @@ public interface IRepairRecordService extends IBaseService<RepairRecord>
 
     public int updateRepairRecord(RepairRecord repairRecord);
 
-    public RepairRecord findRepairRecordById(int id);
+    public RepairRecord findRepairRecordById(Integer id);
 
-    public int deleteRepairRecordById(int id);
+    public int deleteRepairRecordById(Integer id);
 
 }

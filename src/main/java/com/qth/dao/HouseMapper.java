@@ -19,4 +19,6 @@ public interface HouseMapper {
     List<Unit> selectDataTable(House entity);
 
     int selectDataTableCount(House entity);
+
+    int updateBalance(House house);
 }

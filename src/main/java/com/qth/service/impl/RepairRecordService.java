@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -30,6 +31,7 @@ public class RepairRecordService extends BaseService<RepairRecord> implements IR
     @Transactional
     @Override
     public int insertRepairRecord(RepairRecord repairRecord) {
+        BigDecimal cost = new BigDecimal(0f);
         //添加维修记录
         int result = repairRecordMapper.insert(repairRecord);
         //获取维修项目参数
@@ -39,8 +41,11 @@ public class RepairRecordService extends BaseService<RepairRecord> implements IR
             List<RepairItem> repairItems = JSON.parseArray(supplement,RepairItem.class);
             for(RepairItem item :repairItems){
                 item.setRepairRecord(repairRecord.getId());
+                cost = cost.add(item.getPrice()) ;
                 repairItemMapper.insert(item);
             }
+            repairRecord.setMoneySum(cost);
+            repairRecordMapper.updateByPrimaryKey(repairRecord);
         }
         return result;
     }
@@ -52,25 +57,28 @@ public class RepairRecordService extends BaseService<RepairRecord> implements IR
         repairItemMapper.deleteByRecord(repairRecord.getId());
         //获取维修项目参数
         String supplement = repairRecord.getSupplement();
+        BigDecimal cost = new BigDecimal(0f);
         if(supplement!= null&&supplement.trim().length()>0){
             //插入维修项目
             List<RepairItem> repairItems = JSON.parseArray(supplement,RepairItem.class);
             for(RepairItem item :repairItems){
                 item.setRepairRecord(repairRecord.getId());
                 repairItemMapper.insert(item);
+                cost = cost.add(item.getPrice()) ;
             }
         }
+        repairRecord.setMoneySum(cost);
         return repairRecordMapper.updateByPrimaryKey(repairRecord);
     }
 
     @Override
-    public RepairRecord findRepairRecordById(int id) {
+    public RepairRecord findRepairRecordById(Integer id) {
         return repairRecordMapper.selectByPrimaryKey(id);
     }
 
     @Transactional
     @Override
-    public int deleteRepairRecordById(int id) {
+    public int deleteRepairRecordById(Integer id) {
         //删除所有维修项
         repairItemMapper.deleteByRecord(id);
         return repairRecordMapper.deleteByPrimaryKey(id);

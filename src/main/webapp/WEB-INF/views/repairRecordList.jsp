@@ -10,7 +10,7 @@
     <title>维修记录</title>
 
     <link rel="stylesheet" type="text/css" href="<%=path%>/vendors/datatable/datatables-bootstrap.min.css"/>
-    <link rel="stylesheet" type="text/css" href="<%=path%>/vendors/select2/select2.min.css"
+    <link rel="stylesheet" type="text/css" href="<%=path%>/vendors/select2/select2.min.css"/>
     <!--[if lt IE 8 ]><script src="<%=path%>/vendors/json2.min.js"></script><![endif]-->
     <script src="<%=path%>/vendors/requireJS/require.js"></script>
     <script type="text/javascript" src="<%=path%>/vendors/requireJS/require-config.js"></script>
@@ -19,9 +19,11 @@
             $(function () {
                 main.loadDeps(["residential_area", "ShareType.json", "RepairState.json"], function (data) {
                     $("select[name='residentialArea']").mySelect2({data: data["residential_area"]})
+                    $("select[name='state']").mySelect2({data: data["RepairState.json"]})
                     $("#shareTypeSelect").mySelect2({data: data["ShareType.json"]})
                     var config = {
                         popArea: ['700px', '550px'],
+                        scrollX:true,
                         domain: {
                             name: 'repairRecord',
                             props: [
@@ -35,13 +37,16 @@
                                         return dic && dic.text ? dic.text : "";
                                     }
                                 },
-                                {name: 'address', type: 'string', showable: true},
+                                {name: 'address', type: 'string', showable: true,width:'100px'},
                                 {name: 'developer', type: 'string', showable: true},
                                 {name: 'propertyCompany', type: 'string', showable: true},
                                 {name: 'propertyCompanyTel', type: 'string', showable: true},
                                 {name: 'owners', type: 'string', showable: true},
                                 {name: 'ownersTel', type: 'string', showable: true},
-                                {name: 'shareType', type: 'string', showable: true},
+                                {name: 'shareType', type: 'string', showable: true,render: function(row){
+                                    var dic = main.findArrayValue(row, data["ShareType.json"])
+                                    return dic && dic.text ? dic.text : "";
+                                 },width:'60px'},
                                 {
                                     name: 'state',
                                     type: 'string',
@@ -52,6 +57,20 @@
                                     }
                                 }
                             ]
+                        },
+                        editable:function(data, type, full, meta){
+                          if(full.state==0){
+                              return true
+                          }else{
+                              return false;
+                          }
+                        },
+                        deleteable:function(data, type, full, meta){
+                            if(full.state==0){
+                                return true
+                            }else{
+                                return false;
+                            }
                         },
                         beforePopWin:function(type){
                             if(type == 1){
@@ -126,6 +145,12 @@
                 <select name="residentialArea" class="form-control" style="width:100%;"></select>
             </div>
         </div>
+        <div class="col-xs-5 form-group">
+            <label class="control-label col-xs-3">状态</label>
+            <div class="col-xs-9">
+                <select name="state" class="form-control" style="width:100%;"></select>
+            </div>
+        </div>
         <div class="col-xs-2 form-group">
             <div class="col-xs-6">
                 <button id="searchBtn" class="btn btn-primary" type="button">查询</button>
@@ -139,7 +164,7 @@
 <div class="ln_solid"></div>
 <!-- 数据表格 -->
 <div class="container">
-    <table id="datatable" class="table table-striped table-bordered" style="width:100%">
+    <table id="datatable" class="table table-striped table-bordered" style="width:1200px;">
         <thead>
         <tr>
             <th>所属小区</th>

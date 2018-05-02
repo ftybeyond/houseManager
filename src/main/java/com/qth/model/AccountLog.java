@@ -21,6 +21,10 @@ public class AccountLog extends DataTableReqWrapper {
 
     private String handler;
 
+    private Long seq;
+
+    private String remark;
+
     public Integer getId() {
         return id;
     }
@@ -83,5 +87,21 @@ public class AccountLog extends DataTableReqWrapper {
 
     public void setHandler(String handler) {
         this.handler = handler;
+    }
+
+    public Long getSeq() {
+        return seq;
+    }
+
+    public void setSeq(Long seq) {
+        this.seq = seq;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

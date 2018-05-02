@@ -104,8 +104,8 @@ define(["dataTables-bs"], function () {
                             layer.alert(rsp.description, {closeBtn: 0})
                         }
                     },
-                    error: function () {
-                        layer.alert("服务器内部错误!", {closeBtn: 0})
+                    error: function (xhr) {
+                        layer.alert(xhr.statusText , {closeBtn: 0})
                     }
                 })
                 layer.close(index);
@@ -212,8 +212,8 @@ define(["dataTables-bs"], function () {
                         layer.alert(rsp.description, {closeBtn: 0})
                     }
                 },
-                error: function () {
-                    layer.alert("服务器内部错误!", {closeBtn: 0})
+                error: function (xhr) {
+                    layer.alert(xhr.statusText , {closeBtn: 0})
                 }
             })
         }
@@ -275,8 +275,8 @@ define(["dataTables-bs"], function () {
                             }
                             layer.close(win);
                         },
-                        error: function () {
-                            layer.alert("服务器内部错误!", {closeBtn: 0});
+                        error: function (xhr) {
+                            layer.alert(xhr.statusText, {closeBtn: 0});
                             layer.close(win);
                         }
                     })

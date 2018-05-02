@@ -36,6 +36,8 @@ public class RepairRecord extends DataTableReqWrapper {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date stamp;
 
+    private Long shareSeq;
+
     public Integer getId() {
         return id;
     }
@@ -138,5 +140,13 @@ public class RepairRecord extends DataTableReqWrapper {
 
     public void setStamp(Date stamp) {
         this.stamp = stamp;
+    }
+
+    public Long getShareSeq() {
+        return shareSeq;
+    }
+
+    public void setShareSeq(Long shareSeq) {
+        this.shareSeq = shareSeq;
     }
 }
