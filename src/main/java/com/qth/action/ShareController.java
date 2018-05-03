@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-public class ShareController {
+public class ShareController extends BaseController{
 
     @Autowired
     IShareService shareService;
@@ -79,6 +79,21 @@ public class ShareController {
             rsp.setDescription("无效参数");
         }
         return rsp;
+    }
+
+    @RequestMapping(value = "/rest/share/doShareBack")
+    @ResponseBody
+    public CommonRsp doShareBack(Integer record,HttpSession session){
+        //todo handler
+        int effect = shareService.shareBack(record,"admin");
+        return dbEffect2Rsp(effect);
+    }
+
+    @RequestMapping(value = "/rest/share/shareBackInfo")
+    @ResponseBody
+    public CommonRsp shareBackInfo(Long seq){
+        Map<String,BigDecimal> result = shareService.shareBackInfo(seq);
+        return data2Rsp(result);
     }
 
 }

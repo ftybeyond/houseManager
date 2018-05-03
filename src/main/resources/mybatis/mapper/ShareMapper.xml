@@ -192,4 +192,8 @@
         h.unit = #{unit} and h.floor = #{floor}
     </select>
 
+    <select id="shareBackInfo" parameterType="java.lang.Long" resultType="java.util.Map">
+        select count(al.house_code) as houseCount ,sum(al.trade_money) as cost from account_log al where al.seq = ${value}
+    </select>
+
 </mapper>

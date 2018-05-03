@@ -65,15 +65,16 @@ define(["dataTables-bs"], function () {
                 var handle = $(this).attr("data-handle");
                 var index = $(this).attr("data-index");
                 var handleIndex = $(this).attr("data-handle-index");
-
                 if (handle == "edit") {
                     selectOneById(index);
                 } else if (handle == "del") {
                     deleteOneById(index)
                 } else if (handle == "custom") {
+                    var tr = $(this).closest('tr');
+                    var row = table.row( tr );
                     $.each(baseConfig.customBtns, function (customIndex, item) {
                         if (customIndex == handleIndex) {
-                            item.callback(index);
+                            item.callback(index,row.data());
                         }
                     })
                 }
@@ -303,7 +304,7 @@ define(["dataTables-bs"], function () {
      * @callback 依赖数据加载完毕回调
      */
     var loadDeps = function (deps, callback) {
-        loadingMask = layer.msg('拼命加载中......', {shade: [0.8, '#393D49'], time: 3000, icon: 16});
+        loadingMask = layer.msg('拼命加载中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
         if (deps && (deps instanceof Array)) {
             var url;
             $.each(deps, function (index, item) {

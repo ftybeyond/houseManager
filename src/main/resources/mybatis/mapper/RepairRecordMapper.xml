@@ -73,6 +73,6 @@
         rr.id = #{value,jdbcType=INTEGER}
   </select>
   <update id="stateChange" parameterType="com.qth.model.RepairRecord">
-    update repair_record set update_stamp = #{stamp},state = #{state},share_seq = #{shareSeq}
+    update repair_record set update_stamp = #{stamp},state = #{state},share_seq = #{shareSeq} WHERE id = #{id}
   </update>
 </mapper>

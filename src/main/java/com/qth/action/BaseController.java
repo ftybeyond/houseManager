@@ -26,7 +26,7 @@ public class BaseController {
         if (effect > 0) {
             rsp.setSuccess(true);
             rsp.setResultCode("0000");
-            rsp.setDescription("数据插入成功");
+            rsp.setDescription("操作成功");
         } else {
             rsp.setSuccess(false);
             rsp.setResultCode("1000");

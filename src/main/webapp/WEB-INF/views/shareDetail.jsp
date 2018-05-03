@@ -76,6 +76,7 @@
                                 layer.alert("没有可分摊的房屋信息!");
                                 return;
                             }else{
+                                var loadingMask = parent.layer.msg('拼命计算中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
                                 //分摊入账
                                 $.ajax({
                                     url:'/rest/share/doShare.action',
@@ -83,7 +84,23 @@
                                     type:"POST",
                                     data:{paths:param,sumArea:data.attr.sumArea,totalHouse:data.attr.sumHouses,shareType:${record.shareType},cost:${record.moneySum},record:${record.id}}
                                 }).done(function (data) {
-                                    layer.alert(data.description)
+                                    parent.layer.close(loadingMask);
+                                    var content='';
+                                    var title="提示";
+                                    if (data.dataList&&data.dataList.length>0) {
+                                        content = "<p>以下账户余额已不足</p>"
+                                        $.each(data.dataList,function(index, item){
+                                            content += '<p>产业代码：' + item.code + '，余额：' +item.accountBalance.toFixed(2)+ '</p>';
+                                        });
+                                    } else {
+                                        content=data.description;
+                                    }
+                                    layer.alert(content,{clostBtn:0},function(index){
+                                        layer.close(index);
+                                        parent.layer.closeAll();
+                                    });
+                                    parent.table.ajax.reload();
+
                                 }).fail(function (xhr) {
                                     layer.alert(xhr.statusText);
                                 })

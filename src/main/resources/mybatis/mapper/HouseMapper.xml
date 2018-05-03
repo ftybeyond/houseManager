@@ -218,8 +218,54 @@
     </if>
   </select>
 
-  <update id="updateBalance" parameterType="com.qth.model.House">
-    UPDATE house set account_balance = #{accountBalance} where id = #{id}
-
+  <update id="updateBalanceByCode" parameterType="com.qth.model.House">
+    UPDATE house set account_balance = #{accountBalance} where code = #{code}
   </update>
+
+  <select id="selectBalanceByCode" parameterType="java.lang.String" resultType="java.math.BigDecimal">
+    select account_balance from house where code = #{value}
+  </select>
+
+  <!-- 结息日期-->
+
+  <select id="lastAccrualInResidentialArea" parameterType="java.lang.Integer" resultType="java.util.Date">
+    SELECT
+    max(h.accrual_time)
+    FROM
+    house h
+    INNER JOIN unit u ON h.unit = u.id
+    INNER JOIN building b ON b.id = u.building
+    WHERE
+    b.residential_area = #{value}
+  </select>
+
+  <select id="lastAccrualInBuilding" parameterType="java.lang.Integer" resultType="java.util.Date">
+    SELECT
+    max(h.accrual_time)
+    FROM
+    house h
+    INNER JOIN unit u ON h.unit = u.id
+    INNER JOIN building b ON b.id = u.building
+    WHERE
+    b.id = #{value}
+  </select>
+
+  <select id="lastAccrualInUnit" parameterType="java.lang.Integer" resultType="java.util.Date">
+    SELECT
+    max(h.accrual_time)
+    FROM
+    house h
+    WHERE
+    h.unit = #{value}
+  </select>
+
+  <select id="lastAccrualInFloor" parameterType="com.qth.model.House" resultType="java.util.Date">
+    SELECT
+    max(h.accrual_time)
+    FROM
+    house h
+    WHERE
+    h.unit = #{unit} and h.floor = #{floor}
+    GROUP BY h.floor
+  </select>
 </mapper>

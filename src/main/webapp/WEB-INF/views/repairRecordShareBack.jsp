@@ -7,7 +7,7 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 
-    <title>维修记录</title>
+    <title>维修基金返还</title>
 
     <link rel="stylesheet" type="text/css" href="<%=path%>/vendors/datatable/datatables-bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="<%=path%>/vendors/select2/select2.min.css"/>
@@ -28,7 +28,6 @@
     <script src="<%=path%>/vendors/requireJS/require.js"></script>
     <script type="text/javascript" src="<%=path%>/vendors/requireJS/require-config.js"></script>
     <script type="text/javascript">
-        var table;
         require(["common", "mySelect"], function (main) {
             $(function () {
                 main.loadDeps(["residential_area", "ShareType.json"], function (data) {
@@ -69,17 +68,29 @@
                             return false;
                         },
                         customBtns:[
-                            {label:'分摊', callback:function(rowId){
-                                layer.open({
-                                    area: ['700px', '550px'],
-                                    offset:'t',
-                                    type: 2,
-                                    content: '/page/shareDetail.action?record='+rowId //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
-                                });
+                            {label:'回退', callback:function(rowId,row){
+                                var loadingMask = layer.msg('拼命计算中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
+                                $.post("/rest/share/shareBackInfo.action",{seq:row.shareSeq},null,"json").done(function(data){
+//                                    console.log(data.data.cost)
+                                    content = '<p>回退费用：'+data.data.cost+'</p>';
+                                    content +=  '<p>回退户数：'+data.data.houseCount+'</p>';
+                                    layer.confirm(content, {icon: 3, title:'提示'}, function(index){
+                                        loadingMask = layer.msg('拼命计算中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
+                                        $.post("/rest/share/doShareBack.action",{record:row.id},null,"json").done(function(data){
+                                            layer.alert(data.description);
+                                            table.ajax.reload();
+                                        }).fail(function (xhr) {
+                                            layer.alert("服务器内部错误!"+xhr.statusText)
+                                        })
+
+                                    });
+                                }).fail(function (xhr) {
+                                    layer.alert("服务器内部错误!"+xhr.statusText)
+                                })
                             }}
                         ]
                     }
-                    table = main.init(config);
+                    var table = main.init(config);
                     table.on('click', 'td.details-control', function () {
                         var tr = $(this).closest('tr');
                         var row = table.row( tr );
@@ -143,7 +154,7 @@
                 <select name="residentialArea" class="form-control" style="width:100%;"></select>
             </div>
         </div>
-        <input type="hidden" name="state" value="0"/>
+        <input type="hidden" name="state" value="1"/>
         <div class="col-xs-2 form-group">
             <div class="col-xs-6">
                 <button id="searchBtn" class="btn btn-primary" type="button">查询</button>

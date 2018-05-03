@@ -8,6 +8,7 @@ import com.qth.model.common.ZTreeNodeReq;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public interface IShareService {
 
@@ -25,7 +26,7 @@ public interface IShareService {
      */
     public List<House> share(String paths, Integer shareType, BigDecimal sumArea, Integer houses, BigDecimal cost,Integer record, String handler);
 
-    public int shareBack(RepairRecord record);
+    public int shareBack(Integer record,String handler);
 
     public BigDecimal getRecordCost(Integer id);
 
@@ -33,4 +34,5 @@ public interface IShareService {
 
     public BigDecimal sumShareArea(String paths);
 
+    public Map<String,BigDecimal> shareBackInfo(Long seq);
 }

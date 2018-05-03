@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -115,7 +116,10 @@ public class ShareService implements IShareService{
         BigDecimal everySquareCost = cost.divide(sumArea,2, BigDecimal.ROUND_HALF_EVEN);
         //每户均摊价，按户分摊时使用
         BigDecimal everyHouseCost = cost.divide(new BigDecimal(totalHouse),2, BigDecimal.ROUND_HALF_EVEN);
-        for (House house:houses){
+
+        BigDecimal totalCost = new BigDecimal(0f);
+        for (int i=0;i<houses.size();i++){
+            House house = houses.get(i);
             if(shareType == 1){
                 //按面积分摊
                 houseCost = everySquareCost.multiply(house.getArea());
@@ -125,6 +129,11 @@ public class ShareService implements IShareService{
             }else{
                 return 0;
             }
+            if(i == houses.size()-1){
+                //最后一个 花费= 总额-前面总花销
+                houseCost = cost.subtract(totalCost);
+            }
+            totalCost = totalCost.add(houseCost);
             //新的余额
             BigDecimal newBalance = house.getAccountBalance().subtract(houseCost);
             if(newBalance.compareTo(new BigDecimal(0f))==-1) {
@@ -143,7 +152,7 @@ public class ShareService implements IShareService{
             accountLog.setRemark(record.toString());
             //余额变更
             house.setAccountBalance(newBalance);
-            houseMapper.updateBalance(house);
+            houseMapper.updateBalanceByCode(house);
             accountLogMapper.insert(accountLog);
         }
 
@@ -152,8 +161,47 @@ public class ShareService implements IShareService{
     }
 
     @Override
-    public int shareBack(RepairRecord record) {
-        return 0;
+    @Transactional
+    public int shareBack(Integer record,String handler) {
+        int sum =0;
+        Date stamp = new Date();
+        RepairRecord repairRecord = recordMapper.selectByPrimaryKey(record);
+
+        //查询余额变更记录
+        List<AccountLog> accountLogs = accountLogMapper.selectByRecord(repairRecord);
+        //批量回滚余额
+        for(AccountLog accountLog:accountLogs){
+
+            BigDecimal tradeMoney = accountLog.getTradeMoney().negate();//此时取反应为正数
+            //即时账户余额
+            BigDecimal balance = houseMapper.selectBalanceByCode(accountLog.getHouseCode());
+            //新账户余额
+            BigDecimal newBalance = balance.add(tradeMoney);
+            House house = new House();
+            house.setAccountBalance(newBalance);
+            house.setCode(accountLog.getHouseCode());
+            //更新余额信息
+            sum += houseMapper.updateBalanceByCode(house);
+
+            //插入变更记录
+            accountLog.setId(null);
+            accountLog.setTradeType(5);
+            accountLog.setTradeMoney(tradeMoney);
+            accountLog.setTradeTime(stamp);
+            accountLog.setBalance(balance);
+            accountLog.setSeq(stamp.getTime());
+            accountLog.setHandler(handler);
+            accountLog.setRemark(record.toString());
+            sum += accountLogMapper.insert(accountLog);
+        }
+
+        //重置record状态
+        repairRecord.setShareSeq(null);
+        repairRecord.setState(0);
+        repairRecord.setStamp(stamp);
+        sum += recordMapper.stateChange(repairRecord);
+
+        return sum;
     }
 
     public BigDecimal getRecordCost(Integer id){
@@ -226,6 +274,11 @@ public class ShareService implements IShareService{
             }
         }
         return sum;
+    }
+
+    @Override
+    public Map<String, BigDecimal> shareBackInfo(Long seq) {
+        return shareMapper.shareBackInfo(seq);
     }
 
 }

@@ -6,6 +6,7 @@ import com.qth.model.common.ZTreeNodeReq;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  * by fty
@@ -46,5 +47,7 @@ public interface ShareMapper {
     List<House> allHousesInUnit(Integer unit);
 
     List<House> allHousesInFloor(House house);
+
+    Map<String,BigDecimal> shareBackInfo(Long seq);
 
 }

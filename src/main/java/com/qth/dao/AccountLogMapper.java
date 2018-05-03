@@ -1,6 +1,8 @@
 package com.qth.dao;
 
 import com.qth.model.AccountLog;
+import com.qth.model.RepairRecord;
+
 import java.util.List;
 
 public interface AccountLogMapper {
@@ -13,4 +15,6 @@ public interface AccountLogMapper {
     List<AccountLog> selectAll();
 
     int updateByPrimaryKey(AccountLog record);
+
+    List<AccountLog> selectByRecord(RepairRecord record);
 }

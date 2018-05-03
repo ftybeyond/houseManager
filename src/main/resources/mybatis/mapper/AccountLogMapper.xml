@@ -11,7 +11,7 @@
     <result column="trade_type" jdbcType="INTEGER" property="tradeType" />
     <result column="handler" jdbcType="VARCHAR" property="handler" />
     <result column="seq" jdbcType="BIGINT" property="seq" />
-    <result column="remark" jdbcType="BIGINT" property="remark" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from account_log
@@ -33,7 +33,8 @@
       trade_money = #{tradeMoney,jdbcType=DECIMAL},
       trade_time = #{tradeTime,jdbcType=TIMESTAMP},
       trade_type = #{tradeType,jdbcType=INTEGER},
-      handler = #{handler,jdbcType=VARCHAR}
+      handler = #{handler,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -47,4 +48,12 @@
     handler,seq,remark
     from account_log
   </select>
+
+  <select id="selectByRecord" parameterType="com.qth.model.RepairRecord" resultMap="BaseResultMap">
+    select id, house_code, house_owner, balance, trade_money, trade_time, trade_type,
+    handler,seq,remark
+    from account_log
+    where seq = #{shareSeq}
+  </select>
+
 </mapper>
