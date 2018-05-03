@@ -1,9 +1,11 @@
 package com.qth.action;
 
+import com.qth.model.RepairRecord;
 import com.qth.model.common.CommonRsp;
 import com.qth.model.RepairItem;
 import com.qth.service.IRepairItemService;
 import com.qth.model.common.DataTableRspWrapper;
+import com.qth.service.IRepairRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -58,6 +60,11 @@ public DataTableRspWrapper<RepairItem> table(RepairItem repairItem){
     public CommonRsp deleteById(Integer id){
         int effect = repairItemService.deleteRepairItemById(id);
         return dbEffect2Rsp(effect);
+    }
+
+    @RequestMapping(value = "selectByRecord")
+    public CommonRsp selectByRecord(Integer record){
+        return data2Rsp(repairItemService.selectByRecord(record));
     }
 
 }

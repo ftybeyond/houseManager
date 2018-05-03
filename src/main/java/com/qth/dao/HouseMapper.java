@@ -3,6 +3,7 @@ package com.qth.dao;
 import com.qth.model.House;
 import com.qth.model.Unit;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface HouseMapper {
@@ -19,4 +20,8 @@ public interface HouseMapper {
     List<Unit> selectDataTable(House entity);
 
     int selectDataTableCount(House entity);
+
+    int updateBalanceByCode(House house);
+
+    BigDecimal selectBalanceByCode(String code);
 }

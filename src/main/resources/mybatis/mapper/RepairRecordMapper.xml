@@ -14,7 +14,8 @@
     <result column="share_type" jdbcType="INTEGER" property="shareType" />
     <result column="handler" jdbcType="VARCHAR" property="handler" />
     <result column="state" jdbcType="INTEGER" property="state" />
-    <result column="stamp" jdbcType="TIMESTAMP" property="stamp" />
+    <result column="update_stamp" jdbcType="TIMESTAMP" property="stamp" />
+    <result column="share_seq" jdbcType="BIGINT" property="shareSeq" />
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from repair_record
@@ -27,8 +28,8 @@
     insert into repair_record (id, residential_area, address, 
       developer, property_company, property_company_tel, 
       owners, owners_tel, money_sum, 
-      share_type, handler, state, 
-      stamp)
+      share_type, handler, state,
+    update_stamp)
     values (#{id,jdbcType=INTEGER}, #{residentialArea,jdbcType=INTEGER}, #{address,jdbcType=VARCHAR}, 
       #{developer,jdbcType=VARCHAR}, #{propertyCompany,jdbcType=VARCHAR}, #{propertyCompanyTel,jdbcType=VARCHAR}, 
       #{owners,jdbcType=VARCHAR}, #{ownersTel,jdbcType=VARCHAR}, #{moneySum,jdbcType=DECIMAL}, 
@@ -46,18 +47,32 @@
       owners_tel = #{ownersTel,jdbcType=VARCHAR},
       money_sum = #{moneySum,jdbcType=DECIMAL},
       share_type = #{shareType,jdbcType=INTEGER},
-      handler = #{handler,jdbcType=VARCHAR}
+      handler = #{handler,jdbcType=VARCHAR},
+      update_stamp = #{stamp,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select id, residential_area, address, developer, property_company, property_company_tel, 
-    owners, owners_tel, money_sum, share_type, handler, state, stamp
+    owners, owners_tel, money_sum, share_type, handler, state, update_stamp,share_seq
     from repair_record
     where id = #{id,jdbcType=INTEGER}
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
     select id, residential_area, address, developer, property_company, property_company_tel, 
-    owners, owners_tel, money_sum, share_type, handler, state, stamp
+    owners, owners_tel, money_sum, share_type, handler, state, update_stamp,share_seq
     from repair_record
   </select>
+
+  <select id="recordCostSum" resultType="java.math.BigDecimal" parameterType="java.lang.Integer">
+    SELECT
+        sum(ri.price)
+    FROM
+        repair_record rr
+    LEFT JOIN repair_item ri ON ri.repair_record = rr.id
+    WHERE
+        rr.id = #{value,jdbcType=INTEGER}
+  </select>
+  <update id="stateChange" parameterType="com.qth.model.RepairRecord">
+    update repair_record set update_stamp = #{stamp},state = #{state},share_seq = #{shareSeq} WHERE id = #{id}
+  </update>
 </mapper>

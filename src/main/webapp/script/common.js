@@ -12,8 +12,12 @@ define(["dataTables-bs"], function () {
             props: []//实体属性集合 {data:'name',editable:true,searchable:true,tableShow:true,formType:'datetime|select|string|number|file|date|',showType:'',dateFormat:'yyyy-MM-dd HH:ss:mm',selectKey:'id',selectValue:'name',numberFormate:''}
         },//实体信息
         multiSelect: false,
-        deleteable: true,
-        editable: true,
+        deleteable:  function(data, type, full, meta){
+            return true;
+        },
+        editable: function(data, type, full, meta){
+            return true;
+        },
         customedit1: false,
         suffix: '.action',//请求后缀
         tableId: 'datatable',//数据表格ID
@@ -61,15 +65,16 @@ define(["dataTables-bs"], function () {
                 var handle = $(this).attr("data-handle");
                 var index = $(this).attr("data-index");
                 var handleIndex = $(this).attr("data-handle-index");
-
                 if (handle == "edit") {
                     selectOneById(index);
                 } else if (handle == "del") {
                     deleteOneById(index)
                 } else if (handle == "custom") {
+                    var tr = $(this).closest('tr');
+                    var row = table.row( tr );
                     $.each(baseConfig.customBtns, function (customIndex, item) {
                         if (customIndex == handleIndex) {
-                            item.callback(index);
+                            item.callback(index,row.data());
                         }
                     })
                 }
@@ -100,8 +105,8 @@ define(["dataTables-bs"], function () {
                             layer.alert(rsp.description, {closeBtn: 0})
                         }
                     },
-                    error: function () {
-                        layer.alert("服务器内部错误!", {closeBtn: 0})
+                    error: function (xhr) {
+                        layer.alert(xhr.statusText , {closeBtn: 0})
                     }
                 })
                 layer.close(index);
@@ -158,7 +163,7 @@ define(["dataTables-bs"], function () {
                     render: function (data, type, full, meta) {
                         var btns = '';
                         //最后一列操作按钮渲染
-                        if (baseConfig.editable) {
+                        if (typeof (baseConfig.editable)=="function" && baseConfig.editable(data, type, full, meta)) {
                             var btnEdit = ' <button type="button" data-handle="edit" data-index="' + full.id + '"   class="btn btn-primary btn-xs">编辑</button> ';
                             btns += btnEdit;
                         }
@@ -172,7 +177,7 @@ define(["dataTables-bs"], function () {
                             var btnEdit = ' <button type="button" data-handle="edit" data-index="' + full.id + '"   class="btn btn-primary btn-xs">' + label + '</button> ';
                             btns += btnEdit;
                         }
-                        if (baseConfig.deleteable) {
+                        if (typeof (baseConfig.deleteable)=="function" && baseConfig.deleteable(data, type, full, meta)) {
                             var btnDel = ' <button type="button"  data-handle="del" data-index="' + full.id + '"  class="btn btn-primary btn-xs">删除</button> ';
                             btns += btnDel;
                         }
@@ -208,8 +213,8 @@ define(["dataTables-bs"], function () {
                         layer.alert(rsp.description, {closeBtn: 0})
                     }
                 },
-                error: function () {
-                    layer.alert("服务器内部错误!", {closeBtn: 0})
+                error: function (xhr) {
+                    layer.alert(xhr.statusText , {closeBtn: 0})
                 }
             })
         }
@@ -271,8 +276,8 @@ define(["dataTables-bs"], function () {
                             }
                             layer.close(win);
                         },
-                        error: function () {
-                            layer.alert("服务器内部错误!", {closeBtn: 0});
+                        error: function (xhr) {
+                            layer.alert(xhr.statusText, {closeBtn: 0});
                             layer.close(win);
                         }
                     })
@@ -299,7 +304,7 @@ define(["dataTables-bs"], function () {
      * @callback 依赖数据加载完毕回调
      */
     var loadDeps = function (deps, callback) {
-        loadingMask = layer.msg('拼命加载中......', {shade: [0.8, '#393D49'], time: 3000, icon: 16});
+        loadingMask = layer.msg('拼命加载中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
         if (deps && (deps instanceof Array)) {
             var url;
             $.each(deps, function (index, item) {

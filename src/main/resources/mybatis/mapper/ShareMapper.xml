@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qth.dao.ShareMapper">
+    <select id="loadResidentialAreaNodes" parameterType="java.lang.Integer"
+            resultType="com.qth.model.common.ZTreeModel">
+        SELECT
+        ra.id,
+        ra.`name`,
+        count(b.id) as leaves
+        FROM
+        residential_area ra
+        LEFT JOIN building b ON ra.id = b.residential_area
+        <where>
+            <if test="value!=null and value>0">
+                ra.id = #{value}
+            </if>
+        </where>
+        GROUP BY
+        ra.id
+    </select>
+    <select id="loadBuildingNodes" parameterType="java.lang.Integer" resultType="com.qth.model.common.ZTreeModel">
+    SELECT
+        count(u.id) as leaves,
+        b.id,
+        b.`name`
+    FROM
+        building b
+    LEFT JOIN unit u ON b.id = u.building
+    WHERE b.residential_area = #{value}
+    GROUP BY
+        b.id
+  </select>
+    <select id="loadUnitNodes" parameterType="java.lang.Integer" resultType="com.qth.model.common.ZTreeModel">
+        SELECT
+            u.id,
+            u.`name`,
+            count(h.floor) AS LEAVES
+        FROM
+            unit u
+        LEFT JOIN house h ON h.unit = u.id
+        WHERE u.building = #{value}
+        GROUP BY
+          u.id
+    </select>
+    <select id="loadFloorNodes" parameterType="java.lang.Integer" resultType="com.qth.model.common.ZTreeModel">
+    SELECT
+        h.unit as id,
+        h.floor as name,
+        count(h.id) AS LEAVES
+    FROM
+        house h
+    LEFT JOIN unit u ON h.unit = u.id
+    WHERE u.id = #{value}
+    GROUP BY
+        h.floor
+
+  </select>
+    <select id="loadHouseNodes" parameterType="java.lang.Integer" resultType="com.qth.model.common.ZTreeModel">
+    SELECT
+        h.id,
+        h.`name`
+    FROM
+        house h
+    WHERE
+        h.unit = #{id}
+        and
+        h.floor = ${name}
+  </select>
+
+    <select id="allAreaInResidentialArea" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+        SELECT
+        sum(h.area)
+        FROM
+        house h
+        INNER JOIN unit u ON h.unit = u.id
+        INNER JOIN building b ON b.id = u.building
+        WHERE
+        b.residential_area = #{value}
+    </select>
+
+    <select id="allHouseInResidentialArea" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        SELECT
+        count(h.id)
+        FROM
+        house h
+        INNER JOIN unit u ON h.unit = u.id
+        INNER JOIN building b ON b.id = u.building
+        WHERE
+        b.residential_area = #{value}
+    </select>
+
+    <select id="allAreaInBuilding" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+        SELECT
+        sum(h.area)
+        FROM
+        house h
+        INNER JOIN unit u ON h.unit = u.id
+        INNER JOIN building b ON b.id = u.building
+        WHERE
+        b.id = #{value}
+    </select>
+
+    <select id="allHouseInBuilding" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        SELECT
+        count(h.id)
+        FROM
+        house h
+        INNER JOIN unit u ON h.unit = u.id
+        INNER JOIN building b ON b.id = u.building
+        WHERE
+        b.id = #{value}
+    </select>
+
+    <select id="allAreaInUnit" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+        SELECT
+        sum(h.area)
+        FROM
+        house h
+        WHERE
+        h.unit = #{value}
+    </select>
+
+    <select id="allHouseInUnit" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        SELECT
+        count(h.id)
+        FROM
+        house h
+        WHERE
+        h.unit = #{value}
+    </select>
+
+    <select id="allAreaInFloor" parameterType="com.qth.model.House" resultType="java.math.BigDecimal">
+        SELECT
+        sum(h.area)
+        FROM
+        house h
+        WHERE
+        h.unit = #{unit} and h.floor = #{floor}
+        GROUP BY h.floor
+    </select>
+
+    <select id="allHouseInFloor" parameterType="com.qth.model.House" resultType="java.lang.Integer">
+        SELECT
+        count(h.id)
+        FROM
+        house h
+        WHERE
+        h.unit = #{unit} and h.floor = #{floor}
+        GROUP BY h.floor
+    </select>
+
+    <!-- houses search-->
+
+    <select id="allHousesInResidentialArea" parameterType="java.lang.Integer" resultType="com.qth.model.House">
+        SELECT
+        h.id,h.area,h.account_balance as accountBalance,h.code,h.owner_name as ownerName
+        FROM
+        house h
+        INNER JOIN unit u ON h.unit = u.id
+        INNER JOIN building b ON b.id = u.building
+        WHERE
+        b.residential_area = #{value}
+    </select>
+
+
+    <select id="allHousesInBuilding" parameterType="java.lang.Integer" resultType="com.qth.model.House">
+        SELECT
+        h.id,h.area,h.account_balance as accountBalance,h.code,h.owner_name as ownerName
+        FROM
+        house h
+        INNER JOIN unit u ON h.unit = u.id
+        INNER JOIN building b ON b.id = u.building
+        WHERE
+        b.id = #{value}
+    </select>
+
+
+    <select id="allHousesInUnit" parameterType="java.lang.Integer" resultType="com.qth.model.House">
+        SELECT
+        h.id,h.area,h.account_balance as accountBalance,h.code,h.owner_name as ownerName        FROM
+        house h
+        WHERE
+        h.unit = #{value}
+    </select>
+
+    <select id="allHousesInFloor" parameterType="com.qth.model.House" resultType="com.qth.model.House">
+        SELECT
+        h.id,h.area,h.account_balance as accountBalance,h.code,h.owner_name as ownerName
+        FROM
+        house h
+        WHERE
+        h.unit = #{unit} and h.floor = #{floor}
+    </select>
+
+    <select id="shareBackInfo" parameterType="java.lang.Long" resultType="java.util.Map">
+        select count(al.house_code) as houseCount ,sum(al.trade_money) as cost from account_log al where al.seq = ${value}
+    </select>
+
+</mapper>

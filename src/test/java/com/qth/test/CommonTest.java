@@ -1,4 +1,4 @@
-package com.fty.code;
+package com.qth.test;
 
 
 import com.qth.dao.CompanyMapper;
@@ -6,6 +6,7 @@ import com.qth.model.Company;
 import com.qth.model.common.DataTableRspWrapper;
 import com.qth.model.common.SelectDataTableMap;
 import com.qth.service.ICompanyService;
+import com.qth.service.IShareService;
 import com.qth.util.BeanUtil;
 import org.apache.ibatis.mapping.ResultMapping;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -16,6 +17,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +34,9 @@ public class CommonTest {
 
     @Autowired
     ICompanyService companyService;
+
+    @Autowired
+    IShareService shareService;
 
     @Test
     @Transactional
@@ -52,9 +57,14 @@ public class CommonTest {
 //        companyMapper.getSelect2Data("region");
 //        System.out.println(result);
 //        companyMapper.updateByMap(new UpdateMap("region",new String[]{"name"},new String[]{"666"},20));
-        Company company = new Company();
-        company.setName("联通");
-        DataTableRspWrapper<Company> companies =  companyService.selectDataTable2Rsp(company);
-        System.out.println(companies);
+//        Company company = new Company();
+//        company.setName("联通");
+//        DataTableRspWrapper<Company> companies =  companyService.selectDataTable2Rsp(company);
+//        System.out.println(companies);
+        Map<String,BigDecimal> map = shareService.shareBackInfo(1525252590147l);
+        for (String key:map.keySet()){
+            System.out.println(key + ":" + map.get(key));
+        }
+
     }
 }

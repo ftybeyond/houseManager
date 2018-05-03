@@ -97,8 +97,8 @@
                             <li><a><i class="fa fa-table"></i>基金使用管理<span class="fa fa-chevron-down"></span></a>
                                 <ul class="nav child_menu">
                                     <li><a target="main_frame" href="/page/repairRecordList.action">维修信息管理</a></li>
-                                    <li><a target="main_frame" href="/page/regionList.action">基金分摊</a></li>
-                                    <li><a target="main_frame" href="/page/regionList.action">维修基金回退</a></li>
+                                    <li><a target="main_frame" href="/page/repairRecordShare.action">基金分摊</a></li>
+                                    <li><a target="main_frame" href="/page/repairRecordShareBack.action">维修基金回退</a></li>
                                 </ul>
                             </li>
                             <li><a><i class="fa fa-bar-chart-o"></i> Data Presentation <span class="fa fa-chevron-down"></span></a>
