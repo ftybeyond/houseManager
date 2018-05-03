@@ -49,7 +49,7 @@
     WHERE
     p.type = 'hasornot'
     AND p2.type = 'hasornot'
-    where b.id = #{id,jdbcType=INTEGER}
+    AND b.id = #{id,jdbcType=INTEGER}
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
     select id, name, residential_area, units, has_elevator, has_underground
