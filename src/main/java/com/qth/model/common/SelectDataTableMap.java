@@ -4,6 +4,10 @@ import java.util.Map;
 
 public class SelectDataTableMap extends DataTableReqWrapper{
 
+    public static final String ORDER_AES = "asc";
+
+    public static final String ORDER_DESC = "desc";
+
     //查询的表名
     private String tableName;
 
@@ -12,6 +16,9 @@ public class SelectDataTableMap extends DataTableReqWrapper{
 
     //要查询的条件映射,null时为无条件查询
     private Map<String,String> conditions;
+
+    //排序
+    private Map<String,String> orders;
 
 
     public SelectDataTableMap(String tableName, String[] cols, Map<String, String> conditions) {
@@ -56,4 +63,11 @@ public class SelectDataTableMap extends DataTableReqWrapper{
         this.conditions = conditions;
     }
 
+    public Map<String, String> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(Map<String, String> orders) {
+        this.orders = orders;
+    }
 }

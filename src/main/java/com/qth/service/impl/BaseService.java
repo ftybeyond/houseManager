@@ -37,6 +37,16 @@ public class BaseService<T extends DataTableReqWrapper> implements IBaseService<
 
     @Override
     public DataTableRspWrapper<T> selectDataTable2Rsp(T entity) {
+        return selectDataTable2Rsp(entity,null,null);
+    }
+
+    @Override
+    public DataTableRspWrapper<T> selectDataTable2Rsp(T entity,Map<String,String> orders) {
+        return selectDataTable2Rsp(entity,orders,null);
+    }
+
+    @Override
+    public DataTableRspWrapper<T> selectDataTable2Rsp(T entity,Map<String,String> orders,Map<String,String> conditions) {
         DataTableRspWrapper rspWrapper = new DataTableRspWrapper();
         List<ResultMapping> resultMappings = sqlSessionFactory.getConfiguration().getResultMap("com.qth.dao." +clazz.getSimpleName()+"Mapper.BaseResultMap" ).getResultMappings();
         SelectDataTableMap map = BeanUtil.searchBean2Map(entity,resultMappings);
@@ -44,6 +54,14 @@ public class BaseService<T extends DataTableReqWrapper> implements IBaseService<
         map.setStart(entity.getStart());
         map.setLength(entity.getLength());
         map.setDraw(entity.getDraw());
+        //追加初始条件
+        if(map.getConditions()!=null&&conditions!=null){
+            map.getConditions().putAll(conditions);
+        }else if(map.getConditions()==null&&conditions!=null){
+            map.setConditions(conditions);
+        }
+
+        map.setOrders(orders);
         //获取表名
         map.setTableName(tableMapping.getTableName(clazz));
         List<T> data = (List<T>) BeanUtil.convertByResultMap(baseMapper.selectDataTable(map),resultMappings,clazz);

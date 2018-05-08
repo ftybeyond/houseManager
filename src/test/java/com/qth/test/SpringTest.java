@@ -24,7 +24,7 @@ import java.util.Map;
 
 @RunWith(SpringJUnit4ClassRunner.class) //使用junit4进行测试
 @ContextConfiguration(locations = {"classpath:spring/spring-*.xml"}) //加载配置文件
-public class CommonTest {
+public class SpringTest {
 
     @Autowired
     CompanyMapper companyMapper;

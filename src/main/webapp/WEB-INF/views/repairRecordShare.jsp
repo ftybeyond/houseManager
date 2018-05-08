@@ -71,6 +71,7 @@
                         customBtns:[
                             {label:'分摊', callback:function(rowId){
                                 layer.open({
+                                    title:'选择分摊单位',
                                     area: ['700px', '550px'],
                                     offset:'t',
                                     type: 2,

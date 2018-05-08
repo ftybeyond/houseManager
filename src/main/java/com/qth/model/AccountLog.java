@@ -1,10 +1,12 @@
 package com.qth.model;
 
 import com.qth.model.common.DataTableReqWrapper;
+import com.qth.util.AccountLogRateChangeComparatorHelper;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class AccountLog extends DataTableReqWrapper {
+public class AccountLog extends DataTableReqWrapper implements AccountLogRateChangeComparatorHelper{
     private Integer id;
 
     private String houseCode;
@@ -103,5 +105,10 @@ public class AccountLog extends DataTableReqWrapper {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    @Override
+    public Date compareDateElement() {
+        return tradeTime;
     }
 }

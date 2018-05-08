@@ -72,6 +72,7 @@
                 <entry key="InvoiceLog" value="invoice_log"></entry>
                 <entry key="ChargeBill" value="charge_bill"></entry>
                 <entry key="AccountLog" value="account_log"></entry>
+                <entry key="AccrualResult" value="accrual_result"></entry>
             </map>
         </property>
     </bean>

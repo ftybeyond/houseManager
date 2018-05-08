@@ -16,6 +16,7 @@
     <result column="owner_name" jdbcType="VARCHAR" property="ownerName" />
     <result column="owner_psptid" jdbcType="INTEGER" property="ownerPsptid" />
     <result column="account_balance" jdbcType="DECIMAL" property="accountBalance" />
+    <result column="accrual_time" jdbcType="TIMESTAMP" property="accrualTime" />
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from house
@@ -267,5 +268,58 @@
     WHERE
     h.unit = #{unit} and h.floor = #{floor}
     GROUP BY h.floor
+  </select>
+
+  <!-- houses search-->
+
+  <select id="allHousesInResidentialArea" parameterType="java.lang.Integer" resultType="com.qth.model.House">
+    SELECT
+    h.id,h.area,h.account_balance as accountBalance,h.code,h.owner_name as ownerName,h.accrual_time as accrualTime,h.accrual_balance as accrualBalance
+    FROM
+    house h
+    INNER JOIN unit u ON h.unit = u.id
+    INNER JOIN building b ON b.id = u.building
+    WHERE
+    b.residential_area = #{value}
+  </select>
+
+
+  <select id="allHousesInBuilding" parameterType="java.lang.Integer" resultType="com.qth.model.House">
+    SELECT
+    h.id,h.area,h.account_balance as accountBalance,h.code,h.owner_name as ownerName,h.accrual_time as accrualTime,h.accrual_balance as accrualBalance
+    FROM
+    house h
+    INNER JOIN unit u ON h.unit = u.id
+    INNER JOIN building b ON b.id = u.building
+    WHERE
+    b.id = #{value}
+  </select>
+
+
+  <select id="allHousesInUnit" parameterType="java.lang.Integer" resultType="com.qth.model.House">
+    SELECT
+    h.id,h.area,h.account_balance as accountBalance,h.code,h.owner_name as ownerName,h.accrual_time as accrualTime,h.accrual_balance as accrualBalance
+    FROM
+    house h
+    WHERE
+    h.unit = #{value}
+  </select>
+
+  <select id="allHousesInFloor" parameterType="com.qth.model.House" resultType="com.qth.model.House">
+    SELECT
+    h.id,h.area,h.account_balance as accountBalance,h.code,h.owner_name as ownerName ,h.accrual_time as accrualTime,h.accrual_balance as accrualBalance
+    FROM
+    house h
+    WHERE
+    h.unit = #{unit} and h.floor = #{floor}
+  </select>
+
+  <select id="selectSimpleOne" parameterType="java.lang.Integer" resultType="com.qth.model.House">
+    SELECT
+    h.id,h.area,h.account_balance as accountBalance,h.code,h.owner_name as ownerName ,h.accrual_time as accrualTime,h.accrual_balance as accrualBalance
+    FROM
+    house h
+    WHERE
+    h.id = #{value}
   </select>
 </mapper>

@@ -10,8 +10,6 @@
     <title>缴费规则管理</title>
 
     <link rel="stylesheet" type="text/css" href="<%=path%>/vendors/datatable/datatables-bootstrap.min.css"/>
-    <link rel="stylesheet" type="text/css"
-    <link rel="stylesheet" type="text/css" href="<%=path%>/vendors/select2/select2.min.css"/>
     <script src="<%=path%>/vendors/requireJS/require.js"></script>
     <script type="text/javascript" src="<%=path%>/vendors/requireJS/require-config.js"></script>
     <script type="text/javascript">
@@ -23,7 +21,7 @@
                         domain: {
                             name: 'moneyRate',
                             props: [
-                                {name: 'id', type: 'string', false: true},
+                                {name: 'id', type: 'string', showable: false},
                                 {name: 'term', type: 'date', showable: true},
                                 {name: 'rate', type: 'string', showable: true,render:function (row) {
                                     return row.toFixed(12)

@@ -28,7 +28,8 @@ define(["dataTables-bs"], function () {
         customBtns: [],//表格上自定义按钮{label:'自定义按钮',callback:function(index){//行数据id}}
         beforeSaveOrUpdate: null,//保存或更新前回调方法，提供ajax 即将提交的param参数,用于表单校验和参数补充
         afterSyncFormData: null, //selectById后同步表单后回调方法，此回调用于不能自动同步到表单项的值的组件,传入当前查询回的对象
-        beforePopWin:null
+        beforePopWin:null,
+        order:null
     };
     var handleObj;//当前编辑的Region对象
     var table;//表格对象
@@ -228,7 +229,9 @@ define(["dataTables-bs"], function () {
             var title, url, param;
             if (type == 1) {
                 $("#" + baseConfig.infoFrom)[0].reset();
-                $("#" + baseConfig.infoFrom +" select").select2("val","all")
+                if($("#" + baseConfig.infoFrom +" select").size()>0){
+                    $("#" + baseConfig.infoFrom +" select").select2("val","all")
+                }
                 title = "添加";
                 url = getUrl("insert");
             } else if (type == 2) {
@@ -330,7 +333,7 @@ define(["dataTables-bs"], function () {
         }
 
         function waitForSynch() {
-            console.log("等待异步任务" + deps.length + "个，当前完成" + taskComplated + "个");
+            //console.log("等待异步任务" + deps.length + "个，当前完成" + taskComplated + "个");
             if (taskComplated == deps.length) {
                 taskComplated = 0;
                 if (callback) {

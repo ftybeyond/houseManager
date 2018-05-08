@@ -40,7 +40,11 @@ public class ShareService implements IShareService{
     @Override
     public List<ZTreeModel> loadTreeNodes(ZTreeNodeReq req) {
         if(req.getLevel() == null){
-            return shareMapper.loadResidentialAreaNodes(Integer.parseInt(req.getParam()));
+            if (req.getParam()!=null) {
+                return shareMapper.loadResidentialAreaNodes(Integer.parseInt(req.getParam()));
+            } else {
+                return shareMapper.loadResidentialAreaNodes(null);
+            }
         }
         switch (req.getLevel()){
             case HouseTree.RESIDENTIALAREA_LEVEL:
@@ -77,23 +81,23 @@ public class ShareService implements IShareService{
             switch (ids.length-1){
                 case HouseTree.RESIDENTIALAREA_LEVEL:
                     //指定小区下所有房屋信息
-                    list = shareMapper.allHousesInResidentialArea(Integer.parseInt(ids[HouseTree.RESIDENTIALAREA_LEVEL]));
+                    list = houseMapper.allHousesInResidentialArea(Integer.parseInt(ids[HouseTree.RESIDENTIALAREA_LEVEL]));
                     break;
                 case HouseTree.BUILDING_LEVEL:
-                    list = shareMapper.allHousesInBuilding(Integer.parseInt(ids[HouseTree.BUILDING_LEVEL]));
+                    list = houseMapper.allHousesInBuilding(Integer.parseInt(ids[HouseTree.BUILDING_LEVEL]));
                     break;
                 case HouseTree.UNIT_LEVEL:
-                    list = shareMapper.allHousesInUnit(Integer.parseInt(ids[HouseTree.UNIT_LEVEL]));
+                    list = houseMapper.allHousesInUnit(Integer.parseInt(ids[HouseTree.UNIT_LEVEL]));
                     break;
                 case HouseTree.FLOOR_LEVEL:
                     House house = new House();
                     house.setUnit(Integer.parseInt(ids[HouseTree.UNIT_LEVEL]));
                     house.setFloor(ids[HouseTree.FLOOR_LEVEL]);
-                    list = shareMapper.allHousesInFloor(house);
+                    list = houseMapper.allHousesInFloor(house);
                     break;
                 case HouseTree.HOUSE_LEVEL:
                     list = new ArrayList<>(1);
-                    list.add(houseMapper.selectByPrimaryKey(Integer.parseInt(ids[HouseTree.HOUSE_LEVEL])));
+                    list.add(houseMapper.selectSimpleOne(Integer.parseInt(ids[HouseTree.HOUSE_LEVEL])));
                     break;
                 default:
                     list = new ArrayList<>();
@@ -268,7 +272,7 @@ public class ShareService implements IShareService{
                     sum = sum.add(result==null?new BigDecimal(0f):result);
                     break;
                 case HouseTree.HOUSE_LEVEL:
-                    result = houseMapper.selectByPrimaryKey(Integer.parseInt(ids[HouseTree.HOUSE_LEVEL])).getArea();
+                    result = houseMapper.selectSimpleOne(Integer.parseInt(ids[HouseTree.HOUSE_LEVEL])).getArea();
                     sum = sum.add(result==null?new BigDecimal(0f):result);
                     break;
             }

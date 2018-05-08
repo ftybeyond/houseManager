@@ -27,12 +27,12 @@
                             props:[
                                 {name:'id',type:'string',false:true},
                                 {name:'term',type:'date',showable:true},
-                                {name:'chargeType',type:'string',showable:true,render:function (row) {
-                                    var dic = main.findArrayValue(row,data["ChargeType.json"])
-                                    return dic&&dic.text?dic.text:"";
-                                }},
                                 {name:'houseType',type:'string',showable:true,render:function (row) {
                                     var dic = main.findArrayValue(row,data["HouseType.json"])
+                                    return dic&&dic.text?dic.text:"";
+                                }},
+                                {name:'chargeType',type:'string',showable:true,render:function (row) {
+                                    var dic = main.findArrayValue(row,data["ChargeType.json"])
                                     return dic&&dic.text?dic.text:"";
                                 }},
                                 {name:'elevatorSign',type:'string',showable:true,render:function (row) {

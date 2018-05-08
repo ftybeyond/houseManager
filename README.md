@@ -62,3 +62,8 @@ xml中**Mapper**节点的**namespace**属性对应dao接口名，每个**sqlStat
 6.action层实现类,页面跳转由IndexController统一路由，约定/page/jsp名称.action会forward到webRoot/web-inf/view/下的jsp文件，restApi应答统一用CommonRsp类型包装，约定使用通用页面模版的controller需要具备 **/rest/实体名称(小写)/one**、**/rest/实体名称(小写)/delete**、**/rest/实体名称(小写)/update**、、**/rest/实体名称(小写)/insert**、**/rest/实体名称(小写)/table**。记住这个实体名称就是要配置给渲染页面的domain的name,
 
 7.页面：基础页面（带查询表单、数据表格、添加/修改窗口）参考 区域和街道模块，其中表单id和表格id，查询、添加按钮的id都是约定的，不用修改，也可以根据配置文件指定id。
+
+
+#### 数据导入注意事项
+
+1、房屋信息导入时，需要计息完毕，账户变更记录表记录，并填入最后计息时间，最后计息余额，**即一个房屋余额不为0，则必然要有余额变更记录和最后计息时间和计息余额**

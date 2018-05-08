@@ -26,40 +26,22 @@
     <script type="text/javascript" src="<%=path%>/vendors/requireJS/require-config.js"></script>
     <script type="text/javascript">
         var treeObj
-        require(["zTree","layer"],function (main) {
+        require(["houseTree","layer"],function (tree) {
             $(function () {
                 var setting = {
                     async:{
-                        autoParam:["id","level","name","checked"],
-                        enable:true,
                         otherParam:{"param":${record.residentialArea}},
-                        url:"/rest/tree/selectHouseTree.action"
-                    },
-                    check: {
-                        enable: true
-                    },
-                    callback: {
-                        onAsyncSuccess: function (e,treeId,treeNode,msg) {
-
-                        },
-                        onCheck:showOnDiv
                     }
                 };
 
-                treeObj = $.fn.zTree.init($("#selectTree"), setting);
+                treeObj = tree.genTree("selectTree", setting);
                 //绑定计算按钮时间，计算分摊结果
                 $("#calculateBtn").on("click",function () {
-                    var addCheckedNodes = loadAllChecksNodes();
-                    var param = "";
-                    for(key in addCheckedNodes){
-                        param += getIdPath(addCheckedNodes[key]);
-                        param+=","
-                    }
-                    if(param.length==0){
-                        layer.alert("请至少选择一个分摊单位!")
+                    param = tree.getPathParam();
+                    if(!param){
+                        layer.alert("请至少选择一个分摊单位!");
                         return;
                     }
-                    param = param.substring(0,param.lastIndexOf(","));
                     $.ajax({
                         url:'/rest/share/calculateResult.action',
                         dataType:'json',
@@ -111,76 +93,6 @@
                         layer.alert(xhr.statusText);
                     })
                 })
-                function loadAllChecksNodes(){
-                    var checkedNodes = treeObj.getNodesByParam("checked",true);//获取所有已选中的节点
-                    var result = new Object()//结果对象
-                    $.each(checkedNodes,function(index,item){
-                        if(item.check_Child_State == 2 || item.check_Child_State == -1){
-                            //当前是一个全选节点,判断其父节点是否也是全选节点
-                            var parentNode = item.getParentNode()
-                            if(parentNode == null){
-                                //当前是根节点被选中，无需向父级查找
-                                result[item.tId] = item
-                            }else{
-                                //向父节点递归，直到祖先节点是半选状态
-                                var finalNode = getAllCheckedAncestors(item);
-                                result[finalNode.tId] = finalNode;
-                            }
-                        }
-                    });
-                    return result;
-                }
-
-                function showOnDiv() {
-                    var allCheckedNodes = loadAllChecksNodes();
-                    $("#selectedNodes").empty();
-                    //显示到页面
-                    for(key in allCheckedNodes){
-                        $("#selectedNodes").append('<li>'+getNamePath(allCheckedNodes[key])+'</li>')
-                        console.log();
-                    }
-                }
-
-                /**
-                 * 查找指定上节点分支上，最高级的全选节点
-                 * @param treeNode
-                 */
-                function getAllCheckedAncestors(treeNode) {
-                    var parentNode = treeNode.getParentNode();
-                    if(parentNode != null && parentNode.check_Child_State==2){
-                        return getAllCheckedAncestors(parentNode)
-                    }else{
-                        return treeNode;
-                    }
-                }
-
-                function getNamePath(treeNode){
-                    var result = "";
-                    var pathNodes = treeNode.getPath();
-                    $.each(pathNodes,function(index,item){
-                        result +=item.name;
-                        if(index !=(pathNodes.length-1)){
-                            result += "-"
-                        }
-                    })
-                    return result;
-                }
-
-                function getIdPath(treeNode){
-                    var result = "";
-                    var pathNodes = treeNode.getPath();
-                    $.each(pathNodes,function(index,item){
-                        if (item.level == 3) {
-                            result +=item.name;
-                        } else {
-                            result +=item.id;
-                        }
-                        if(index !=(pathNodes.length-1)){
-                            result += "-"
-                        }
-                    })
-                    return result;
-                }
             })
         })
     </script>

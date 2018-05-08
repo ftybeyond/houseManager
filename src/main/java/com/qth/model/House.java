@@ -3,6 +3,7 @@ package com.qth.model;
 import com.qth.model.common.DataTableReqWrapper;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class House extends DataTableReqWrapper {
     private Integer id;
@@ -48,6 +49,10 @@ public class House extends DataTableReqWrapper {
     private Integer ownerPsptid;
 
     private BigDecimal accountBalance;
+
+    private Date accrualTime;
+
+    private BigDecimal accrualBalance;
 
     public Integer getId() {
         return id;
@@ -223,5 +228,21 @@ public class House extends DataTableReqWrapper {
 
     public void setAccountBalance(BigDecimal accountBalance) {
         this.accountBalance = accountBalance;
+    }
+
+    public Date getAccrualTime() {
+        return accrualTime;
+    }
+
+    public void setAccrualTime(Date accrualTime) {
+        this.accrualTime = accrualTime;
+    }
+
+    public BigDecimal getAccrualBalance() {
+        return accrualBalance;
+    }
+
+    public void setAccrualBalance(BigDecimal accrualBalance) {
+        this.accrualBalance = accrualBalance;
     }
 }

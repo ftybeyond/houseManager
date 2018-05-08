@@ -11,12 +11,15 @@ require.config({
         'dataTables-bs':'datatable/dataTables.bootstrap.min',
         'jquery-serializejson':'jquery/jquery.serializejson.min',
         'layer':'layer/layer',
+        'laydate':'layer/laydate',
         'common':'../script/common',
         'select2-cn':'select2/zh-CN',
         'mySelect':'../script/commonSelect',
         'my97date':'My97DatePicker/WdatePicker',
         'moment':'moment/moment.min',
-        'zTree':'zTree/js/jquery.ztree.all.min'
+        'zTree':'zTree/js/jquery.ztree.all.min',
+        'houseTree':'../script/houseTree'
+
     },
     'shim' : {
         'bootstrap' : {
@@ -31,6 +34,7 @@ require.config({
         'select2-cn':['select2'],
         'mySelect':['select2','select2-cn'],
         'dataTables-bs':['bootstrap','datatable','layer','jquery-serializejson'],
-        'zTree':['jquery']
+        'zTree':['jquery'],
+        'houseTree':['zTree']
     }
 });

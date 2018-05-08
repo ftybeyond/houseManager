@@ -40,14 +40,6 @@ public interface ShareMapper {
 
     Integer allHouseInFloor(House house);
 
-    List<House> allHousesInResidentialArea(Integer residentialArea);
-
-    List<House> allHousesInBuilding(Integer building);
-
-    List<House> allHousesInUnit(Integer unit);
-
-    List<House> allHousesInFloor(House house);
-
     Map<String,BigDecimal> shareBackInfo(Long seq);
 
 }

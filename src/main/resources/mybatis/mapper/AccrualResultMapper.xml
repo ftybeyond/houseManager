@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qth.dao.AccrualResultMapper">
+  <resultMap id="BaseResultMap" type="com.qth.model.AccrualResult">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="house_code" jdbcType="VARCHAR" property="houseCode" />
+    <result column="balance" jdbcType="DECIMAL" property="balance" />
+    <result column="rate" jdbcType="DECIMAL" property="rate" />
+    <result column="accrual" jdbcType="DECIMAL" property="accrual" />
+    <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
+    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+    <result column="seq" jdbcType="BIGINT" property="seq" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from accrual_result
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <delete id="delectBatch" parameterType="java.util.List">
+    delete from accrual_result
+    where house_code in
+    <foreach collection="list" item="item" open="(" close=")" separator=",">
+      #{item.houseCode}
+    </foreach>
+  </delete>
+  <insert id="insert" parameterType="com.qth.model.AccrualResult">
+    insert into accrual_result (id, house_code, balance, 
+      rate, accrual, start_time, 
+      end_time, state, seq
+      )
+    values (#{id,jdbcType=INTEGER}, #{houseCode,jdbcType=VARCHAR}, #{balance,jdbcType=DECIMAL}, 
+      #{rate,jdbcType=DECIMAL}, #{accrual,jdbcType=DECIMAL}, #{startTime,jdbcType=TIMESTAMP}, 
+      #{endTime,jdbcType=TIMESTAMP}, #{state,jdbcType=INTEGER}, #{seq,jdbcType=BIGINT}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.qth.model.AccrualResult">
+    update accrual_result
+    set house_code = #{houseCode,jdbcType=VARCHAR},
+      balance = #{balance,jdbcType=DECIMAL},
+      rate = #{rate,jdbcType=DECIMAL},
+      accrual = #{accrual,jdbcType=DECIMAL},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      state = #{state,jdbcType=INTEGER},
+      seq = #{seq,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, house_code, balance, rate, accrual, start_time, end_time, state, seq
+    from accrual_result
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, house_code, balance, rate, accrual, start_time, end_time, state, seq
+    from accrual_result
+  </select>
+
+  <!--paths search-->
+
+  <select id="allResultInResidentialArea" parameterType="com.qth.model.AccrualResult" resultMap="BaseResultMap">
+    SELECT
+        ar.*
+    FROM
+        accrual_result ar
+    INNER JOIN house h ON ar.house_code = h.`code`
+    INNER JOIN unit u ON u.id = h.unit
+    INNER JOIN building b ON b.id = u.building
+    INNER JOIN residential_area a ON a.id = b.residential_area
+    WHERE
+    b.residential_area = ${domainId}
+    <if test="state != null">
+      and ar.state = #{state}
+    </if>
+    Limit #{start},#{Length}
+  </select>
+
+
+  <select id="allResultInBuilding" parameterType="com.qth.model.AccrualResult" resultMap="BaseResultMap">
+    SELECT
+        ar.*
+    FROM
+        accrual_result ar
+    INNER JOIN house h ON ar.house_code = h.`code`
+    INNER JOIN unit u ON u.id = h.unit
+    INNER JOIN building b ON b.id = u.building
+    WHERE
+    b.id = ${domainId}
+    <if test="state != null">
+      and ar.state = #{state}
+    </if>
+    Limit #{start},#{Length}
+  </select>
+
+
+  <select id="allResultInUnit" parameterType="com.qth.model.AccrualResult" resultMap="BaseResultMap">
+    SELECT
+        ar.*
+    FROM
+        accrual_result ar
+    INNER JOIN house h ON ar.house_code = h.`code`
+    INNER JOIN unit u ON u.id = h.unit
+    WHERE
+    h.unit = ${domainId}
+    <if test="state != null">
+      and ar.state = #{state}
+    </if>
+    Limit #{start},#{Length}
+  </select>
+
+  <select id="allResultInFloor" parameterType="com.qth.model.AccrualResult" resultMap="BaseResultMap">
+    SELECT
+        ar.*
+    FROM
+        accrual_result ar
+    INNER JOIN house h ON ar.house_code = h.`code`
+    WHERE
+    h.unit = ${attr1} and h.floor = ${attr2}
+    <if test="state != null">
+      and ar.state = #{state}
+    </if>
+    Limit #{start},#{Length}
+  </select>
+
+  <select id="allResultInHouse" parameterType="com.qth.model.AccrualResult" resultMap="BaseResultMap">
+    SELECT
+        ar.*
+    FROM
+        accrual_result ar
+    INNER JOIN house h ON ar.house_code = h.`code`
+    WHERE
+    h.id = ${domainId}
+    <if test="state != null">
+      and ar.state = #{state}
+    </if>
+    Limit #{start},#{Length}
+  </select>
+
+  <!--counts-->
+
+  <select id="allCountResultInResidentialArea" parameterType="com.qth.model.AccrualResult" resultType="java.lang.Integer">
+    SELECT
+    count(ar.id)
+    FROM
+    accrual_result ar
+    INNER JOIN house h ON ar.house_code = h.`code`
+    INNER JOIN unit u ON u.id = h.unit
+    INNER JOIN building b ON b.id = u.building
+    INNER JOIN residential_area a ON a.id = b.residential_area
+    WHERE
+    b.residential_area = ${domainId}
+    <if test="state != null">
+      and ar.state = #{state}
+    </if>
+  </select>
+
+
+  <select id="allCountResultInBuilding" parameterType="com.qth.model.AccrualResult" resultType="java.lang.Integer">
+    SELECT
+    count(ar.id)
+    FROM
+    accrual_result ar
+    INNER JOIN house h ON ar.house_code = h.`code`
+    INNER JOIN unit u ON u.id = h.unit
+    INNER JOIN building b ON b.id = u.building
+    WHERE
+    b.id = ${domainId}
+    <if test="state != null">
+      and ar.state = #{state}
+    </if>
+  </select>
+
+
+  <select id="allCountResultInUnit" parameterType="com.qth.model.AccrualResult" resultType="java.lang.Integer">
+    SELECT
+    count(ar.id)
+    FROM
+    accrual_result ar
+    INNER JOIN house h ON ar.house_code = h.`code`
+    INNER JOIN unit u ON u.id = h.unit
+    WHERE
+    h.unit = ${domainId}
+    <if test="state != null">
+      and ar.state = #{state}
+    </if>
+  </select>
+
+  <select id="allCountResultInFloor" parameterType="com.qth.model.AccrualResult" resultType="java.lang.Integer">
+    SELECT
+    count(ar.id)
+    FROM
+    accrual_result ar
+    INNER JOIN house h ON ar.house_code = h.`code`
+    WHERE
+    h.unit = ${attr1} and h.floor = ${attr2}
+    <if test="state != null">
+      and ar.state = #{state}
+    </if>
+  </select>
+
+  <select id="allCountResultInHouse" parameterType="com.qth.model.AccrualResult" resultType="java.lang.Integer">
+    SELECT
+    count(ar.id)
+    FROM
+    accrual_result ar
+    INNER JOIN house h ON ar.house_code = h.`code`
+    WHERE
+    h.id = ${domainId}
+    <if test="state != null">
+      and ar.state = #{state}
+    </if>
+  </select>
+
+</mapper>

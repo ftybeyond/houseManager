@@ -29,6 +29,9 @@
     <script type="text/javascript" src="<%=path%>/vendors/requireJS/require-config.js"></script>
     <script type="text/javascript">
         require(["common", "mySelect"], function (main) {
+            layer.config({
+                offset:"100px"
+            })
             $(function () {
                 main.loadDeps(["residential_area", "ShareType.json"], function (data) {
                     $("select[name='residentialArea']").mySelect2({data: data["residential_area"]})

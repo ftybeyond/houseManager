@@ -90,18 +90,18 @@
                                     <li><a target="main_frame" href="/page/.action">收缴退回</a></li>
                                     <li><a target="main_frame" href="/page/.action">收缴登账</a></li>
                                     <li><a target="main_frame" href="/page/.action">基金返还</a></li>
-                                    <li><a target="main_frame" href="/page/.action">基金计息</a></li>
-                                    <li><a target="main_frame" href="/page/.action">计息登账</a></li>
+                                    <li><a target="main_frame" href="/page/accrual.action">基金计息</a></li>
+                                    <li><a target="main_frame" href="/page/accrualBack.action">计息登账</a></li>
                                 </ul>
                             </li>
-                            <li><a><i class="fa fa-table"></i>基金使用管理<span class="fa fa-chevron-down"></span></a>
+                            <li><a><i class="fa fa-table"></i> 基金使用管理<span class="fa fa-chevron-down"></span></a>
                                 <ul class="nav child_menu">
                                     <li><a target="main_frame" href="/page/repairRecordList.action">维修信息管理</a></li>
                                     <li><a target="main_frame" href="/page/repairRecordShare.action">基金分摊</a></li>
                                     <li><a target="main_frame" href="/page/repairRecordShareBack.action">维修基金回退</a></li>
                                 </ul>
                             </li>
-                            <li><a><i class="fa fa-bar-chart-o"></i> Data Presentation <span class="fa fa-chevron-down"></span></a>
+                            <li><a><i class="fa fa-bar-chart-o"></i> 查询信息管理 <span class="fa fa-chevron-down"></span></a>
                                 <ul class="nav child_menu">
                                     <li><a href="chartjs.html">Chart JS</a></li>
                                     <li><a href="chartjs2.html">Chart JS2</a></li>
@@ -110,7 +110,7 @@
                                     <li><a href="other_charts.html">Other Charts</a></li>
                                 </ul>
                             </li>
-                            <li><a><i class="fa fa-clone"></i>Layouts <span class="fa fa-chevron-down"></span></a>
+                            <li><a><i class="fa fa-clone"></i> 用户权限管理 <span class="fa fa-chevron-down"></span></a>
                                 <ul class="nav child_menu">
                                     <li><a href="fixed_sidebar.html">Fixed Sidebar</a></li>
                                     <li><a href="fixed_footer.html">Fixed Footer</a></li>

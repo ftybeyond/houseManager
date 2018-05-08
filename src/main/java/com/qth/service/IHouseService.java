@@ -3,6 +3,7 @@ package com.qth.service;
 import com.qth.model.House;
 import com.qth.model.common.DataTableRspWrapper;
 
+import java.util.Date;
 import java.util.List;
 
 public interface IHouseService extends IBaseService<House>
@@ -18,4 +19,8 @@ public interface IHouseService extends IBaseService<House>
     public House findHouseById(int id);
 
     public int deleteHouseById(int id);
+
+    public Date getLastAccrual(String paths);
+
+    public List<House> selectByTreePath(String paths);
 }

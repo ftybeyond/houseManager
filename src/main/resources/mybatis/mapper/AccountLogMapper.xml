@@ -55,5 +55,10 @@
     from account_log
     where seq = #{shareSeq}
   </select>
+  <select id="selectHouseChangeWithDateRange" parameterType="java.util.Map" resultMap="BaseResultMap">
+    select *
+    from account_log
+    where house_code = #{houseCode} and  trade_time BETWEEN #{fromDate,jdbcType=TIMESTAMP} and #{endDate,jdbcType=TIMESTAMP}
+  </select>
 
 </mapper>

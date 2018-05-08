@@ -21,7 +21,7 @@
   </update>
 
   <!-- 通用查询dataTable数据格式 -->
-  <select id="selectDataTable" parameterType="com.qth.model.common.SelectDataTableMap" resultType="java.util.Map">
+  <select id="selectDataTable" parameterType="com.qth.model.common.SelectDataTableMap" resultType="map">
   SELECT
   <choose>
     <when test="cols!=null and cols.length >0">
@@ -49,6 +49,12 @@
       </foreach>
     </if>
   </where>
+    <if test="orders!=null">
+      ORDER BY
+      <foreach collection="orders" separator="," index="column" item="val">
+        ${column} ${val}
+      </foreach>
+    </if>
   limit #{start} ,#{length}
 </select>
   <!--通用查询datatable总行数，配合分页-->

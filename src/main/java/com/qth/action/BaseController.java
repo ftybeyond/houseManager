@@ -3,7 +3,9 @@ package com.qth.action;
 import com.qth.model.common.CommonRsp;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.web.bind.ServletRequestDataBinder;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
@@ -45,6 +47,26 @@ public class BaseController {
         CommonRsp rsp = new CommonRsp(true, "0000", "查询成功");
         rsp.setDataList(list);
         return rsp;
+    }
+
+    public CommonRsp description2Rsp(String description){
+        CommonRsp rsp = new CommonRsp(true, "0000", description);
+        return rsp;
+    }
+
+
+    /**
+     * 全局异常处理
+     */
+    @ExceptionHandler({Exception.class})
+    @ResponseBody
+    public CommonRsp exception(Exception e) {
+        CommonRsp commonRsp = new CommonRsp();
+        commonRsp.setSuccess(false);
+        commonRsp.setResultCode("9999");
+        commonRsp.setDescription("服务器内部错误：" + e.getMessage());
+        e.printStackTrace();
+        return commonRsp;
     }
 }
 

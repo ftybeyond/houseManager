@@ -149,49 +149,6 @@
         GROUP BY h.floor
     </select>
 
-    <!-- houses search-->
-
-    <select id="allHousesInResidentialArea" parameterType="java.lang.Integer" resultType="com.qth.model.House">
-        SELECT
-        h.id,h.area,h.account_balance as accountBalance,h.code,h.owner_name as ownerName
-        FROM
-        house h
-        INNER JOIN unit u ON h.unit = u.id
-        INNER JOIN building b ON b.id = u.building
-        WHERE
-        b.residential_area = #{value}
-    </select>
-
-
-    <select id="allHousesInBuilding" parameterType="java.lang.Integer" resultType="com.qth.model.House">
-        SELECT
-        h.id,h.area,h.account_balance as accountBalance,h.code,h.owner_name as ownerName
-        FROM
-        house h
-        INNER JOIN unit u ON h.unit = u.id
-        INNER JOIN building b ON b.id = u.building
-        WHERE
-        b.id = #{value}
-    </select>
-
-
-    <select id="allHousesInUnit" parameterType="java.lang.Integer" resultType="com.qth.model.House">
-        SELECT
-        h.id,h.area,h.account_balance as accountBalance,h.code,h.owner_name as ownerName        FROM
-        house h
-        WHERE
-        h.unit = #{value}
-    </select>
-
-    <select id="allHousesInFloor" parameterType="com.qth.model.House" resultType="com.qth.model.House">
-        SELECT
-        h.id,h.area,h.account_balance as accountBalance,h.code,h.owner_name as ownerName
-        FROM
-        house h
-        WHERE
-        h.unit = #{unit} and h.floor = #{floor}
-    </select>
-
     <select id="shareBackInfo" parameterType="java.lang.Long" resultType="java.util.Map">
         select count(al.house_code) as houseCount ,sum(al.trade_money) as cost from account_log al where al.seq = ${value}
     </select>
