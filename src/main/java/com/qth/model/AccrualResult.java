@@ -31,6 +31,10 @@ public class AccrualResult extends DatatableReqWithTree {
 
     private Long seq;
 
+    private String handler;
+
+    private Date updateTime;
+
     public Integer getId() {
         return id;
     }
@@ -101,5 +105,21 @@ public class AccrualResult extends DatatableReqWithTree {
 
     public void setSeq(Long seq) {
         this.seq = seq;
+    }
+
+    public String getHandler() {
+        return handler;
+    }
+
+    public void setHandler(String handler) {
+        this.handler = handler;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

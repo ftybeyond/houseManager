@@ -7,8 +7,10 @@ import java.util.List;
 
 public interface IAccrualService {
 
-    int accrualCalculate(String paths,Date fromDate);
+    int accrualCalculate(String paths,Date fromDate,String handler);
 
     int accrualBack(AccrualResult model);
+
+    public int billBatch(AccrualResult model,String handler);
 
 }

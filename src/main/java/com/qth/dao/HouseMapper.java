@@ -2,10 +2,12 @@ package com.qth.dao;
 
 import com.qth.model.House;
 import com.qth.model.Unit;
+import com.qth.model.dto.AccrualInfo;
 
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public interface HouseMapper {
     int deleteByPrimaryKey(Integer id);
@@ -43,5 +45,7 @@ public interface HouseMapper {
     List<House> allHousesInUnit(Integer unit);
 
     List<House> allHousesInFloor(House house);
+
+    int updateByAccrualInfo(AccrualInfo accrualInfo);
 
 }

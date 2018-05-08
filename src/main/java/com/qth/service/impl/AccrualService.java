@@ -2,11 +2,13 @@ package com.qth.service.impl;
 
 import com.qth.dao.AccountLogMapper;
 import com.qth.dao.AccrualResultMapper;
+import com.qth.dao.HouseMapper;
 import com.qth.dao.MoneyRateMapper;
 import com.qth.model.AccountLog;
 import com.qth.model.AccrualResult;
 import com.qth.model.House;
 import com.qth.model.MoneyRate;
+import com.qth.model.dto.AccrualInfo;
 import com.qth.service.IAccrualResultService;
 import com.qth.service.IAccrualService;
 import com.qth.service.IHouseService;
@@ -34,6 +36,9 @@ public class AccrualService implements IAccrualService {
     IHouseService houseService;
 
     @Autowired
+    HouseMapper houseMapper;
+
+    @Autowired
     IAccrualResultService accrualResultService;
 
     @Autowired
@@ -51,7 +56,7 @@ public class AccrualService implements IAccrualService {
      */
     @Override
     @Transactional
-    public int accrualCalculate(String paths, Date toDate) {
+    public int accrualCalculate(String paths, Date toDate,String handler) {
         //待计息房屋列表
         List<House> houseList = houseService.selectByTreePath(paths);
         //利息变化列表
@@ -127,6 +132,8 @@ public class AccrualService implements IAccrualService {
                     accrualResult.setEndTime(endDate);
                     accrualResult.setRate(rate);
                     accrualResult.setState(0);
+                    accrualResult.setHandler(handler);
+                    accrualResult.setUpdateTime(stamp);
                     accrualResult.setSeq(stamp.getTime());
                     accrualResult.setAccrual(accrual);
                     count += accrualResultMapper.insert(accrualResult);
@@ -146,6 +153,8 @@ public class AccrualService implements IAccrualService {
                 accrualResult.setEndTime(endDate);
                 accrualResult.setRate(rate);
                 accrualResult.setState(0);
+                accrualResult.setHandler(handler);
+                accrualResult.setUpdateTime(stamp);
                 accrualResult.setSeq(stamp.getTime());
                 accrualResult.setAccrual(accrual);
                 count += accrualResultMapper.insert(accrualResult);
@@ -158,6 +167,37 @@ public class AccrualService implements IAccrualService {
     public int accrualBack(AccrualResult model) {
         List<AccrualResult> list = accrualResultService.selectByModel(model);
         return accrualResultService.delectBatch(list);
+    }
+
+    @Override
+    @Transactional
+    public int billBatch(AccrualResult model,String handler){
+        //更新状态
+        Map map = new HashMap();
+        List<AccrualInfo> list = accrualResultService.selectAccrualInfoByModel(model);
+        Date stamp = new Date();
+        map.put("list",list);
+        map.put("handler",handler);
+        map.put("updateTime",stamp);
+        accrualResultMapper.billBatch(map);
+
+        for(AccrualInfo accrualInfo:list){
+            //账户余额、更新最后计息时间
+            houseMapper.updateByAccrualInfo(accrualInfo);
+            //插入accountlog
+            AccountLog accountLog = new AccountLog();
+            accountLog.setBalance(accrualInfo.getAccountBalance());
+            accountLog.setSeq(stamp.getTime());
+            accountLog.setRemark("计息收入(" + accrualInfo.getAccrualSum() + ")至" + accrualInfo.getEndTime());
+            accountLog.setHandler(handler);
+            accountLog.setTradeTime(stamp);
+            accountLog.setTradeMoney(accrualInfo.getAccrualSum());
+            accountLog.setTradeType(3);
+            accountLog.setHouseCode(accrualInfo.getHouseCode());
+            accountLog.setHouseOwner(accrualInfo.getHouseOwner());
+            accountLogMapper.insert(accountLog);
+        }
+        return 1;
     }
 
     /**
@@ -174,7 +214,9 @@ public class AccrualService implements IAccrualService {
                     if(i>=1){
                         return moneyRateList.subList(i-1,moneyRateList.size());
                     }else {
-                        return null;
+                        List<MoneyRate> result = new ArrayList<>(1);
+                        result.add(moneyRateList.get(i));
+                        return result;
                     }
                 }
             }

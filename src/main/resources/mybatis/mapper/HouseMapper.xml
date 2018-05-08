@@ -322,4 +322,9 @@
     WHERE
     h.id = #{value}
   </select>
+
+  <update id="updateByAccrualInfo" parameterType="com.qth.model.dto.AccrualInfo">
+    update house set account_balance = #{newBalance},accrual_time = #{endTime},accrual_balance = #{newBalance}
+    where code = #{houseCode}
+  </update>
 </mapper>

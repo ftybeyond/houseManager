@@ -46,7 +46,7 @@
                             layer.alert(data.description);
                             return;
                         }
-                        layer.confirm('<p>'+data.description+'</p><p>请选择计息截至日期：</p><p><input onClick="WdatePicker()" style="width: 100%"/></p>',{title:"结息状态",area:["400px"],btn:["开始计息","取消"]},function (index,layObj) {
+                        layer.confirm('<p>'+data.description+'</p><p>请选择计息截至日期：</p><p><input onClick="WdatePicker({maxDate:\'%y-%M-%d\'})" style="width: 100%"/></p>',{title:"结息状态",area:["400px"],btn:["开始计息","取消"]},function (index,layObj) {
                             var toDate = layObj.find("input").val();
                             if(!toDate){
                                 layer.alert("请选择计息结束时间!");

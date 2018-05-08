@@ -11,6 +11,8 @@
     <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
     <result column="state" jdbcType="INTEGER" property="state" />
     <result column="seq" jdbcType="BIGINT" property="seq" />
+    <result column="handler" jdbcType="VARCHAR" property="handler" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from accrual_result
@@ -27,11 +29,11 @@
   <insert id="insert" parameterType="com.qth.model.AccrualResult">
     insert into accrual_result (id, house_code, balance, 
       rate, accrual, start_time, 
-      end_time, state, seq
+      end_time, state, seq,handler,update_time
       )
     values (#{id,jdbcType=INTEGER}, #{houseCode,jdbcType=VARCHAR}, #{balance,jdbcType=DECIMAL}, 
       #{rate,jdbcType=DECIMAL}, #{accrual,jdbcType=DECIMAL}, #{startTime,jdbcType=TIMESTAMP}, 
-      #{endTime,jdbcType=TIMESTAMP}, #{state,jdbcType=INTEGER}, #{seq,jdbcType=BIGINT}
+      #{endTime,jdbcType=TIMESTAMP}, #{state,jdbcType=INTEGER}, #{seq,jdbcType=BIGINT},#{handler},#{updateTime}
       )
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.qth.model.AccrualResult">
@@ -46,6 +48,16 @@
       seq = #{seq,jdbcType=BIGINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <update id="billBatch" parameterType="java.util.Map">
+     update accrual_result
+    set state = 1 ,handler=#{handler},update_time = #{updateTime} where house_code in
+    <foreach collection="list" item="item" open="(" close=")" separator=",">
+      #{item.houseCode}
+    </foreach>
+
+  </update>
+
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select id, house_code, balance, rate, accrual, start_time, end_time, state, seq
     from accrual_result
@@ -209,6 +221,100 @@
     <if test="state != null">
       and ar.state = #{state}
     </if>
+  </select>
+
+  <!--paths search info-->
+  <select id="allAccrualInfoInResidentialArea" parameterType="com.qth.model.AccrualResult" resultType="com.qth.model.dto.AccrualInfo">
+    SELECT
+      sum(ar.accrual) as accrualSum,
+      max(ar.end_time) as endTime,
+      ar.house_code as houseCode,
+      h.account_balance as accountBalance,
+      h.owner_name as ownerName
+      FROM
+      accrual_result ar
+      INNER JOIN house h ON ar.house_code = h.`code`
+      INNER JOIN unit u ON u.id = h.unit
+      INNER JOIN building b ON b.id = u.building
+      INNER JOIN residential_area a ON a.id = b.residential_area
+    WHERE
+      b.residential_area = ${domainId}
+      and ar.state = #{state}
+      GROUP BY
+	  house_code
+  </select>
+
+
+  <select id="allAccrualInfoInBuilding" parameterType="com.qth.model.AccrualResult" resultType="com.qth.model.dto.AccrualInfo">
+    SELECT
+    sum(ar.accrual) as accrualSum,
+    max(ar.end_time) as endTime,
+    ar.house_code as houseCode,
+    h.account_balance as accountBalance,
+    h.owner_name as ownerName
+    FROM
+    accrual_result ar
+    INNER JOIN house h ON ar.house_code = h.`code`
+    INNER JOIN unit u ON u.id = h.unit
+    INNER JOIN building b ON b.id = u.building
+    WHERE
+    b.id = ${domainId}
+    and ar.state = #{state}
+    GROUP BY
+    house_code
+  </select>
+
+
+  <select id="allAccrualInfoInUnit" parameterType="com.qth.model.AccrualResult" resultType="com.qth.model.dto.AccrualInfo">
+    SELECT
+    sum(ar.accrual) as accrualSum,
+    max(ar.end_time) as endTime,
+    ar.house_code as houseCode,
+    h.account_balance as accountBalance,
+    h.owner_name as ownerName
+    FROM
+    accrual_result ar
+    INNER JOIN house h ON ar.house_code = h.`code`
+    INNER JOIN unit u ON u.id = h.unit
+    WHERE
+    u.id = ${domainId}
+    and ar.state = #{state}
+    GROUP BY
+    house_code
+  </select>
+
+  <select id="allAccrualInfoInFloor" parameterType="com.qth.model.AccrualResult" resultType="com.qth.model.dto.AccrualInfo">
+    SELECT
+    sum(ar.accrual) as accrualSum,
+    max(ar.end_time) as endTime,
+    ar.house_code as houseCode,
+    h.account_balance as accountBalance,
+    h.owner_name as ownerName
+    FROM
+    accrual_result ar
+    INNER JOIN house h ON ar.house_code = h.`code`
+    WHERE
+    h.unit = ${attr1} and h.floor = ${attr2}
+    and ar.state = #{state}
+    GROUP BY
+    house_code
+  </select>
+
+  <select id="allAccrualInfoInHouse" parameterType="com.qth.model.AccrualResult" resultType="com.qth.model.dto.AccrualInfo">
+    SELECT
+    sum(ar.accrual) as accrualSum,
+    max(ar.end_time) as endTime,
+    ar.house_code as houseCode,
+    h.account_balance as accountBalance,
+    h.owner_name as ownerName
+    FROM
+    accrual_result ar
+    INNER JOIN house h ON ar.house_code = h.`code`
+    WHERE
+    h.id = ${domainId}
+    and ar.state = #{state}
+    GROUP BY
+    house_code
   </select>
 
 </mapper>

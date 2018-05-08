@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpSession;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -59,9 +60,11 @@ public class AccrualController extends BaseController {
 
     @RequestMapping("/rest/accrual/accrualCalculate")
     @ResponseBody
-    public CommonRsp accrualCalculate(String paths,String toDate) throws ParseException {
+    public CommonRsp accrualCalculate(String paths,String toDate,HttpSession session) throws ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        int count = accrualService.accrualCalculate(paths,dateFormat.parse(toDate));
+        // todo
+// String handler = session.getAttribute("");
+        int count = accrualService.accrualCalculate(paths,dateFormat.parse(toDate),"admin");
         return description2Rsp("累计成功计息"+count + "条");
     }
 
@@ -81,5 +84,14 @@ public class AccrualController extends BaseController {
     public CommonRsp accrualBack(AccrualResult accrualResult){
         int effect = accrualService.accrualBack(accrualResult);
         return dbEffect2Rsp(effect);
+    }
+
+    @RequestMapping("/rest/accrual/bill")
+    @ResponseBody
+    public CommonRsp accrualBill(AccrualResult accrualResult, HttpSession session) {
+// todo
+// String handler = session.getAttribute("");
+        int effect = accrualService.billBatch(accrualResult,"admin");
+        ;return dbEffect2Rsp(effect);
     }
 }

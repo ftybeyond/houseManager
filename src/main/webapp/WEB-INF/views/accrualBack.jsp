@@ -73,7 +73,18 @@
                         layer.alert("未找到可回退的计息记录!")
                     }
 
-                })
+                });
+                $("#accrualBillBtn").on("click",function(){
+                    if(table.data().length>0){
+                        $.post("/rest/accrual/bill.action",{paths:tree.getPathParam(),state:0},null,"json").done(function (data) {
+                            layer.alert(data.description);
+                            table.ajax.reload();
+                        });
+                    }else{
+                        layer.alert("未找到可登帐的计息记录!")
+                    }
+
+                });
             })
         })
     </script>
@@ -95,6 +106,7 @@
         </div>
         <div class="col-md-8 column">
             <div class="row clearfix" style="padding: 10px;">
+                <button id="accrualBillBtn" style="float:right" class="btn btn-primary" type="button">计息登帐</button>
                 <button id="accrualBackBtn" style="float:right" class="btn btn-primary" type="button">计息回退</button>
             </div>
             <div class="row" style="margin-left: 20px;">
