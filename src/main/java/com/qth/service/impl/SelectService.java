@@ -8,6 +8,7 @@ import com.qth.service.ISelectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -28,8 +29,9 @@ public class SelectService implements ISelectService {
 
     @Override
     public List<Select2> getResidentialAreaByRegion(Integer street) {
-        if (street == null || street == 0) {
-            return baseMapper.getResidentialArea();
+        if (street == null || street < 1) {
+            List<Select2> list = new ArrayList<>();
+            return list;
         } else {
             return baseMapper.getResidentialAreaByRegion(street);
         }
@@ -37,8 +39,9 @@ public class SelectService implements ISelectService {
 
     @Override
     public List<Select2> getBuildingDataByResidentialArea(Integer residentialArea) {
-        if (residentialArea == null || residentialArea == 0) {
-            return baseMapper.getBuilding();
+        if (residentialArea == null || residentialArea < 1) {
+            List<Select2> list = new ArrayList<>();
+            return list;
         } else {
             return baseMapper.getBuildingByResidentialArea(residentialArea);
         }
@@ -46,8 +49,9 @@ public class SelectService implements ISelectService {
 
     @Override
     public List<Select2> getUnitDataByBuilding(Integer building) {
-        if (building == null || building == 0) {
-            return baseMapper.getUnit();
+        if (building == null || building < 1) {
+            List<Select2> list = new ArrayList<>();
+            return list;
         } else {
             return baseMapper.getUnitByBuilding(building);
         }
@@ -55,8 +59,9 @@ public class SelectService implements ISelectService {
 
     @Override
     public List<Select2> getFloorDataByUnit(Integer unit) {
-        if (unit == null || unit == 0) {
-            return baseMapper.getFloor();
+        if (unit == null || unit < 1) {
+            List<Select2> list = new ArrayList<>();
+            return list;
         } else {
             return baseMapper.getFloorByUnit(unit);
         }
@@ -64,9 +69,9 @@ public class SelectService implements ISelectService {
 
     @Override
     public List<SelectIdstring> getHouseNameDataByUnitFloor(House house) {
-        if (house.getUnit() == null || house.getUnit() == 0) {
-            List<SelectIdstring> a = baseMapper.getHouseName();
-                return baseMapper.getHouseName();
+        if (house.getUnit() == null || house.getUnit() < 1) {
+            List<SelectIdstring> list = new ArrayList<>();
+                return list;
         } else {
             return baseMapper.getHouseNameByUnitFloor(house);
         }

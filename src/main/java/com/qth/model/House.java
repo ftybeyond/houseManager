@@ -1,6 +1,8 @@
 package com.qth.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.qth.model.common.DataTableReqWrapper;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -30,15 +32,9 @@ public class House extends DataTableReqWrapper {
 
     private Integer hasElevator;
 
-    private String hasElevatorName;
-
     private Integer nature;
 
-    private String natureName;
-
     private Integer type;
-
-    private String typeName;
 
     private Integer buildingRise;
 
@@ -50,6 +46,8 @@ public class House extends DataTableReqWrapper {
 
     private BigDecimal accountBalance;
 
+    @JSONField(format = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date accrualTime;
 
     private BigDecimal accrualBalance;
@@ -150,14 +148,6 @@ public class House extends DataTableReqWrapper {
         this.hasElevator = hasElevator;
     }
 
-    public String getHasElevatorName() {
-        return hasElevatorName;
-    }
-
-    public void setHasElevatorName(String hasElevatorName) {
-        this.hasElevatorName = hasElevatorName;
-    }
-
     public Integer getNature() {
         return nature;
     }
@@ -166,28 +156,12 @@ public class House extends DataTableReqWrapper {
         this.nature = nature;
     }
 
-    public String getNatureName() {
-        return natureName;
-    }
-
-    public void setNatureName(String natureName) {
-        this.natureName = natureName;
-    }
-
     public Integer getType() {
         return type;
     }
 
     public void setType(Integer type) {
         this.type = type;
-    }
-
-    public String getTypeName() {
-        return typeName;
-    }
-
-    public void setTypeName(String typeName) {
-        this.typeName = typeName;
     }
 
     public Integer getBuildingRise() {

@@ -6,10 +6,10 @@ require.config({
         'bootstrap' : 'bootstrap/js/bootstrap.min',
         'smartresize':'gentelella/js/smartresize',
         'main' : 'gentelella/js/custom',
-        'select2':'select2/select2.min',
+        'select2':'select2/select2',
         'datatable':'datatable/dataTables.min',
         'dataTables-bs':'datatable/dataTables.bootstrap.min',
-        'jquery-serializejson':'jquery/jquery.serializejson.min',
+        'jquery-serializejson':'jquery/jquery.serializejson',
         'layer':'layer/layer',
         'laydate':'layer/laydate',
         'common':'../script/common',
@@ -17,8 +17,9 @@ require.config({
         'mySelect':'../script/commonSelect',
         'my97date':'My97DatePicker/WdatePicker',
         'moment':'moment/moment.min',
-        'zTree':'zTree/js/jquery.ztree.all.min',
-        'houseTree':'../script/houseTree'
+        'zTree':'zTree/js/jquery.ztree.all',
+        'houseTree':'../script/houseTree',
+        'houseTreeSelect':'../script/houseTreeSelect'
 
     },
     'shim' : {

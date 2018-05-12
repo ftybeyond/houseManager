@@ -1,6 +1,9 @@
 package com.qth.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.qth.model.common.DataTableReqWrapper;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
 public class InvoiceLog extends DataTableReqWrapper {
@@ -10,6 +13,8 @@ public class InvoiceLog extends DataTableReqWrapper {
 
     private Integer eventType;
 
+    @JSONField(format = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date stamp;
 
     private Integer bill;

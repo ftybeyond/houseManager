@@ -47,6 +47,17 @@ define(["dataTables-bs"], function () {
             table.ajax.reload();
         })
 
+        //查询表单input 上回车时间
+        $("#" + baseConfig.searchForm + " input").on("keydown",function (event) {
+            if(event.keyCode == "13") {
+                table.ajax.reload();
+            }
+        });
+        //查询表单上的select 变更时间
+        $("#" + baseConfig.searchForm + " select").change(function () {
+            table.ajax.reload();
+        });
+
         //添加按钮时间
         $("#" + baseConfig.addBtn).on("click", function () {
             if (typeof(addBtnBefore) == "function") {
@@ -132,9 +143,6 @@ define(["dataTables-bs"], function () {
             if (typeof (baseConfig.afterSyncFormData)=='function') {
                 //表单同步数据后的回调，用于补充不支持自动填充的表单项,传递ajax返回对象
                 baseConfig.afterSyncFormData(rsp)
-            }
-            if (typeof(obj2FormBackfun) == "function") {
-                obj2FormBackfun(baseConfig, handleObj);
             }
         }
 
@@ -228,6 +236,7 @@ define(["dataTables-bs"], function () {
             //声明添加和修改页面影响的变量
             var title, url, param;
             if (type == 1) {
+                handleObj = null;
                 $("#" + baseConfig.infoFrom)[0].reset();
                 if($("#" + baseConfig.infoFrom +" select").size()>0){
                     $("#" + baseConfig.infoFrom +" select").select2("val","all")
@@ -311,6 +320,9 @@ define(["dataTables-bs"], function () {
         if (deps && (deps instanceof Array)) {
             var url;
             $.each(deps, function (index, item) {
+                if(item.length == 0){
+                    return r
+                }
                 if (item.indexOf(".json") > 0) {
                     url = "/dictionary/" + item;
                 } else if (item.indexOf("/") > 0) {

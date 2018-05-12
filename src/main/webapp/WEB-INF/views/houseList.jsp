@@ -14,10 +14,12 @@
     <script src="<%=path%>/vendors/requireJS/require.js"></script>
     <script type="text/javascript" src="<%=path%>/vendors/requireJS/require-config.js"></script>
     <script type="text/javascript">
-        require(["common", "mySelect", "select2"], function (main) {
+        require(["common", "mySelect"], function (main,select,treeSelect) {
             $(function () {
-                main.loadDeps(["hasornot.json", "hasornotWithall.json", "HouseNature.json", "HouseType.json"], function (data) {
-                    $("#queryResidentialAreaSelect").genSelectWithAll('residential_area');
+                $("#infoForm select").mySelect2({data:[]});
+                $("#searchForm select").mySelect2({data:[]});
+                main.loadDeps(["residential_area","HasOrNot.json", "hasornotWithall.json", "HouseNature.json", "HouseType.json"], function (data) {
+                    $("#queryResidentialAreaSelect").mySelect2({data:data["residential_area"]});
                     $("#queryResidentialAreaSelect").change(function () {
                         $("#queryBuildingSelect").loadBuildingSelect(this.value, null, null, true);
                     });
@@ -26,44 +28,32 @@
                     });
                     $("#queryUnitSelect").change(function () {
                         $("#queryFloorSelect").loadFloorSelect(this.value, null, null, true);
-                        $("#queryNameSelect").loadHouseNameSelect($("#queryUnitSelect").val(), $("#queryFloorSelect").val(), null, null, true);
+//                        $("#queryNameSelect").loadHouseNameSelect($("#queryUnitSelect").val(), $("#queryFloorSelect").val(), null, null, true);
                     });
                     $("#queryFloorSelect").change(function () {
                         $("#queryNameSelect").loadHouseNameSelect($("#queryUnitSelect").val(), $("#queryFloorSelect").val(), null, null, true);
                     });
 
-                    $("#queryResidentialAreaSelect").change();
-                    $("#queryBuildingSelect").change();
-                    $("#queryUnitSelect").change();
-                    $("#queryFloorSelect").change();
 
+                    $("#hasElevatorSelect").mySelect2({data: data["HasOrNot.json"]});
+                    $("#natureSelect").mySelect2({data: data["HouseNature.json"]});
+                    $("#typeSelect").mySelect2({data: data["HouseType.json"]});
 
-                    $("#hasElevatorSelect").select2({data: data["hasornot.json"]});
-                    $("#natureSelect").select2({data: data["HouseNature.json"]});
-                    $("#typeSelect").select2({data: data["HouseType.json"]});
+                    $("#residentialAreaSelect").mySelect2({data:data["residential_area"]});
 
-                    $("#residentialAreaSelect").mySelect('residential_area', null, function (data) {
-                        if (data && data.length > 0 && data[0].id) {
-                            $("#buildingSelect").loadBuildingSelect(data[0].id, null, function (data) {
-                                if (data && data.length > 0 && data[0].id) {
-                                    $("#unitSelect").loadUnitSelect(data[0].id, null, function (data) {
-                                        refreshCode();
-                                    });
-                                }
-                            });
-                        }
-                    });
                     $("#residentialAreaSelect").change(function () {
                         $("#buildingSelect").loadBuildingSelect(this.value, null, function (data) {
-                            if (data && data.length > 0 && data[0].id) {
-                                $("#unitSelect").loadUnitSelect(data[0].id, null, function (data) {
-                                    refreshCode();
-                                });
+                            if(main.getHandleObj()){
+                                $("#buildingSelect").val(main.getHandleObj()["building"]).change();
                             }
+                            refreshCode();
                         });
                     });
                     $("#buildingSelect").change(function () {
                         $("#unitSelect").loadUnitSelect(this.value, null, function (data) {
+                            if(main.getHandleObj()){
+                                $("#unitSelect").val(main.getHandleObj()["unit"]).change();
+                            }
                             refreshCode();
                         });
                     });
@@ -93,12 +83,18 @@
                                 {name: 'floor', type: 'string', showable: true},
                                 {name: 'name', type: 'string', showable: true},
                                 {name: 'area', type: 'string', showable: true},
-                                {name: 'hasElevator', type: 'string', showable: false},
-                                {name: 'hasElevatorName', type: 'string', showable: true},
-                                {name: 'nature', type: 'string', showable: false},
-                                {name: 'natureName', type: 'string', showable: true},
-                                {name: 'type', type: 'string', showable: false},
-                                {name: 'typeName', type: 'string', showable: true}
+                                {name: 'hasElevator', type: 'string', showable: true,render:function (row) {
+                                    var dic = main.findArrayValue(row,data["HasOrNot.json"])
+                                    return dic&&dic.text?dic.text:"";
+                                }},
+                                {name: 'nature', type: 'string', showable: true,render:function (row) {
+                                    var dic = main.findArrayValue(row,data["HouseNature.json"])
+                                    return dic&&dic.text?dic.text:"";
+                                }},
+                                {name: 'type', type: 'string', showable: true,render:function (row) {
+                                    var dic = main.findArrayValue(row,data["HouseType.json"])
+                                    return dic&&dic.text?dic.text:"";
+                                }}
                             ]
                         }
                     }
@@ -117,76 +113,72 @@
 
         function refreshCode() {
             try {
-                var residentialArea = $("#residentialAreaSelect").val();
-                var building = $("#buildingSelect").select2('data')[0].text;
-                var unit = $("#unitSelect").select2('data')[0].text;
+                var residentialArea = $("#residentialAreaSelect").val()?$("#residentialAreaSelect").val():'';
+                var building = $("#buildingSelect").val()?$("#buildingSelect").val():'';
+                var unit = $("#unitSelect").val()?$("#unitSelect").val():'';
                 var floor = $("#floor").val();
                 var name = $("#name").val();
                 $("#code").val(residentialArea + building + unit + floor + name);
                 $("#codeName").val(residentialArea + building + unit + floor + name);
             } catch (e) {
+                console.log(e)
             }
         }
 
-        function obj2FormBackfun(baseConfig, handleObj) {
-            $("#residentialAreaSelect").val(handleObj["residentialArea"]).change();
-
-            $("#buildingSelect").loadBuildingSelect(handleObj["residentialArea"], null, function (data) {
-                $("#buildingSelect").val(handleObj["building"]).change();
-                $("#unitSelect").loadUnitSelect(handleObj["building"], null, function (data) {
-                    $("#unitSelect").val(handleObj["unit"]);
-                    refreshCode();
-                });
-            });
-        }
     </script>
 </head>
 <body>
 <!--查询表单-->
-<div class="container" style="padding-left: 0px;">
+<div class="container" style="padding-left: 0px;padding-top:10px;">
     <form id="searchForm" class="form-horizontal" role="form">
-        <div class="col-xs-5 form-group">
-            <label class="control-label col-xs-3">产业代码</label>
-            <div class="col-xs-9">
-                <input type="text" class="form-control" placeholder="要查询的产业代码" name="code"/>
+        <div class="row clearfix">
+            <div class="col-xs-4 search-form-group">
+                <label class="control-label col-xs-3">产业代码</label>
+                <div class="col-xs-9">
+                    <input type="text" class="form-control" placeholder="要查询的产业代码" name="code"/>
+                </div>
+            </div>
+            <div class="col-xs-4 search-form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-3">小区</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
+                    <select id="queryResidentialAreaSelect" name="residentialArea" class="form-control"
+                            style="width:100%;"></select>
+                </div>
+            </div>
+            <div class="col-xs-4 search-form-group">
+                <label class="control-label col-xs-3">楼栋</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
+                    <select id="queryBuildingSelect" name="building" class="form-control"
+                            style="width:100%;"></select>
+                </div>
             </div>
         </div>
-        <div class="col-xs-5 form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-3">小区</label>
-            <div class="col-md-9 col-sm-9 col-xs-9">
-                <select id="queryResidentialAreaSelect" name="residentialArea" class="form-control"
-                        style="width:100%;"></select>
+
+        <div class="row clearfix">
+            <div class="col-xs-4 search-form-group">
+                <label class="control-label col-xs-3">单元</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
+                    <select id="queryUnitSelect" name="unit" class="form-control"
+                            style="width:100%;"></select>
+                </div>
+            </div>
+            <div class="col-xs-4 search-form-group">
+                <label class="control-label col-xs-3">楼层</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
+                    <select id="queryFloorSelect" name="floor" class="form-control"
+                            style="width:100%;"></select>
+                </div>
+            </div>
+            <div class="col-xs-4 search-form-group">
+                <label class="control-label col-xs-3">房号</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
+                    <select id="queryNameSelect" name="name" class="form-control"
+                            style="width:100%;"></select>
+                </div>
             </div>
         </div>
-        <div class="col-xs-5 form-group">
-            <label class="control-label col-xs-3">楼栋</label>
-            <div class="col-md-9 col-sm-9 col-xs-9">
-                <select id="queryBuildingSelect" name="building" class="form-control"
-                        style="width:100%;"></select>
-            </div>
-        </div>
-        <div class="col-xs-5 form-group">
-            <label class="control-label col-xs-3">单元</label>
-            <div class="col-md-9 col-sm-9 col-xs-9">
-                <select id="queryUnitSelect" name="unit" class="form-control"
-                        style="width:100%;"></select>
-            </div>
-        </div>
-        <div class="col-xs-5 form-group">
-            <label class="control-label col-xs-3">楼层</label>
-            <div class="col-md-9 col-sm-9 col-xs-9">
-                <select id="queryFloorSelect" name="floor" class="form-control"
-                        style="width:100%;"></select>
-            </div>
-        </div>
-        <div class="col-xs-5 form-group">
-            <label class="control-label col-xs-3">房号</label>
-            <div class="col-md-9 col-sm-9 col-xs-9">
-                <select id="queryNameSelect" name="name" class="form-control"
-                        style="width:100%;"></select>
-            </div>
-        </div>
-        <div class="col-xs-2 form-group">
+
+        <div class="col-xs-2 search-form-group" style="float: right">
             <div class="col-xs-6">
                 <button id="searchBtn" class="btn btn-primary" type="button">查询</button>
             </div>

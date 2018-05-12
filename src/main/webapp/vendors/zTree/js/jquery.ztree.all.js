@@ -214,7 +214,6 @@
                 nodeEventType = "", treeEventType = "",
                 nodeEventCallback = null, treeEventCallback = null,
                 tmp = null;
-
             if (tools.eqs(event.type, "mousedown")) {
                 treeEventType = "mousedown";
             } else if (tools.eqs(event.type, "mouseup")) {
@@ -223,6 +222,12 @@
                 treeEventType = "contextmenu";
             } else if (tools.eqs(event.type, "click")) {
                 if (tools.eqs(target.tagName, "span") && target.getAttribute("treeNode" + consts.id.SWITCH) !== null) {
+                    if (event && event.stopPropagation) {//非IE
+                        event.stopPropagation();
+                    }
+                    else {//IE
+                        window.event.cancelBubble = true;
+                    }
                     tId = tools.getNodeMainDom(target).id;
                     nodeEventType = "switchNode";
                 } else {

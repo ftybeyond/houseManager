@@ -17,6 +17,7 @@
     <result column="owner_psptid" jdbcType="INTEGER" property="ownerPsptid" />
     <result column="account_balance" jdbcType="DECIMAL" property="accountBalance" />
     <result column="accrual_time" jdbcType="TIMESTAMP" property="accrualTime" />
+    <result column="accrual_balance" jdbcType="DECIMAL" property="accrualBalance" />
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from house
@@ -53,43 +54,14 @@
   </update>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     SELECT
-    h.id,
-    h.`code`,
-    rbu.residentialArea,
-    rbu.residentialAreaName,
-    rbu.building,
-    rbu.buildingName,
-    rbu.unit,
-    rbu.unitName,
-    h.floor,
-    h.`name`,
-    h.area,
-    h.has_elevator,
-    h.nature,
-    h.type,
-    h.building_rise,
-    h.unit_price,
-    h.owner_name,
-    h.owner_psptid,
-    h.account_balance
+    h.*, ra.`name` as residentialAreaName,ra.id as residentialArea,b.id as building,
+    b.`name`as buildingName,
+    u.`name` as unitName
     FROM
     house h
-    INNER JOIN (
-    SELECT
-    r.id AS residentialArea,
-    r.`name` AS residentialAreaName,
-    b.id AS building,
-    b.`name` AS buildingName,
-    u.id AS unit,
-    u.`name` AS unitName
-    FROM
-    residential_area r,
-    building b,
-    unit u
-    WHERE
-    r.id = b.residential_area
-    AND b.id = u.building
-    ) rbu ON h.unit = rbu.unit
+    LEFT JOIN unit u ON u.id = h.unit
+    LEFT JOIN building b ON b.id = u.building
+    LEFT JOIN residential_area ra ON ra.id = b.residential_area
     where h.id = #{id,jdbcType=INTEGER}
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
@@ -99,64 +71,26 @@
   </select>
   <select id="selectDataTable" resultMap="BaseResultMap" parameterType="com.qth.model.House">
     SELECT
-    h.id,
-    h.`code`,
-    rbu.residentialArea,
-    rbu.residentialAreaName,
-    rbu.building,
-    rbu.buildingName,
-    rbu.unit,
-    rbu.unitName,
-    h.floor,
-    h.`name`,
-    h.area,
-    h.has_elevator,
-    p.type_name AS hasElevatorName,
-    h.nature,
-    p2.type_name AS natureName,
-    h.type,
-    p3.type_name AS typeName,
-    h.building_rise,
-    h.unit_price,
-    h.owner_name,
-    h.owner_psptid,
-    h.account_balance
+    h.*, ra.`name` as residentialAreaName,
+    b.`name`as buildingName,
+    u.`name` as unitName
     FROM
     house h
-    INNER JOIN (
-    SELECT
-    r.id AS residentialArea,
-    r.`name` AS residentialAreaName,
-    b.id AS building,
-    b.`name` AS buildingName,
-    u.id AS unit,
-    u.`name` AS unitName
-    FROM
-    residential_area r,
-    building b,
-    unit u
-    WHERE
-    r.id = b.residential_area
-    AND b.id = u.building
-    ) rbu ON h.unit = rbu.unit
-    LEFT JOIN param_config p ON h.has_elevator = p.type_id
-    LEFT JOIN param_config p2 ON h.nature = p2.type_id
-    LEFT JOIN param_config p3 ON h.type = p3.type_id
-    WHERE
-    p.type = 'hasornot'
-    AND p2.type = 'house.nature'
-    AND p3.type = 'house.type'
+    LEFT JOIN unit u ON u.id = h.unit
+    LEFT JOIN building b ON b.id = u.building
+    LEFT JOIN residential_area ra ON ra.id = b.residential_area
+    <where>
     <if test="code!=null">
       and h.code LIKE '%${code}%'
     </if>
     <if test="residentialArea!=null">
-      and rbu.residentialArea=#{residentialArea,jdbcType=VARCHAR}
+      and ra.id=#{residentialArea,jdbcType=VARCHAR}
     </if>
     <if test="building!=null">
-      and rbu.building=#{building,jdbcType=VARCHAR}
+      and b.id=#{building,jdbcType=VARCHAR}
     </if>
     <if test="unit!=null">
-      and rbu.unit=#{unit,jdbcType=VARCHAR}
+      and u.id=#{unit,jdbcType=VARCHAR}
     </if>
     <if test="floor!=null and floor!=''">
       and h.floor=#{floor,jdbcType=VARCHAR}
@@ -167,56 +101,40 @@
     <if test="hasElevator!=null and hasElevator!=''">
       and h.has_elevator=#{hasElevator,jdbcType=VARCHAR}
     </if>
+    </where>
     limit #{start} ,#{length}
   </select>
   <select id="selectDataTableCount" resultType="int" parameterType="com.qth.model.House">
-    select count(*)
+    SELECT
+    count(h.id)
     FROM
     house h
-    INNER JOIN (
-    SELECT
-    r.id AS residentialArea,
-    r.`name` AS residentialAreaName,
-    b.id AS building,
-    b.`name` AS buildingName,
-    u.id AS unit,
-    u.`name` AS unitName
-    FROM
-    residential_area r,
-    building b,
-    unit u
-    WHERE
-    r.id = b.residential_area
-    AND b.id = u.building
-    ) rbu ON h.unit = rbu.unit
-    LEFT JOIN param_config p ON h.has_elevator = p.type_id
-    LEFT JOIN param_config p2 ON h.nature = p2.type_id
-    LEFT JOIN param_config p3 ON h.type = p3.type_id
-    WHERE
-    p.type = 'hasornot'
-    AND p2.type = 'house.nature'
-    AND p3.type = 'house.type'
-    <if test="code!=null">
-      and h.code LIKE '%${code}%'
-    </if>
-    <if test="residentialArea!=null">
-      and rbu.residentialArea=#{residentialArea,jdbcType=VARCHAR}
-    </if>
-    <if test="building!=null">
-      and rbu.building=#{building,jdbcType=VARCHAR}
-    </if>
-    <if test="unit!=null">
-      and rbu.unit=#{unit,jdbcType=VARCHAR}
-    </if>
-    <if test="floor!=null and floor!=''">
-      and h.floor=#{floor,jdbcType=VARCHAR}
-    </if>
-    <if test="name!=null and name!=''">
-      and h.name=#{name,jdbcType=VARCHAR}
-    </if>
-    <if test="hasElevator!=null and hasElevator!=''">
-      and h.has_elevator=#{hasElevator,jdbcType=VARCHAR}
-    </if>
+    LEFT JOIN unit u ON u.id = h.unit
+    LEFT JOIN building b ON b.id = u.building
+    LEFT JOIN residential_area ra ON ra.id = b.residential_area
+    <where>
+      <if test="code!=null">
+        and h.code LIKE '%${code}%'
+      </if>
+      <if test="residentialArea!=null">
+        and ra.id=#{residentialArea,jdbcType=VARCHAR}
+      </if>
+      <if test="building!=null">
+        and b.id=#{building,jdbcType=VARCHAR}
+      </if>
+      <if test="unit!=null">
+        and u.id=#{unit,jdbcType=VARCHAR}
+      </if>
+      <if test="floor!=null and floor!=''">
+        and h.floor=#{floor,jdbcType=VARCHAR}
+      </if>
+      <if test="name!=null and name!=''">
+        and h.name=#{name,jdbcType=VARCHAR}
+      </if>
+      <if test="hasElevator!=null and hasElevator!=''">
+        and h.has_elevator=#{hasElevator,jdbcType=VARCHAR}
+      </if>
+    </where>
   </select>
 
   <update id="updateBalanceByCode" parameterType="com.qth.model.House">
@@ -312,6 +230,19 @@
     house h
     WHERE
     h.unit = #{unit} and h.floor = #{floor}
+  </select>
+
+
+  <select id="selectHousesByPath" parameterType="java.lang.Integer" resultType="com.qth.model.House">
+    SELECT
+    h.*, ra.`name` as residentialAreaName,ra.id as residentialArea,
+    b.`name`as buildingName,
+    u.`name` as unitName
+    FROM
+    house h
+    LEFT JOIN unit u ON u.id = h.unit
+    LEFT JOIN building b ON b.id = u.building
+    LEFT JOIN residential_area ra ON ra.id = b.residential_area
   </select>
 
   <select id="selectSimpleOne" parameterType="java.lang.Integer" resultType="com.qth.model.House">

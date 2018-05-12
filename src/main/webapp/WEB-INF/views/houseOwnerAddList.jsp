@@ -14,9 +14,9 @@
     <script src="<%=path%>/vendors/requireJS/require.js"></script>
     <script type="text/javascript" src="<%=path%>/vendors/requireJS/require-config.js"></script>
     <script type="text/javascript">
-        require(["common", "mySelect", "select2"], function (main) {
+        require(["common", "mySelect", "He"], function (main) {
             $(function () {
-                main.loadDeps(["hasornot.json", "hasornotWithall.json", "HouseNature.json", "HouseType.json"], function (data) {
+                main.loadDeps(["HasOrNot.json", "hasornotWithall.json", "HouseNature.json", "HouseType.json"], function (data) {
                     $("#queryResidentialAreaSelect").genSelectWithAll('residential_area');
                     $("#queryResidentialAreaSelect").change(function () {
                         $("#queryBuildingSelect").loadBuildingSelect(this.value, null, null, true);
@@ -38,9 +38,9 @@
                     $("#queryFloorSelect").change();
 
 
-                    $("#hasElevatorSelect").select2({data: data["hasornot.json"]});
-                    $("#natureSelect").select2({data: data["HouseNature.json"]});
-                    $("#typeSelect").select2({data: data["HouseType.json"]});
+                    $("#hasElevatorSelect").mySelect2({data: data["HasOrNot.json"]});
+                    $("#natureSelect").mySelect2({data: data["HouseNature.json"]});
+                    $("#typeSelect").mySelect2({data: data["HouseType.json"]});
 
                     $("#residentialAreaSelect").mySelect('residential_area', null, function (data) {
                         if (data && data.length > 0 && data[0].id) {

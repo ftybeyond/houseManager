@@ -32,24 +32,12 @@
   </update>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     SELECT
-    b.id,
-    b.name,
-    b.residential_area,
-    r.name AS residentialAreaName,
-    b.units,
-    b.has_elevator,
-    p.type_name AS hasElevatorName,
-    b.has_underground,
-    p2.type_name AS hasUndergroundName
+        b.*, ra.`name` AS residentialAreaName
     FROM
-    building b
-    LEFT JOIN residential_area r ON b.residential_area = r.id
-    LEFT JOIN param_config p ON b.has_elevator = p.type_id
-    LEFT JOIN param_config p2 ON b.has_underground = p2.type_id
+        building b
+    LEFT JOIN residential_area ra ON ra.id = b.residential_area
     WHERE
-    p.type = 'hasornot'
-    AND p2.type = 'hasornot'
-    AND b.id = #{id,jdbcType=INTEGER}
+    b.id = #{id,jdbcType=INTEGER}
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
     select id, name, residential_area, units, has_elevator, has_underground
@@ -57,32 +45,21 @@
   </select>
   <select id="selectDataTable" resultMap="BaseResultMap" parameterType="com.qth.model.Building">
     SELECT
-    b.id,
-    b.name,
-    b.residential_area,
-    r.name AS residentialAreaName,
-    b.units,
-    b.has_elevator,
-    p.type_name AS hasElevatorName,
-    b.has_underground,
-    p2.type_name AS hasUndergroundName
+    b.*, ra.`name` AS residentialAreaName
     FROM
     building b
-    LEFT JOIN residential_area r ON b.residential_area = r.id
-    LEFT JOIN param_config p ON b.has_elevator = p.type_id
-    LEFT JOIN param_config p2 ON b.has_underground = p2.type_id
-    WHERE
-    p.type = 'hasornot'
-    AND p2.type = 'hasornot'
-    <if test="id!=null">
-      and b.id=#{id}
-    </if>
-    <if test="residentialArea!=null">
-      and b.residential_area=#{residentialArea}
-    </if>
-    <if test="name!=null and name.length()>0">
-      and b.name LIKE '%${name}%'
-    </if>
+    LEFT JOIN residential_area ra ON ra.id = b.residential_area
+    <where>
+      <if test="id!=null">
+        and b.id=#{id}
+      </if>
+      <if test="residentialArea!=null">
+        and b.residential_area=#{residentialArea}
+      </if>
+      <if test="name!=null and name.length()>0">
+        and b.name LIKE '%${name}%'
+      </if>
+    </where>
     limit #{start} ,#{length}
   </select>
   <select id="selectDataTableCount" resultType="int" parameterType="com.qth.model.Building">
@@ -90,7 +67,10 @@
     from building
     <where>
       <if test="id!=null">
-        id=#{id}
+        and id=#{id}
+      </if>
+      <if test="residentialArea!=null">
+        and residential_area=#{residentialArea}
       </if>
       <if test="name!=null and name.length()>0">
         and name LIKE '%${name}%'

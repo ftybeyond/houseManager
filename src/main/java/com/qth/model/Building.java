@@ -15,11 +15,7 @@ public class Building extends DataTableReqWrapper {
 
     private Integer hasElevator;
 
-    private String hasElevatorName;
-
     private Integer hasUnderground;
-
-    private String hasUndergroundName;
 
     public Integer getId() {
         return id;
@@ -69,14 +65,6 @@ public class Building extends DataTableReqWrapper {
         this.hasElevator = hasElevator;
     }
 
-    public String getHasElevatorName() {
-        return hasElevatorName;
-    }
-
-    public void setHasElevatorName(String hasElevatorName) {
-        this.hasElevatorName = hasElevatorName;
-    }
-
     public Integer getHasUnderground() {
         return hasUnderground;
     }
@@ -85,11 +73,4 @@ public class Building extends DataTableReqWrapper {
         this.hasUnderground = hasUnderground;
     }
 
-    public String getHasUndergroundName() {
-        return hasUndergroundName;
-    }
-
-    public void setHasUndergroundName(String hasUndergroundName) {
-        this.hasUndergroundName = hasUndergroundName;
-    }
 }

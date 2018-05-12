@@ -2,14 +2,14 @@ package com.qth.model;
 
 import com.qth.model.common.DataTableReqWrapper;
 
+import java.math.BigDecimal;
+
 public class ResidentialArea extends DataTableReqWrapper {
     private Integer id;
 
     private String name;
 
     private Integer company;
-
-    private String companyName;
 
     private Integer region;
 
@@ -21,13 +21,11 @@ public class ResidentialArea extends DataTableReqWrapper {
 
     private String address;
 
-    private Double areaElevator;
+    private BigDecimal areaElevator;
 
-    private Double areaNoelevator;
+    private BigDecimal areaNoelevator;
 
     private Integer nature;
-
-    private String natureName;
 
     public Integer getId() {
         return id;
@@ -51,14 +49,6 @@ public class ResidentialArea extends DataTableReqWrapper {
 
     public void setCompany(Integer company) {
         this.company = company;
-    }
-
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
     }
 
     public Integer getRegion() {
@@ -101,19 +91,19 @@ public class ResidentialArea extends DataTableReqWrapper {
         this.address = address;
     }
 
-    public Double getAreaElevator() {
+    public BigDecimal getAreaElevator() {
         return areaElevator;
     }
 
-    public void setAreaElevator(Double areaElevator) {
+    public void setAreaElevator(BigDecimal areaElevator) {
         this.areaElevator = areaElevator;
     }
 
-    public Double getAreaNoelevator() {
+    public BigDecimal getAreaNoelevator() {
         return areaNoelevator;
     }
 
-    public void setAreaNoelevator(Double areaNoelevator) {
+    public void setAreaNoelevator(BigDecimal areaNoelevator) {
         this.areaNoelevator = areaNoelevator;
     }
 
@@ -125,11 +115,4 @@ public class ResidentialArea extends DataTableReqWrapper {
         this.nature = nature;
     }
 
-    public String getNatureName() {
-        return natureName;
-    }
-
-    public void setNatureName(String natureName) {
-        this.natureName = natureName;
-    }
 }

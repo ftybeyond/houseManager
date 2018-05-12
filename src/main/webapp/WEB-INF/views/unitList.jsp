@@ -16,48 +16,42 @@
     <script type="text/javascript">
         require(["common", "mySelect"], function (main) {
             $(function () {
-                //var select = $("#natureSelect").mySelect('CompanyNature.json');
-                $("#queryResidentialAreaSelect").genSelectWithAll('residential_area');
-                $("#queryResidentialAreaSelect").change(function () {
-                    $("#queryBuildingSelect").loadBuildingSelect(this.value);
-                });
-                $("#queryResidentialAreaSelect").change();
+                $("#infoForm select").mySelect2({data:[]});
+                $("#searchForm select").mySelect2({data:[]});
+                main.loadDeps(["residential_area"],function(data){
+                    $("#queryResidentialAreaSelect").mySelect2({data:data["residential_area"]});
+                    $("#queryResidentialAreaSelect").change(function () {
+                        $("#queryBuildingSelect").loadBuildingSelect(this.value);
+                    });
+                    $("#residentialAreaSelect").mySelect2({data:data["residential_area"]});
+                    $("#residentialAreaSelect").change(function () {
+                        $("#buildingSelect").loadBuildingSelect(this.value,null,function(){
+                            if(main.getHandleObj()){
+                                $("#buildingSelect").val(main.getHandleObj()["building"]).change()
+                            }
+                        });
+                    });
 
-                $("#residentialAreaSelect").mySelect('residential_area', null, function (data) {
-                    if (data && data.length > 0 && data[0].id) {
-                        $("#buildingSelect").loadBuildingSelect(data[0].id, null, null, true);
+                    var config = {
+                        popArea: ['400px', '500px'],
+                        domain: {
+                            name: 'unit',
+                            props: [
+                                {name: 'id', type: 'string', showable: false},
+                                {name: 'residentialArea', type: 'string', showable: false},
+                                {name: 'residentialAreaName', type: 'string', showable: true},
+                                {name: 'building', type: 'string', showable: false},
+                                {name: 'buildingName', type: 'string', showable: true},
+                                {name: 'name', type: 'string', showable: true},
+                                {name: 'totalFloor',type: 'string',showable: true},
+                                {name: 'housePerFloor',type: 'string',showable: true}
+                            ]
+                        }
                     }
-                });
-                $("#residentialAreaSelect").change(function () {
-                    $("#buildingSelect").loadBuildingSelect(this.value);
-                });
-
-                var config = {
-                    popArea: ['400px', '500px'],
-                    domain: {
-                        name: 'unit',
-                        props: [
-                            {name: 'id', type: 'string', showable: false},
-                            {name: 'residentialArea', type: 'string', showable: false},
-                            {name: 'residentialAreaName', type: 'string', showable: true},
-                            {name: 'building', type: 'string', showable: false},
-                            {name: 'buildingName', type: 'string', showable: true},
-                            {name: 'name', type: 'string', showable: true},
-                            {name: 'totalFloor',type: 'string',showable: true},
-                            {name: 'housePerFloor',type: 'string',showable: true}
-                        ]
-                    }
-                }
-                var table = main.init(config);
+                    var table = main.init(config);
+                })
             })
         })
-        function obj2FormBackfun(baseConfig, handleObj) {
-            $("#residentialAreaSelect").val(handleObj["residentialArea"]).change();
-
-            $("#buildingSelect").loadBuildingSelect(handleObj["residentialArea"], null, function (data) {
-                $("#buildingSelect").val(handleObj["building"]).change();
-            });
-        }
     </script>
 </head>
 <body>

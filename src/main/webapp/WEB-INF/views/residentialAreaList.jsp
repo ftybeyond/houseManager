@@ -16,48 +16,47 @@
     <script type="text/javascript">
         require(["common","mySelect"],function (main) {
             $(function(){
-                $("#companySelect").mySelect('company');
-                $("#regionSelect").mySelect('region', null, function (data){
-                    if (data && data.length > 0 && data[0].id) {
-                        $("#streetSelect").loadStreetSelect(data[0].id);
-                    }
-                });
-                $("#regionSelect").change(function(){
-                    $("#streetSelect").loadStreetSelect(this.value);
-                });
-                $("#natureSelect").loadConfigSelect('residential_area.nature');
+                main.loadDeps(["ResidentialAreaNature.json","company","region"], function (d) {
+                    $("#companySelect").mySelect2({data:d["company"]});
+                    $("#regionSelect").mySelect2({data:d["region"]});
+                    $("#natureSelect").mySelect2({data:d["ResidentialAreaNature.json"]});
 
-                var config = {
-                    domain:{
-                        name:'residentialArea',
-                        props:[
-                            {name:'id',type:'string',showable:true},
-                            {name:'name',type:'string',showable:true},
-                            {name:'company',type:'string',showable:false},
-                            {name:'companyName',type:'string',showable:true},
-                            {name:'region',type:'string',showable:false},
-                            {name:'regionName',type:'string',showable:true},
-                            {name:'street',type:'string',showable:false},
-                            {name:'streetName',type:'string',showable:true},
-                            {name:'address',type:'string',showable:true},
-                            {name:'areaElevator',type:'string',showable:true},
-                            {name:'areaNoelevator',type:'string',showable:true},
-                            {name:'nature',type:'string',showable:false},
-                            {name:'natureName',type:'string',showable:true}
-                        ]
+                    $("#regionSelect").change(function(){
+                        $("#streetSelect").loadStreetSelect(this.value,null,function(){
+                            if(main.getHandleObj()){
+                                $("#streetSelect").val(main.getHandleObj()["street"]).change()
+                            }
+                        });
+                    });
+
+                    var config = {
+                        domain:{
+                            name:'residentialArea',
+                            props:[
+                                {name:'id',type:'string',showable:true},
+                                {name:'name',type:'string',showable:true},
+                                {name:'company',type:'string',showable:true,render:function (row, type, full, meta) {
+                                    var dic = main.findArrayValue(row,d["company"])
+                                    return dic&&dic.text?dic.text:"";
+                                }},
+                                {name:'region',type:'string',showable:false},
+                                {name:'regionName',type:'string',showable:true},
+                                {name:'street',type:'string',showable:false},
+                                {name:'streetName',type:'string',showable:true},
+                                {name:'address',type:'string',showable:true},
+                                {name:'areaElevator',type:'string',showable:true},
+                                {name:'areaNoelevator',type:'string',showable:true},
+                                {name:'nature',type:'string',showable:true,render:function (row, type, full, meta) {
+                                    var dic = main.findArrayValue(row,d["ResidentialAreaNature.json"])
+                                    return dic&&dic.text?dic.text:"";
+                                }}
+                            ]
+                        }
                     }
-                }
-                main.init(config);
+                    main.init(config);
+                });
             })
         })
-
-        function obj2FormBackfun(baseConfig, handleObj){
-            $("#regionSelect").val(handleObj["region"]).change();
-
-            $("#streetSelect").loadStreetSelect(handleObj["region"], null, function (data) {
-                $("#streetSelect").val(handleObj["street"]).change();
-            });
-        }
     </script>
 </head>
 <body>
@@ -94,7 +93,7 @@
         <tr>
             <th>小区编码</th>
             <th>小区名称</th>
-            <th>单位名称</th>
+            <th>所属单位</th>
             <th>所属区域</th>
             <th>所属街道</th>
             <th>地址</th>
@@ -118,7 +117,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">公司</label>
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">所属单位</label>
                     <div class="col-md-9 col-sm-9 col-xs-9">
                         <select id="companySelect" name="company" class="form-control" style="width:100%;"></select>
                     </div>

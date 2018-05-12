@@ -36,38 +36,14 @@
   </update>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     SELECT
-    r.id,
-    r.name,
-    r.company,
-    c.name AS companyName,
-    sn.region,
-    sn.regionName,
-    r.street,
-    sn.name AS streetName,
-    r.address,
-    r.area_elevator,
-    r.area_noelevator,
-    r.nature,
-    p.type_name AS natureName
+        ra.*, s.`name` AS streetName,
+        r.`name` AS regionName,r.id as region
     FROM
-    residential_area r
-    LEFT JOIN param_config p ON r.nature = p.type_id
-    LEFT JOIN company c ON r.company = c.id
-    LEFT JOIN (
-    SELECT
-    s.id,
-    s.name,
-    s.region,
-    n.name AS regionName
-    FROM
-    street s,
-    region n
+        residential_area ra
+    LEFT JOIN street s ON s.id = ra.street
+    LEFT JOIN region r ON s.region = r.id
     WHERE
-    s.region = n.id
-    ) sn ON r.street = sn.id
-    WHERE
-    p.type = 'residential_area.nature'
-    and r.id = #{id,jdbcType=INTEGER}
+    ra.id = #{id,jdbcType=INTEGER}
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
     select id, name, company, street, address, area_elevator, area_noelevator, nature
@@ -75,43 +51,20 @@
   </select>
   <select id="selectDataTable" resultMap="BaseResultMap" parameterType="com.qth.model.ResidentialArea">
     SELECT
-    r.id,
-    r.name,
-    r.company,
-    c.name AS companyName,
-    sn.region,
-    sn.regionName,
-    r.street,
-    sn.name AS streetName,
-    r.address,
-    r.area_elevator,
-    r.area_noelevator,
-    r.nature,
-    p.type_name AS natureName
+    ra.*, s.`name` AS streetName,
+    r.`name` AS regionName
     FROM
-    residential_area r
-    LEFT JOIN param_config p ON r.nature = p.type_id
-    LEFT JOIN company c ON r.company = c.id
-    LEFT JOIN (
-    SELECT
-    s.id,
-    s.name,
-    s.region,
-    n.name AS regionName
-    FROM
-    street s,
-    region n
-    WHERE
-    s.region = n.id
-    ) sn ON r.street = sn.id
-    WHERE
-    p.type = 'residential_area.nature'
+    residential_area ra
+    LEFT JOIN street s ON s.id = ra.street
+    LEFT JOIN region r ON s.region = r.id
+    <where>
       <if test="id!=null">
-        and r.id=#{id}
+        and ra.id=#{id}
       </if>
       <if test="name!=null and name.length()>0">
-        and r.name LIKE '%${name}%'
+        and ra.name LIKE '%${name}%'
       </if>
+    </where>
     limit #{start} ,#{length}
   </select>
   <select id="selectDataTableCount" resultType="int" parameterType="com.qth.model.ResidentialArea">

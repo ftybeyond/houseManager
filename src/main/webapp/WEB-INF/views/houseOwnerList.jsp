@@ -16,7 +16,7 @@
     <script type="text/javascript">
         require(["common", "mySelect", "select2"], function (main) {
             $(function () {
-                main.loadDeps(["hasornot.json", "hasornotWithall.json", "HouseNature.json", "HouseType.json"], function (data) {
+                main.loadDeps(["HasOrNot.json", "hasornotWithall.json", "HouseNature.json", "HouseType.json"], function (data) {
                     $("#queryResidentialAreaSelect").genSelectWithAll('residential_area');
                     $("#queryResidentialAreaSelect").change(function () {
                         $("#queryBuildingSelect").loadBuildingSelect(this.value, null, null, true);
@@ -38,7 +38,7 @@
                     $("#queryFloorSelect").change();
 
 
-                    $("#hasElevatorSelect").select2({data: data["hasornot.json"]});
+                    $("#hasElevatorSelect").select2({data: data["HasOrNot.json"]});
                     $("#natureSelect").select2({data: data["HouseNature.json"]});
                     $("#typeSelect").select2({data: data["HouseType.json"]});
 

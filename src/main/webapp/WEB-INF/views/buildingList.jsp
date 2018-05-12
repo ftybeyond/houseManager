@@ -14,33 +14,15 @@
     <script src="<%=path%>/vendors/requireJS/require.js"></script>
     <script type="text/javascript" src="<%=path%>/vendors/requireJS/require-config.js"></script>
     <script type="text/javascript">
-        require(["common", "mySelect", "select2"], function (main) {
+        require(["common", "mySelect"], function (main) {
             $(function () {
-                //var select = $("#natureSelect").mySelect('CompanyNature.json');
-                main.loadDeps(["hasornot.json"], function (data) {
-                    $("#hasElevatorSelect").select2({data: data["hasornot.json"]});
-                    $("#hasUndergroundSelect").select2({data: data["hasornot.json"]});
-                    $("#regionSelect").mySelect('region', null, function (data) {
-                        if (data && data.length > 0 && data[0].id) {
-                            $("#streetSelect").loadStreetSelect(data[0].id, null, function (data) {
-                                if (data && data.length > 0 && data[0].id) {
-                                    $("#residentialAreaSelect").loadResidentialAreaSelect(data[0].id);
-                                }
-                            });
-                        }
-                    });
-                    $("#regionSelect").change(function () {
-                        $("#streetSelect").loadStreetSelect(this.value, null, function (data) {
-                            if (data && data.length > 0 && data[0].id) {
-                                $("#residentialAreaSelect").loadResidentialAreaSelect(data[0].id);
-                            }
-                        });
-                    });
-                    $("#streetSelect").change(function () {
-                        $("#residentialAreaSelect").loadResidentialAreaSelect(this.value);
-                    });
-
-                    $("#queryResidentialAreaSelect").loadResidentialAreaSelect("", null, null, true);
+                $("#infoForm select").mySelect2({data:[]});
+                $("#searchForm select").mySelect2({data:[]});
+                main.loadDeps(["HasOrNot.json","residential_area"], function (data) {
+                    $("#hasElevatorSelect").mySelect2({data: data["HasOrNot.json"]});
+                    $("#hasUndergroundSelect").mySelect2({data: data["HasOrNot.json"]});
+                    $("#queryResidentialAreaSelect").mySelect2({data:data["residential_area"]});
+                    $("#residentialAreaSelect").mySelect2({data:data["residential_area"]});
 
                     var config = {
                         popArea: ['400px', '500px'],
@@ -52,10 +34,14 @@
                                 {name: 'residentialArea', type: 'string', showable: false},
                                 {name: 'residentialAreaName', type: 'string', showable: true},
                                 {name: 'units', type: 'string', showable: true},
-                                {name: 'hasElevator',type: 'string',showable: false},
-                                {name: 'hasElevatorName',type: 'string',showable: true},
-                                {name: 'hasUnderground',type: 'string',showable: false},
-                                {name: 'hasUndergroundName',type: 'string',showable: true}
+                                {name: 'hasElevator',type: 'string',showable: true,render:function (row, type, full, meta) {
+                                    var dic = main.findArrayValue(row,data["HasOrNot.json"])
+                                    return dic&&dic.text?dic.text:"";
+                                }},
+                                {name: 'hasUnderground',type: 'string',showable: true,render:function (row, type, full, meta) {
+                                    var dic = main.findArrayValue(row,data["HasOrNot.json"])
+                                    return dic&&dic.text?dic.text:"";
+                                }}
                             ]
                         }
                     }
@@ -115,19 +101,7 @@
         <div class="x_content">
             <form id="infoForm" class="form-horizontal form-label-left input_mask">
                 <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">所属区域</label>
-                    <div class="col-md-9 col-sm-9 col-xs-9">
-                        <select id="regionSelect" name="region" class="form-control" style="width:100%;"></select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">所属街道</label>
-                    <div class="col-md-9 col-sm-9 col-xs-9">
-                        <select id="streetSelect" name="street" class="form-control" style="width:100%;"></select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">小区</label>
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">所属小区</label>
                     <div class="col-md-9 col-sm-9 col-xs-9">
                         <select id="residentialAreaSelect" name="residentialArea" class="form-control"
                                 style="width:100%;"></select>
@@ -154,7 +128,7 @@
                 <div class="form-group">
                     <label class="control-label col-md-3 col-sm-3 col-xs-3">有无地下室</label>
                     <div class="col-md-9 col-sm-9 col-xs-9">
-                        <select id="hasUndergroundSelect" name="street" class="form-control"
+                        <select id="hasUndergroundSelect" name="hasUnderground" class="form-control"
                                 style="width:100%;"></select>
                     </div>
                 </div>
