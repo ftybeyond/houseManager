@@ -27,8 +27,10 @@
                 }
             }
             $(function(){
-                $("#regionSelect").mySelect('region');
-                main.init(config);
+                main.loadDeps(["region"], function (d) {
+                    $("#regionSelect").mySelect2({data:d["region"]});
+                    main.init(config);
+                })
             })
         })
     </script>

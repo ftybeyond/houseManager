@@ -1,60 +1,4 @@
 ;(function () {
-    jQuery.fn.mySelect = function (table, settings, backfun) {
-        var baseOpt = {
-            language: "zh-CN",
-            placeholder: '--请选择--'
-        }
-        var _this = $(this)
-        $.ajax({
-            url: '/rest/select/' + table + '.action',
-            dataType: 'json',
-            type: 'post',
-            success: function (data) {
-                baseOpt.data = data;
-                if (settings) {
-                    $.extend(true, settings, baseOpt);
-                    _this.html("");
-                    _this.select2(settings);
-                } else {
-                    _this.html("");
-                    _this.select2(baseOpt);
-                }
-                _this.select2("val", "all");
-                if (backfun && data) {
-                    backfun(data);
-                }
-            }
-        })
-    }
-
-    jQuery.fn.genSelectWithAll = function (table, settings, backfun) {
-        var baseOpt = {
-            language: "zh-CN",
-            placeholder: '--请选择--'
-        }
-        var _this = $(this)
-        $.ajax({
-            url: '/rest/select/' + table + '.action',
-            dataType: 'json',
-            type: 'post',
-            success: function (data) {
-                data.unshift({"id": "", "text": "全部"});
-                baseOpt.data = data;
-                if (settings) {
-                    $.extend(true, settings, baseOpt);
-                    _this.html("");
-                    _this.select2(settings);
-                } else {
-                    _this.html("");
-                    _this.select2(baseOpt);
-                }
-                _this.select2("val", "all");
-                if (backfun && data) {
-                    backfun(data);
-                }
-            }
-        })
-    }
 
     jQuery.fn.mySelect2 = function (settings) {
         var baseOpt = {
@@ -82,40 +26,6 @@
             dataType: 'json',
             type: 'post',
             success: function (data) {
-                baseOpt.data = data;
-                if (settings) {
-                    $.extend(true, settings, baseOpt);
-                    _this.html("");
-                    _this.select2(settings);
-                } else {
-                    _this.html("");
-                    _this.select2(baseOpt);
-                }
-                _this.select2("val", "all");
-                if (backfun && data) {
-                    backfun(data);
-                }
-            }
-        })
-    }
-    jQuery.fn.loadResidentialAreaSelect = function (street, settings, backfun, withall) {
-        var baseOpt = {
-            language: "zh-CN",
-            placeholder: '--请选择--'
-        }
-        var _this = $(this);
-        if(!street){
-            baseOpt.data = [];
-            _this.select2(baseOpt);
-        }
-        $.ajax({
-            url: '/rest/selectResidentialAreaByStreet/' + street + '.action',
-            dataType: 'json',
-            type: 'post',
-            success: function (data) {
-                if (withall != null && withall == true) {
-                    data.unshift({"id": "", "text": "全部"});
-                }
                 baseOpt.data = data;
                 if (settings) {
                     $.extend(true, settings, baseOpt);
