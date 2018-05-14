@@ -1,33 +1,24 @@
 package com.qth.model;
 
-import com.alibaba.fastjson.annotation.JSONField;
 import com.qth.model.common.DataTableReqWrapper;
-import org.springframework.format.annotation.DateTimeFormat;
-
 import java.math.BigDecimal;
 import java.util.Date;
 
 public class ChargeBill extends DataTableReqWrapper {
     private Integer id;
 
-    private Integer buildingCode;
-
     private String houseCode;
 
-    private String houseUnit;
+    private BigDecimal houseArea;
 
-    private String houseFloor;
-
-    private String houseNum;
-
-    private String houseArea;
+    private BigDecimal houseUnitPrice;
 
     private String houseOwner;
 
-    private Integer userType;
+    private BigDecimal ratio;
 
-    @JSONField(format = "yyyy-MM-dd")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Integer chargeType;
+
     private Date createTime;
 
     private String handler;
@@ -46,14 +37,6 @@ public class ChargeBill extends DataTableReqWrapper {
         this.id = id;
     }
 
-    public Integer getBuildingCode() {
-        return buildingCode;
-    }
-
-    public void setBuildingCode(Integer buildingCode) {
-        this.buildingCode = buildingCode;
-    }
-
     public String getHouseCode() {
         return houseCode;
     }
@@ -62,36 +45,20 @@ public class ChargeBill extends DataTableReqWrapper {
         this.houseCode = houseCode;
     }
 
-    public String getHouseUnit() {
-        return houseUnit;
-    }
-
-    public void setHouseUnit(String houseUnit) {
-        this.houseUnit = houseUnit;
-    }
-
-    public String getHouseFloor() {
-        return houseFloor;
-    }
-
-    public void setHouseFloor(String houseFloor) {
-        this.houseFloor = houseFloor;
-    }
-
-    public String getHouseNum() {
-        return houseNum;
-    }
-
-    public void setHouseNum(String houseNum) {
-        this.houseNum = houseNum;
-    }
-
-    public String getHouseArea() {
+    public BigDecimal getHouseArea() {
         return houseArea;
     }
 
-    public void setHouseArea(String houseArea) {
+    public void setHouseArea(BigDecimal houseArea) {
         this.houseArea = houseArea;
+    }
+
+    public BigDecimal getHouseUnitPrice() {
+        return houseUnitPrice;
+    }
+
+    public void setHouseUnitPrice(BigDecimal houseUnitPrice) {
+        this.houseUnitPrice = houseUnitPrice;
     }
 
     public String getHouseOwner() {
@@ -102,12 +69,20 @@ public class ChargeBill extends DataTableReqWrapper {
         this.houseOwner = houseOwner;
     }
 
-    public Integer getUserType() {
-        return userType;
+    public BigDecimal getRatio() {
+        return ratio;
     }
 
-    public void setUserType(Integer userType) {
-        this.userType = userType;
+    public void setRatio(BigDecimal ratio) {
+        this.ratio = ratio;
+    }
+
+    public Integer getChargeType() {
+        return chargeType;
+    }
+
+    public void setChargeType(Integer chargeType) {
+        this.chargeType = chargeType;
     }
 
     public Date getCreateTime() {

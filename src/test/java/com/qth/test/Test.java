@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.qth.model.MoneyRate;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -15,11 +16,7 @@ public class Test {
 //        moneyRate.setRate(new BigDecimal(0.000000000000212));
 //        System.out.println(JSON.toJSONString(moneyRate));
 //        System.out.println(new Date().getTime());
-        List<Integer> list = new ArrayList<>(10);
-        list.add(1);
-        list.add(2);
-        list.add(3);
-        list.add(4);
-        System.out.println(list.size());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSSSS");
+        System.out.println(sdf.format(new Date()));
     }
 }

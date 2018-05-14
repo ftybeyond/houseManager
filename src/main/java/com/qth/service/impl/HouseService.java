@@ -1,18 +1,17 @@
 package com.qth.service.impl;
 
+import com.qth.dao.AlgorithmSwitchMapper;
+import com.qth.dao.ChargeCriterionMapper;
 import com.qth.dao.HouseMapper;
-import com.qth.model.House;
-import com.qth.model.HouseTree;
-import com.qth.model.Unit;
+import com.qth.model.*;
 import com.qth.model.common.DataTableRspWrapper;
+import com.qth.model.dto.HouseTreeModel;
 import com.qth.service.IHouseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Transactional
@@ -20,6 +19,12 @@ public class HouseService extends BaseService<House> implements IHouseService {
 
     @Autowired
     HouseMapper houseMapper;
+
+    @Autowired
+    ChargeCriterionMapper chargeCriterionMapper;
+
+    @Autowired
+    AlgorithmSwitchMapper algorithmSwitchMapper;
 
     @Override
     public DataTableRspWrapper<House> selectDataTable2Rsp(House house) {
@@ -48,6 +53,11 @@ public class HouseService extends BaseService<House> implements IHouseService {
     }
 
     @Override
+    public int updateOwnerInfo(House house) {
+        return houseMapper.updateOwnerInfo(house);
+    }
+
+    @Override
     public House findHouseById(int id) {
         return houseMapper.selectByPrimaryKey(id);
     }
@@ -55,6 +65,31 @@ public class HouseService extends BaseService<House> implements IHouseService {
     @Override
     public int deleteHouseById(int id) {
         return houseMapper.deleteByPrimaryKey(id);
+    }
+
+    public List<House> selectByTreeNode(HouseTreeModel model){
+        return houseMapper.selectByTreeNode(model);
+    }
+
+    public int selectCountByTreeNode(HouseTreeModel model){
+        return houseMapper.selectCountByTreeNode(model);
+    }
+
+    @Override
+    public ChargeCriterion getChargeCriterionByHouse(Integer house ,Integer user) {
+        Map map = new HashMap();
+        map.put("houseId",house);
+        map.put("userId",user);
+        List<ChargeCriterion> list = chargeCriterionMapper.selectByHouse(map);
+        if(list.size()>0){
+            return list.get(0);
+        }
+        return null;
+    }
+
+    @Override
+    public AlgorithmSwitch getChargeType(Integer user) {
+        return algorithmSwitchMapper.selectByPrimaryKey(1);
     }
 
     public List<House> selectByTreePath(String paths) {

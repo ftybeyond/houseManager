@@ -21,6 +21,7 @@
                     $("#chargeSwitchSelect").mySelect2({data:data["AlgorithmSwitch.json"]})
                     var config = {
                         popArea:['400px','300px'],
+                        deleteable:false,
                         domain:{
                             name:'algorithmSwitch',
                             props:[
@@ -46,7 +47,6 @@
 <body>
 
 <div class="container" style="padding-left: 0px;" >
-    <button id="addBtn" class="btn btn-primary" style="float:right" type="button">新增</button>
 </div>
 
 <!-- 数据表格 -->

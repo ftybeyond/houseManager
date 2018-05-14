@@ -14,7 +14,7 @@
     <result column="building_rise" jdbcType="INTEGER" property="buildingRise" />
     <result column="unit_price" jdbcType="DECIMAL" property="unitPrice" />
     <result column="owner_name" jdbcType="VARCHAR" property="ownerName" />
-    <result column="owner_psptid" jdbcType="INTEGER" property="ownerPsptid" />
+    <result column="owner_psptid" jdbcType="VARCHAR" property="ownerPsptid" />
     <result column="account_balance" jdbcType="DECIMAL" property="accountBalance" />
     <result column="accrual_time" jdbcType="TIMESTAMP" property="accrualTime" />
     <result column="accrual_balance" jdbcType="DECIMAL" property="accrualBalance" />
@@ -47,10 +47,18 @@
       type = #{type,jdbcType=INTEGER},
       building_rise = #{buildingRise,jdbcType=INTEGER},
       unit_price = #{unitPrice,jdbcType=DECIMAL},
-      owner_name = #{ownerName,jdbcType=INTEGER},
-      owner_psptid = #{ownerPsptid,jdbcType=INTEGER},
+      owner_name = #{ownerName,jdbcType=VARCHAR},
+      owner_psptid = #{ownerPsptid,jdbcType=VARCHAR},
       account_balance = #{accountBalance,jdbcType=DECIMAL}
     where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateOwnerInfo" parameterType="com.qth.model.House">
+    update house
+    set
+      owner_name = #{ownerName,jdbcType=VARCHAR},
+      owner_psptid = #{ownerPsptid,jdbcType=VARCHAR}
+     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     SELECT
@@ -232,19 +240,6 @@
     h.unit = #{unit} and h.floor = #{floor}
   </select>
 
-
-  <select id="selectHousesByPath" parameterType="java.lang.Integer" resultType="com.qth.model.House">
-    SELECT
-    h.*, ra.`name` as residentialAreaName,ra.id as residentialArea,
-    b.`name`as buildingName,
-    u.`name` as unitName
-    FROM
-    house h
-    LEFT JOIN unit u ON u.id = h.unit
-    LEFT JOIN building b ON b.id = u.building
-    LEFT JOIN residential_area ra ON ra.id = b.residential_area
-  </select>
-
   <select id="selectSimpleOne" parameterType="java.lang.Integer" resultType="com.qth.model.House">
     SELECT
     h.id,h.area,h.account_balance as accountBalance,h.code,h.owner_name as ownerName ,h.accrual_time as accrualTime,h.accrual_balance as accrualBalance
@@ -254,8 +249,84 @@
     h.id = #{value}
   </select>
 
+  <select id="selectByTreeNode" parameterType="com.qth.model.dto.HouseTreeModel" resultMap="BaseResultMap">
+    SELECT
+    h.*
+    FROM
+    house h
+    LEFT JOIN unit u ON u.id = h.unit
+    LEFT JOIN building b ON b.id = u.building
+    LEFT JOIN residential_area ra ON ra.id = b.residential_area
+    where 1=1
+    <choose>
+      <when test="level == 0">
+        and ra.id = #{id}
+      </when>
+      <when test="level == 1">
+        and b.id = #{id}
+      </when>
+      <when test="level == 2">
+        and u.id = #{id}
+      </when>
+      <when test="level == 3">
+        and u.id = #{id} and h.floor = #{name}
+      </when>
+      <when test="level == 4">
+        and h.id = #{id}
+      </when>
+    </choose>
+      <if test="ownerName!=null and ownerName.length >0">
+        and h.owner_name = #{ownerName}
+      </if>
+      <if test="houseCode!=null and houseCode.length >0">
+        and h.code LIKE '%${houseCode}%'
+      </if>
+      <if test="hasOwner!=null and hasOwner">
+        and h.owner_name is not null
+      </if>
+      <if test="hasOwner!=null and !hasOwner">
+        and h.owner_name is null
+      </if>
+    limit #{start},#{length}
+  </select>
+
+  <select id="selectCountByTreeNode" parameterType="com.qth.model.dto.HouseTreeModel" resultType="int">
+    SELECT
+    count(h.id)
+    FROM
+    house h
+    LEFT JOIN unit u ON u.id = h.unit
+    LEFT JOIN building b ON b.id = u.building
+    LEFT JOIN residential_area ra ON ra.id = b.residential_area
+    where 1=1
+    <choose>
+      <when test="level == 0">
+        and ra.id = #{id}
+      </when>
+      <when test="level == 1">
+        and b.id = #{id}
+      </when>
+      <when test="level == 2">
+        and u.id = #{id}
+      </when>
+      <when test="level == 3">
+        and u.id = #{id} and h.floor = #{name}
+      </when>
+      <when test="level == 4">
+        and h.id = #{id}
+      </when>
+    </choose>
+    <if test="ownerName!=null and ownerName.length >0">
+      and h.owner_name = #{ownerName}
+    </if>
+    <if test="houseCode!=null and houseCode.length >0">
+      and h.code LIKE '%${houseCode}%'
+    </if>
+  </select>
+
   <update id="updateByAccrualInfo" parameterType="com.qth.model.dto.AccrualInfo">
     update house set account_balance = #{newBalance},accrual_time = #{endTime},accrual_balance = #{newBalance}
     where code = #{houseCode}
   </update>
+
 </mapper>

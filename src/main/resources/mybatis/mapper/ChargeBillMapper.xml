@@ -3,14 +3,12 @@
 <mapper namespace="com.qth.dao.ChargeBillMapper">
   <resultMap id="BaseResultMap" type="com.qth.model.ChargeBill">
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="building_code" jdbcType="INTEGER" property="buildingCode" />
     <result column="house_code" jdbcType="VARCHAR" property="houseCode" />
-    <result column="house_unit" jdbcType="VARCHAR" property="houseUnit" />
-    <result column="house_floor" jdbcType="VARCHAR" property="houseFloor" />
-    <result column="house_num" jdbcType="VARCHAR" property="houseNum" />
-    <result column="house_area" jdbcType="VARCHAR" property="houseArea" />
+    <result column="house_area" jdbcType="DECIMAL" property="houseArea" />
+    <result column="house_unit_price" jdbcType="DECIMAL" property="houseUnitPrice" />
     <result column="house_owner" jdbcType="VARCHAR" property="houseOwner" />
-    <result column="user_type" jdbcType="INTEGER" property="userType" />
+    <result column="ratio" jdbcType="DECIMAL" property="ratio" />
+    <result column="charge_type" jdbcType="INTEGER" property="chargeType" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="handler" jdbcType="VARCHAR" property="handler" />
     <result column="actual_sum" jdbcType="DECIMAL" property="actualSum" />
@@ -22,27 +20,28 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.qth.model.ChargeBill">
-    insert into charge_bill (id, building_code, house_code, 
-      house_unit, house_floor, house_num, 
-      house_area, house_owner, user_type, 
-      create_time, handler, actual_sum, 
-      invoice_num, state)
-    values (#{id,jdbcType=INTEGER}, #{buildingCode,jdbcType=INTEGER}, #{houseCode,jdbcType=VARCHAR}, 
-      #{houseUnit,jdbcType=VARCHAR}, #{houseFloor,jdbcType=VARCHAR}, #{houseNum,jdbcType=VARCHAR}, 
-      #{houseArea,jdbcType=VARCHAR}, #{houseOwner,jdbcType=VARCHAR}, #{userType,jdbcType=INTEGER}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{handler,jdbcType=VARCHAR}, #{actualSum,jdbcType=DECIMAL}, 
-      #{invoiceNum,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER})
+    <selectKey resultType="java.lang.Integer" keyProperty="id">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into charge_bill (id, house_code, house_area,
+      house_unit_price, house_owner, ratio,
+      charge_type, create_time, handler,
+      actual_sum, invoice_num, state
+      )
+    values (#{id,jdbcType=INTEGER}, #{houseCode,jdbcType=VARCHAR}, #{houseArea,jdbcType=DECIMAL},
+      #{houseUnitPrice,jdbcType=DECIMAL}, #{houseOwner,jdbcType=VARCHAR}, #{ratio,jdbcType=DECIMAL},
+      #{chargeType,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{handler,jdbcType=VARCHAR},
+      #{actualSum,jdbcType=DECIMAL}, #{invoiceNum,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER}
+      )
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.qth.model.ChargeBill">
     update charge_bill
-    set building_code = #{buildingCode,jdbcType=INTEGER},
-      house_code = #{houseCode,jdbcType=VARCHAR},
-      house_unit = #{houseUnit,jdbcType=VARCHAR},
-      house_floor = #{houseFloor,jdbcType=VARCHAR},
-      house_num = #{houseNum,jdbcType=VARCHAR},
-      house_area = #{houseArea,jdbcType=VARCHAR},
+    set house_code = #{houseCode,jdbcType=VARCHAR},
+      house_area = #{houseArea,jdbcType=DECIMAL},
+      house_unit_price = #{houseUnitPrice,jdbcType=DECIMAL},
       house_owner = #{houseOwner,jdbcType=VARCHAR},
-      user_type = #{userType,jdbcType=INTEGER},
+      ratio = #{ratio,jdbcType=DECIMAL},
+      charge_type = #{chargeType,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       handler = #{handler,jdbcType=VARCHAR},
       actual_sum = #{actualSum,jdbcType=DECIMAL},
@@ -51,14 +50,14 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select id, building_code, house_code, house_unit, house_floor, house_num, house_area, 
-    house_owner, user_type, create_time, handler, actual_sum, invoice_num, state
+    select id, house_code, house_area, house_unit_price, house_owner, ratio, charge_type,
+    create_time, handler, actual_sum, invoice_num, state
     from charge_bill
     where id = #{id,jdbcType=INTEGER}
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
-    select id, building_code, house_code, house_unit, house_floor, house_num, house_area, 
-    house_owner, user_type, create_time, handler, actual_sum, invoice_num, state
+    select id, house_code, house_area, house_unit_price, house_owner, ratio, charge_type,
+    create_time, handler, actual_sum, invoice_num, state
     from charge_bill
   </select>
 </mapper>

@@ -41,4 +41,15 @@
     select id, term, house_type, charge_type, elevator_sign, price_ratio, area_ratio
     from charge_criterion
   </select>
+
+  <select id="selectByHouse" parameterType="map" resultMap="BaseResultMap">
+    SELECT
+      cc.*
+    FROM
+      charge_criterion cc
+    INNER JOIN USER u ON u.org = cc.company
+    INNER JOIN house h ON h.has_elevator = cc.elevator_sign
+    AND h.type = cc.house_type
+    where h.id = #{houseId} and u.id=#{userId}
+  </select>
 </mapper>

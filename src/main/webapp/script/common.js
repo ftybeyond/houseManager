@@ -1,4 +1,4 @@
-define(["dataTables-bs"], function () {
+define(["dataTables-bs","layer"], function () {
     layer.config({
         path: '/vendors/layer/',
         offset: "100px"
@@ -18,7 +18,6 @@ define(["dataTables-bs"], function () {
         editable: function(data, type, full, meta){
             return true;
         },
-        customedit1: false,
         suffix: '.action',//请求后缀
         tableId: 'datatable',//数据表格ID
         searchForm: 'searchForm',//搜索表单ID
@@ -51,6 +50,7 @@ define(["dataTables-bs"], function () {
         $("#" + baseConfig.searchForm + " input").on("keydown",function (event) {
             if(event.keyCode == "13") {
                 table.ajax.reload();
+                return false;
             }
         });
         //查询表单上的select 变更时间
@@ -98,7 +98,11 @@ define(["dataTables-bs"], function () {
          * @param handle add one delete selectById
          */
         function getUrl(handle) {
-            return baseConfig.baseUrl + baseConfig.domain.name + "/" + handle + baseConfig.suffix;
+            if(baseConfig.url&&baseConfig.url.length>0){
+                return baseConfig.url
+            }else {
+                return baseConfig.baseUrl + baseConfig.domain.name + "/" + handle + baseConfig.suffix;
+            }
         }
 
         function deleteOneById(id) {
@@ -167,23 +171,13 @@ define(["dataTables-bs"], function () {
                 }
             })
 
-            if (baseConfig.editable || baseConfig.customedit1 ||  baseConfig.deleteable || baseConfig.customBtns.length > 0) {
+            if (baseConfig.editable ||  baseConfig.deleteable || baseConfig.customBtns.length > 0) {
                 columns.push({
                     render: function (data, type, full, meta) {
                         var btns = '';
                         //最后一列操作按钮渲染
                         if (typeof (baseConfig.editable)=="function" && baseConfig.editable(data, type, full, meta)) {
                             var btnEdit = ' <button type="button" data-handle="edit" data-index="' + full.id + '"   class="btn btn-primary btn-xs">编辑</button> ';
-                            btns += btnEdit;
-                        }
-                        if (baseConfig.customedit1) {
-                            var label = '';
-                            if (full.ownerName == null || full.ownerName == "") {
-                                label = '增加';
-                            } else {
-                                label = '变更';
-                            }
-                            var btnEdit = ' <button type="button" data-handle="edit" data-index="' + full.id + '"   class="btn btn-primary btn-xs">' + label + '</button> ';
                             btns += btnEdit;
                         }
                         if (typeof (baseConfig.deleteable)=="function" && baseConfig.deleteable(data, type, full, meta)) {

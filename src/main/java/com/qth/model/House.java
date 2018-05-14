@@ -42,7 +42,7 @@ public class House extends DataTableReqWrapper {
 
     private String ownerName;
 
-    private Integer ownerPsptid;
+    private String ownerPsptid;
 
     private BigDecimal accountBalance;
 
@@ -188,11 +188,11 @@ public class House extends DataTableReqWrapper {
         this.ownerName = ownerName;
     }
 
-    public Integer getOwnerPsptid() {
+    public String getOwnerPsptid() {
         return ownerPsptid;
     }
 
-    public void setOwnerPsptid(Integer ownerPsptid) {
+    public void setOwnerPsptid(String ownerPsptid) {
         this.ownerPsptid = ownerPsptid;
     }
 

@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%
     String path = request.getContextPath();
 %>
@@ -10,305 +11,169 @@
     <title>业主变更</title>
 
     <link rel="stylesheet" type="text/css" href="<%=path%>/vendors/datatable/datatables-bootstrap.min.css"/>
-    <link rel="stylesheet" type="text/css" href="<%=path%>/vendors/select2/select2.min.css"/>
+    <link rel="stylesheet" type="text/css" href="<%=path%>/vendors/zTree/css/metroStyle/metroStyle.css"/>
+    <link rel="stylesheet" type="text/css" href="<%=path%>/vendors/gentelella/css/custom.min.css"/>
+    <link rel="stylesheet" type="text/css" href="<%=path%>/vendors/layer/theme/default/layer.css"/>
+
+    <style type="text/css">
+        body{
+            background: #F7F7F7;
+            padding: 20px;
+        }
+        li{
+            font-size: 16px;
+        }
+    </style>
     <script src="<%=path%>/vendors/requireJS/require.js"></script>
     <script type="text/javascript" src="<%=path%>/vendors/requireJS/require-config.js"></script>
     <script type="text/javascript">
-        require(["common", "mySelect", "select2"], function (main) {
+        require(["houseTree","dataTables-bs","layer","common"],function (tree,table,layer,common) {
+            layer.config({
+                offset:"100px"
+            })
             $(function () {
-                main.loadDeps(["HasOrNot.json", "hasornotWithall.json", "HouseNature.json", "HouseType.json"], function (data) {
-                    $("#queryResidentialAreaSelect").genSelectWithAll('residential_area');
-                    $("#queryResidentialAreaSelect").change(function () {
-                        $("#queryBuildingSelect").loadBuildingSelect(this.value, null, null, true);
-                    });
-                    $("#queryBuildingSelect").change(function () {
-                        $("#queryUnitSelect").loadUnitSelect(this.value, null, null, true);
-                    });
-                    $("#queryUnitSelect").change(function () {
-                        $("#queryFloorSelect").loadFloorSelect(this.value, null, null, true);
-                        $("#queryNameSelect").loadHouseNameSelect($("#queryUnitSelect").val(), $("#queryFloorSelect").val(), null, null, true);
-                    });
-                    $("#queryFloorSelect").change(function () {
-                        $("#queryNameSelect").loadHouseNameSelect($("#queryUnitSelect").val(), $("#queryFloorSelect").val(), null, null, true);
-                    });
-
-                    $("#queryResidentialAreaSelect").change();
-                    $("#queryBuildingSelect").change();
-                    $("#queryUnitSelect").change();
-                    $("#queryFloorSelect").change();
-
-
-                    $("#hasElevatorSelect").select2({data: data["HasOrNot.json"]});
-                    $("#natureSelect").select2({data: data["HouseNature.json"]});
-                    $("#typeSelect").select2({data: data["HouseType.json"]});
-
-                    $("#residentialAreaSelect").mySelect('residential_area', null, function (data) {
-                        if (data && data.length > 0 && data[0].id) {
-                            $("#buildingSelect").loadBuildingSelect(data[0].id, null, function (data) {
-                                if (data && data.length > 0 && data[0].id) {
-                                    $("#unitSelect").loadUnitSelect(data[0].id, null, function (data) {
-                                        refreshCode();
-                                    });
-                                }
-                            });
+                common.loadDeps(["HouseType.json"],function (data) {
+                    var treeObj;
+                    var tableObj;
+                    treeObj = tree.genTree("selectTree",{
+                        check:{
+                            enable:false
+                        },
+                        callback:{
+                            onClick:function(event, treeId, treeNode){
+                                $("#searchForm input[name='id']").val(treeNode.id);
+                                $("#searchForm input[name='level']").val(treeNode.level);
+                                tableObj.ajax.reload()
+                            }
                         }
                     });
-                    $("#residentialAreaSelect").change(function () {
-                        $("#buildingSelect").loadBuildingSelect(this.value, null, function (data) {
-                            if (data && data.length > 0 && data[0].id) {
-                                $("#unitSelect").loadUnitSelect(data[0].id, null, function (data) {
-                                    refreshCode();
-                                });
-                            }
-                        });
-                    });
-                    $("#buildingSelect").change(function () {
-                        $("#unitSelect").loadUnitSelect(this.value, null, function (data) {
-                            refreshCode();
-                        });
-                    });
-                    $("#unitSelect").change(function () {
-                        refreshCode();
-                    });
-                    $("#floor").change(function () {
-                        refreshCode();
-                    });
-                    $("#name").change(function () {
-                        refreshCode();
-                    });
-
-                    var config = {
-                        popArea: ['400px', '550px'],
-                        domain: {
-                            name: 'house',
-                            props: [
-                                {name: 'id', type: 'string', showable: false},
-                                {name: 'code', type: 'string', showable: true},
-                                {name: 'residentialArea', type: 'string', showable: false},
-                                {name: 'residentialAreaName', type: 'string', showable: true},
-                                {name: 'building', type: 'string', showable: false},
-                                {name: 'buildingName', type: 'string', showable: true},
-                                {name: 'unit', type: 'string', showable: false},
-                                {name: 'unitName', type: 'string', showable: true},
-                                {name: 'floor', type: 'string', showable: true},
-                                {name: 'name', type: 'string', showable: true},
-                                {name: 'area', type: 'string', showable: true},
-                                {name: 'hasElevator', type: 'string', showable: false},
-                                {name: 'hasElevatorName', type: 'string', showable: false},
-                                {name: 'nature', type: 'string', showable: false},
-                                {name: 'natureName', type: 'string', showable: false},
-                                {name: 'type', type: 'string', showable: false},
-                                {name: 'typeName', type: 'string', showable: false},
-                                {name: 'unitPrice', type: 'string', showable: true},
-                                {name: 'ownerName', type: 'string', showable: true},
+                    var table_config ={
+                        url:'/rest/house/selectByTreeNode.action',
+                        domain:{
+                            props:[
+                                {name:"id",showable:false},
+                                {name:"code",showable:true},
+                                {name:"ownerName",showable:true},
+                                {name:"ownerPsptid",showable:true},
+                                {name:"area",showable:true},
+                                {name:"type",showable:true,render:function(row){
+                                    var dic = common.findArrayValue(row,data["HouseType.json"])
+                                    return dic&&dic.text?dic.text:"";
+                                }}
                             ]
                         },
-                        editable: false,
-                        customedit1: true,
-                        deleteable: false
+                        editable:false,
+                        deleteable:false,
+                        customBtns:[
+                            {label:'更改业主',callback:function (index,item ){
+                                $("#infoForm input[name='id']").val(item.id);
+                                $("#infoForm input[name='ownerName']").val(item.ownerName?item.ownerName:'');
+                                $("#infoForm input[name='ownerPsptid']").val(item.ownerPsptid?item.ownerPsptid:'');
+                                var win = layer.open({
+                                    type: 1,
+                                    title: "业主信息",
+                                    offset: '20px',
+                                    content: $('#popWin'),
+                                    area: ["400px","270px"],
+                                    btn: ['确定', '取消'],
+                                    yes: function () {
+                                        layer.msg('拼命加载中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
+                                        var formdata = $("#infoForm").serializeJSON()
+                                        $.post("/rest/house/updateOwnerInfo.action",formdata,null,"json").done(function (data) {
+                                            layer.alert(data.description);
+                                            tableObj.ajax.reload();
+                                            layer.close(win);
+                                        }).fail(function (xhr) {
+                                            layer.alert("服务器内部错误!")
+                                        })
+                                    },
+                                    btn2: function () {
+                                        layer.close(win);
+                                    }
+                                })
+                            }}
+                        ]
                     }
-                    var table = main.init(config);
+                    tableObj = common.init(table_config)
                 })
             })
         })
-
-        function addBtnAfter() {
-            refreshCode();
-        }
-
-        function editRecordAfter() {
-            refreshCode();
-        }
-
-        function refreshCode() {
-            try {
-                var residentialArea = $("#residentialAreaSelect").val();
-                var building = $("#buildingSelect").select2('data')[0].text;
-                var unit = $("#unitSelect").select2('data')[0].text;
-                var floor = $("#floor").val();
-                var name = $("#name").val();
-                $("#code").val(residentialArea + building + unit + floor + name);
-                $("#codeName").val(residentialArea + building + unit + floor + name);
-            } catch (e) {
-            }
-        }
-
-        function obj2FormBackfun(baseConfig, handleObj) {
-            $("#residentialAreaSelect").val(handleObj["residentialArea"]).change();
-
-            $("#buildingSelect").loadBuildingSelect(handleObj["residentialArea"], null, function (data) {
-                $("#buildingSelect").val(handleObj["building"]).change();
-                $("#unitSelect").loadUnitSelect(handleObj["building"], null, function (data) {
-                    $("#unitSelect").val(handleObj["unit"]);
-                    refreshCode();
-                });
-            });
-        }
     </script>
+
 </head>
 <body>
-<!--查询表单-->
-<div class="container" style="padding-left: 0px;">
-    <form id="searchForm" class="form-horizontal" role="form">
-        <div class="col-xs-5 form-group">
-            <label class="control-label col-xs-3">产业代码</label>
-            <div class="col-xs-9">
-                <input type="text" class="form-control" placeholder="要查询的产业代码" name="code"/>
-            </div>
-        </div>
-        <div class="col-xs-5 form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-3">小区</label>
-            <div class="col-md-9 col-sm-9 col-xs-9">
-                <select id="queryResidentialAreaSelect" name="residentialArea" class="form-control"
-                        style="width:100%;"></select>
-            </div>
-        </div>
-        <div class="col-xs-5 form-group">
-            <label class="control-label col-xs-3">楼栋</label>
-            <div class="col-md-9 col-sm-9 col-xs-9">
-                <select id="queryBuildingSelect" name="building" class="form-control"
-                        style="width:100%;"></select>
-            </div>
-        </div>
-        <div class="col-xs-5 form-group">
-            <label class="control-label col-xs-3">单元</label>
-            <div class="col-md-9 col-sm-9 col-xs-9">
-                <select id="queryUnitSelect" name="unit" class="form-control"
-                        style="width:100%;"></select>
-            </div>
-        </div>
-        <div class="col-xs-5 form-group">
-            <label class="control-label col-xs-3">楼层</label>
-            <div class="col-md-9 col-sm-9 col-xs-9">
-                <select id="queryFloorSelect" name="floor" class="form-control"
-                        style="width:100%;"></select>
-            </div>
-        </div>
-        <div class="col-xs-5 form-group">
-            <label class="control-label col-xs-3">房号</label>
-            <div class="col-md-9 col-sm-9 col-xs-9">
-                <select id="queryNameSelect" name="name" class="form-control"
-                        style="width:100%;"></select>
-            </div>
-        </div>
-        <div class="col-xs-2 form-group">
-            <div class="col-xs-6">
-                <button id="searchBtn" class="btn btn-primary" type="button">查询</button>
-            </div>
-        </div>
-    </form>
-</div>
-<div class="ln_solid"></div>
-<!-- 数据表格 -->
 <div class="container">
-    <table id="datatable" class="table table-striped table-bordered" style="width:100%">
-        <thead>
-        <tr>
-            <th>产业代码</th>
-            <th>小区</th>
-            <th>楼栋</th>
-            <th>单元</th>
-            <th>楼层</th>
-            <th>房号</th>
-            <th>面积</th>
-            <th>单价</th>
-            <th>业主姓名</th>
-            <th>操作</th>
-        </tr>
-        </thead>
-    </table>
+    <div class="row clearfix">
+        <div class="col-md-3 column" style="min-width: 250px;">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h4><i class="fa fa-align-left"></i> 房屋选择 </h4>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <div id="selectTree" class="ztree"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9 column">
+            <form id="searchForm" class="form-horizontal" role="form">
+                <input type="hidden" name="id"/>
+                <input type="hidden" name="level"/>
+                <input type="hidden" name="hasOwner" value="true">
+                <div class="row clearfix" style="padding: 10px;">
+                    <div class="col-xs-5 search-form-group">
+                        <label class="control-label col-xs-3">业主姓名</label>
+                        <div class="col-xs-9">
+                            <input type="text" class="form-control" placeholder="要查询的房屋的业主姓名" name="ownerName"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-5 search-form-group">
+                        <label class="control-label col-xs-3">产业代码</label>
+                        <div class="col-xs-9">
+                            <input type="text" class="form-control" placeholder="要查询的房屋的产业代码" name="houseCode"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-2 search-form-group" style="float: right">
+                        <div class="col-xs-6">
+                            <button id="searchBtn" class="btn btn-primary" type="button">查询</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="row" style="margin-left: 20px;">
+                <table id="datatable" class="table table-striped table-bordered" style="width:100%">
+                    <thead>
+                    <tr>
+                        <th>产业代码</th>
+                        <th>业主姓名</th>
+                        <th>业主证件</th>
+                        <th>房屋面积</th>
+                        <th>房屋类型</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div id="popWin" style="display: none;">
+<div id="popWin" style="display: none">
     <div class="x_panel">
         <div class="x_content">
             <form id="infoForm" class="form-horizontal form-label-left input_mask">
-                <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">产业代码</label>
-                    <div class="col-md-9 col-sm-9 col-xs-9">
-                        <input type="text" class="form-control" id="codeName" name="codeName" placeholder="自动生成"
-                               disabled="ture">
-                        <input type="hidden" id="code" name="code">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">小区</label>
-                    <div class="col-md-9 col-sm-9 col-xs-9">
-                        <select id="residentialAreaSelect" name="residentialArea" class="form-control" disabled="ture"
-                                style="width:100%;"></select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">楼栋</label>
-                    <div class="col-md-9 col-sm-9 col-xs-9">
-                        <select id="buildingSelect" name="building" class="form-control" disabled="ture"
-                                style="width:100%;"></select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">单元编号</label>
-                    <div class="col-md-9 col-sm-9 col-xs-9">
-                        <select id="unitSelect" id="unit" name="unit" class="form-control" disabled="ture"
-                                style="width:100%;"></select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">层号</label>
-                    <div class="col-md-9 col-sm-9 col-xs-9">
-                        <input type="text" class="form-control" id="floor" name="floor" disabled="ture"
-                               placeholder="请输入层号......">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">房号</label>
-                    <div class="col-md-9 col-sm-9 col-xs-9">
-                        <input type="text" class="form-control" id="name" name="name" disabled="ture"
-                               placeholder="请输入房号......">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">面积</label>
-                    <div class="col-md-9 col-sm-9 col-xs-9">
-                        <input type="text" class="form-control" name="area" disabled="ture" placeholder="请输入面积......">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">是否有电梯</label>
-                    <div class="col-md-9 col-sm-9 col-xs-9">
-                        <select id="hasElevatorSelect" name="hasElevator" class="form-control" disabled="ture"
-                                style="width:100%;"></select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">房屋性质</label>
-                    <div class="col-md-9 col-sm-9 col-xs-9">
-                        <select id="natureSelect" name="nature" class="form-control" disabled="ture"
-                                style="width:100%;"></select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">住宅类型</label>
-                    <div class="col-md-9 col-sm-9 col-xs-9">
-                        <select id="typeSelect" name="type" class="form-control" disabled="ture"
-                                style="width:100%;"></select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">单价</label>
-                    <div class="col-md-9 col-sm-9 col-xs-9">
-                        <input type="text" class="form-control" name="unitPrice" placeholder="请输入单价......">
-                    </div>
-                </div>
+                <input type="hidden" name="id"/>
                 <div class="form-group">
                     <label class="control-label col-md-3 col-sm-3 col-xs-3">业主姓名</label>
                     <div class="col-md-9 col-sm-9 col-xs-9">
                         <input type="text" class="form-control" name="ownerName" placeholder="请输入业主姓名......">
                     </div>
                 </div>
+
                 <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">身份证号码</label>
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">业主证件</label>
                     <div class="col-md-9 col-sm-9 col-xs-9">
-                        <input type="text" class="form-control" name="ownerPsptid" placeholder="请输入身份证号码......">
+                        <input type="text" class="form-control" name="ownerPsptid" placeholder="请输入业主证件......">
                     </div>
                 </div>
             </form>

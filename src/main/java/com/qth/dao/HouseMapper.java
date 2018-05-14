@@ -3,6 +3,7 @@ package com.qth.dao;
 import com.qth.model.House;
 import com.qth.model.Unit;
 import com.qth.model.dto.AccrualInfo;
+import com.qth.model.dto.HouseTreeModel;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -28,6 +29,8 @@ public interface HouseMapper {
 
     int updateBalanceByCode(House house);
 
+    int updateOwnerInfo(House house);
+
     BigDecimal selectBalanceByCode(String code);
 
     Date lastAccrualInResidentialArea(Integer residentialArea);
@@ -45,6 +48,10 @@ public interface HouseMapper {
     List<House> allHousesInUnit(Integer unit);
 
     List<House> allHousesInFloor(House house);
+
+    List<House> selectByTreeNode(HouseTreeModel model);
+
+    int selectCountByTreeNode(HouseTreeModel model);
 
     int updateByAccrualInfo(AccrualInfo accrualInfo);
 

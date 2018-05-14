@@ -85,13 +85,12 @@
                                 <ul class="nav child_menu">
                                     <li><a target="main_frame" href="/page/houseOwnerAddList.action">业主增加</a></li>
                                     <li><a target="main_frame" href="/page/houseOwnerList.action">业主变更</a></li>
-                                    <li><a target="main_frame" href="/page/.action">业主收缴</a></li>
-                                    <li><a target="main_frame" href="/page/.action">业主补缴</a></li>
+                                    <li><a target="main_frame" href="/page/ownerCharge.action">业主补缴</a></li>
                                     <li><a target="main_frame" href="/page/.action">收缴退回</a></li>
                                     <li><a target="main_frame" href="/page/.action">收缴登账</a></li>
                                     <li><a target="main_frame" href="/page/.action">基金返还</a></li>
                                     <li><a target="main_frame" href="/page/accrual.action">基金计息</a></li>
-                                    <li><a target="main_frame" href="/page/accrualBack.action">计息登账</a></li>
+                                    <li><a target="main_frame" href="/page/accrualResult.action">计息登账</a></li>
                                 </ul>
                             </li>
                             <li><a><i class="fa fa-table"></i> 基金使用管理<span class="fa fa-chevron-down"></span></a>

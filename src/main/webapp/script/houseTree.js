@@ -16,10 +16,12 @@ define(["zTree"],function(){
     };
 
     var genTree = function(container,setting){
-        if(setting && typeof (setting.onCheck)=="function"){
-            base.callback.onCheck = setting.onCheck
-        }else{
-            base.callback.onCheck = showOnDiv
+        if (setting&&setting.check.enable) {
+            if (setting && typeof (setting.onCheck) == "function") {
+                base.callback.onCheck = setting.onCheck
+            } else {
+                base.callback.onCheck = showOnDiv
+            }
         }
         $.extend(true,base,setting);
         houseTree = $.fn.zTree.init($("#" + container), base);
