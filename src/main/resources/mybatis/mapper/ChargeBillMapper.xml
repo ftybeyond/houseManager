@@ -60,4 +60,15 @@
     create_time, handler, actual_sum, invoice_num, state
     from charge_bill
   </select>
+
+  <select id="countByHouse" parameterType="int" resultType="int">
+    SELECT
+        count(*)
+    FROM
+        charge_bill cb
+    INNER JOIN house h ON cb.house_code = h.`code`
+    WHERE
+        h.id = #{value}
+    AND cb.state >= 0
+  </select>
 </mapper>

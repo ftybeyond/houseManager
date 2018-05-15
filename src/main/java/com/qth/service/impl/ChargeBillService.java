@@ -40,4 +40,9 @@ public class ChargeBillService extends BaseService<ChargeBill> implements ICharg
     public int deleteChargeBillById(int id) {
         return chargeBillMapper.deleteByPrimaryKey(id);
     }
+
+    @Override
+    public int countByHouse(Integer house) {
+        return chargeBillMapper.countByHouse(house);
+    }
 }

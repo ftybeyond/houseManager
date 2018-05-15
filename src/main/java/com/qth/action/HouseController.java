@@ -93,7 +93,7 @@ public class HouseController extends BaseController {
     }
 
     @RequestMapping(value = "chargeInfo")
-    public CommonRsp getHouseChargeInfo(Integer house, HttpSession session){
+    public CommonRsp getHouseChargeInfo(Integer house,boolean patch, HttpSession session){
         CommonRsp rsp = new CommonRsp();
         //todo user company
         ChargeCriterion chargeCriterion = houseService.getChargeCriterionByHouse(house,1);
@@ -104,6 +104,9 @@ public class HouseController extends BaseController {
             Map map = new HashMap();
             map.put("algorithmSwitch",algorithmSwitch);
             map.put("chargeCriterion",chargeCriterion);
+            if(patch){
+                map.put("chargeBillCount",chargeBillService.countByHouse(house));
+            }
             rsp.setAttr(map);
             return rsp;
         }else if(algorithmSwitch==null){
@@ -123,8 +126,25 @@ public class HouseController extends BaseController {
     public CommonRsp genChargeBill(ChargeBill chargeBill,HttpSession session){
         //todo handler
         Date stamp = new Date();
+
         chargeBill.setCreateTime(stamp);
         chargeBill.setState(0);
+        chargeBill.setHandler("admin");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSSS");
+        chargeBill.setInvoiceNum(sdf.format(stamp));
+        int effect = chargeBillService.insertChargeBill(chargeBill);
+        CommonRsp rsp = dbEffect2Rsp(effect);
+        rsp.setDescription("成功生成缴费单!");
+        rsp.setData(chargeBill);
+        return rsp;
+    }
+
+    @RequestMapping(value = "chargeBillPatch")
+    public CommonRsp chargeBillPatch(ChargeBill chargeBill,HttpSession session){
+        //todo handler
+        Date stamp = new Date();
+        chargeBill.setCreateTime(stamp);
+        chargeBill.setState(2);
         chargeBill.setHandler("admin");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSSS");
         chargeBill.setInvoiceNum(sdf.format(stamp));

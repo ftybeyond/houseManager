@@ -80,8 +80,8 @@
                                         layer.msg('拼命加载中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
                                         var formdata = $("#infoForm").serializeJSON()
                                         $.post("/rest/house/updateOwnerInfo.action",formdata,null,"json").done(function (data) {
-                                            layer.msg('拼命加载中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
                                             var chargeAlert = layer.alert(data.description,{btn:["缴费"],closeBtn:0,btn1:function () {
+                                                layer.msg('拼命加载中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
                                                 $.post("/rest/house/chargeInfo.action",{house:item.id},null,"json").done(function (rsp) {
                                                     if(rsp.success){
                                                         var houseType = common.findArrayValue(item.type,baseData["HouseType.json"]);
@@ -130,6 +130,7 @@
                                                                 param.houseUnitPrice = item.unitPrice;
                                                                 param.houseOwner = $("#infoForm input[name='ownerName']").val();
                                                                 param.actualSum = chargeMoney;
+                                                                layer.msg('拼命加载中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
                                                                 $.post("/rest/house/genChargeBill.action",param,null,"json").done(function(data){
                                                                     layer.closeAll();
                                                                     tableObj.ajax.reload();
@@ -143,6 +144,8 @@
                                                     }else{
                                                         layer.alert(rsp.description)
                                                     }
+                                                }).fail(function (xhr) {
+                                                    layer.alert("服务器内部错误!")
                                                 })
                                             }});
                                             tableObj.ajax.reload();

@@ -85,7 +85,7 @@
                                 <ul class="nav child_menu">
                                     <li><a target="main_frame" href="/page/houseOwnerAddList.action">业主增加</a></li>
                                     <li><a target="main_frame" href="/page/houseOwnerList.action">业主变更</a></li>
-                                    <li><a target="main_frame" href="/page/ownerCharge.action">业主补缴</a></li>
+                                    <li><a target="main_frame" href="/page/chargePatch.action">业主补缴</a></li>
                                     <li><a target="main_frame" href="/page/.action">收缴退回</a></li>
                                     <li><a target="main_frame" href="/page/.action">收缴登账</a></li>
                                     <li><a target="main_frame" href="/page/.action">基金返还</a></li>

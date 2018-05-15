@@ -13,4 +13,6 @@ public interface ChargeBillMapper {
     List<ChargeBill> selectAll();
 
     int updateByPrimaryKey(ChargeBill record);
+
+    int countByHouse(Integer house);
 }

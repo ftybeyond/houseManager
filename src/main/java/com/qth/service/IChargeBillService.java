@@ -15,4 +15,6 @@ public interface IChargeBillService extends IBaseService<ChargeBill>
     public ChargeBill findChargeBillById(int id);
 
     public int deleteChargeBillById(int id);
+
+    public int countByHouse(Integer house);
 }
