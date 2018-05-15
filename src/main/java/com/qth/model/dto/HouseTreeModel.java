@@ -16,6 +16,12 @@ public class HouseTreeModel extends ZTreeNodeReq{
 
     private Boolean hasOwner;
 
+    /**
+     * 1：收缴回退
+     * 2：收缴登帐
+     */
+    private int sign;
+
     public Integer getStart() {
         return start;
     }
@@ -62,5 +68,13 @@ public class HouseTreeModel extends ZTreeNodeReq{
 
     public void setHasOwner(Boolean hasOwner) {
         this.hasOwner = hasOwner;
+    }
+
+    public int getSign() {
+        return sign;
+    }
+
+    public void setSign(int sign) {
+        this.sign = sign;
     }
 }

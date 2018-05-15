@@ -86,9 +86,9 @@
                                     <li><a target="main_frame" href="/page/houseOwnerAddList.action">业主增加</a></li>
                                     <li><a target="main_frame" href="/page/houseOwnerList.action">业主变更</a></li>
                                     <li><a target="main_frame" href="/page/chargePatch.action">业主补缴</a></li>
-                                    <li><a target="main_frame" href="/page/.action">收缴退回</a></li>
-                                    <li><a target="main_frame" href="/page/.action">收缴登账</a></li>
-                                    <li><a target="main_frame" href="/page/.action">基金返还</a></li>
+                                    <li><a target="main_frame" href="/page/chargeBillBack.action">收缴退回</a></li>
+                                    <li><a target="main_frame" href="/page/chargeBillAccount.action">收缴登账</a></li>
+                                    <li><a target="main_frame" href="/page/houseBalanceBack.action">基金返还</a></li>
                                     <li><a target="main_frame" href="/page/accrual.action">基金计息</a></li>
                                     <li><a target="main_frame" href="/page/accrualResult.action">计息登账</a></li>
                                 </ul>

@@ -12,6 +12,7 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="handler" jdbcType="VARCHAR" property="handler" />
     <result column="actual_sum" jdbcType="DECIMAL" property="actualSum" />
+    <result column="flow_num" jdbcType="VARCHAR" property="flowNum" />
     <result column="invoice_num" jdbcType="VARCHAR" property="invoiceNum" />
     <result column="state" jdbcType="INTEGER" property="state" />
   </resultMap>
@@ -26,12 +27,12 @@
     insert into charge_bill (id, house_code, house_area,
       house_unit_price, house_owner, ratio,
       charge_type, create_time, handler,
-      actual_sum, invoice_num, state
+      actual_sum, invoice_num,flow_num, state
       )
     values (#{id,jdbcType=INTEGER}, #{houseCode,jdbcType=VARCHAR}, #{houseArea,jdbcType=DECIMAL},
       #{houseUnitPrice,jdbcType=DECIMAL}, #{houseOwner,jdbcType=VARCHAR}, #{ratio,jdbcType=DECIMAL},
       #{chargeType,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{handler,jdbcType=VARCHAR},
-      #{actualSum,jdbcType=DECIMAL}, #{invoiceNum,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER}
+      #{actualSum,jdbcType=DECIMAL}, #{invoiceNum,jdbcType=VARCHAR},#{flowNum,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER}
       )
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.qth.model.ChargeBill">
@@ -49,6 +50,13 @@
       state = #{state,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <update id="updateState" parameterType="com.qth.model.ChargeBill">
+    update charge_bill
+    set
+    state = #{state}
+    where id = #{id}
+  </update>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select id, house_code, house_area, house_unit_price, house_owner, ratio, charge_type,
     create_time, handler, actual_sum, invoice_num, state
@@ -56,8 +64,7 @@
     where id = #{id,jdbcType=INTEGER}
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
-    select id, house_code, house_area, house_unit_price, house_owner, ratio, charge_type,
-    create_time, handler, actual_sum, invoice_num, state
+    select *
     from charge_bill
   </select>
 
@@ -71,4 +78,82 @@
         h.id = #{value}
     AND cb.state >= 0
   </select>
+
+  <select id="selectByTreeNode" parameterType="com.qth.model.dto.HouseTreeModel" resultMap="BaseResultMap">
+    SELECT
+	cb.*
+    FROM
+        charge_bill cb
+    LEFT JOIN house h ON cb.house_code = h.`code`
+    LEFT JOIN unit u ON u.id = h.unit
+    LEFT JOIN building b ON b.id = u.id
+    LEFT JOIN residential_area ra ON ra.id = b.residential_area
+    where 1=1
+    <choose>
+      <when test="level == 0">
+        and ra.id = #{id}
+      </when>
+      <when test="level == 1">
+        and b.id = #{id}
+      </when>
+      <when test="level == 2">
+        and u.id = #{id}
+      </when>
+      <when test="level == 3">
+        and u.id = #{id} and h.floor = #{name}
+      </when>
+      <when test="level == 4">
+        and h.id = #{id}
+      </when>
+    </choose>
+    <if test="ownerName!=null and ownerName.length >0">
+      and h.owner_name = #{ownerName}
+    </if>
+    <if test="houseCode!=null and houseCode.length >0">
+      and h.code LIKE '%${houseCode}%'
+    </if>
+    <if test="sign == 0">
+      and (cb.state=0 or cb.state=2)
+    </if>
+    limit #{start},#{length}
+  </select>
+
+  <select id="selectCountByTreeNode" parameterType="com.qth.model.dto.HouseTreeModel" resultType="int">
+    SELECT
+    count(cb.id)
+    FROM
+    charge_bill cb
+    LEFT JOIN house h ON cb.house_code = h.`code`
+    LEFT JOIN unit u ON u.id = h.unit
+    LEFT JOIN building b ON b.id = u.id
+    LEFT JOIN residential_area ra ON ra.id = b.residential_area
+    where 1=1
+    <choose>
+      <when test="level == 0">
+        and ra.id = #{id}
+      </when>
+      <when test="level == 1">
+        and b.id = #{id}
+      </when>
+      <when test="level == 2">
+        and u.id = #{id}
+      </when>
+      <when test="level == 3">
+        and u.id = #{id} and h.floor = #{name}
+      </when>
+      <when test="level == 4">
+        and h.id = #{id}
+      </when>
+    </choose>
+    <if test="ownerName!=null and ownerName.length >0">
+      and h.owner_name = #{ownerName}
+    </if>
+    <if test="houseCode!=null and houseCode.length >0">
+      and h.code LIKE '%${houseCode}%'
+    </if>
+    <if test="sign == 0">
+      and (cb.state=0 or cb.state=2)
+    </if>
+  </select>
+
 </mapper>

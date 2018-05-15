@@ -19,6 +19,8 @@ public interface HouseMapper {
 
     House selectSimpleOne(Integer id);
 
+    House selectByCode(String code);
+
     List<House> selectAll();
 
     int updateByPrimaryKey(House record);

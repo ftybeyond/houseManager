@@ -1,5 +1,6 @@
 package com.qth.service.impl;
 
+import com.qth.dao.AccountLogMapper;
 import com.qth.dao.AlgorithmSwitchMapper;
 import com.qth.dao.ChargeCriterionMapper;
 import com.qth.dao.HouseMapper;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 @Service
@@ -25,6 +27,9 @@ public class HouseService extends BaseService<House> implements IHouseService {
 
     @Autowired
     AlgorithmSwitchMapper algorithmSwitchMapper;
+
+    @Autowired
+    AccountLogMapper accountLogMapper;
 
     @Override
     public DataTableRspWrapper<House> selectDataTable2Rsp(House house) {
@@ -90,6 +95,24 @@ public class HouseService extends BaseService<House> implements IHouseService {
     @Override
     public AlgorithmSwitch getChargeType(Integer user) {
         return algorithmSwitchMapper.selectByPrimaryKey(1);
+    }
+
+    @Transactional
+    @Override
+    public int backBalance(Integer house,String handler) {
+        House house1 = houseMapper.selectByPrimaryKey(house);
+        AccountLog accountLog = new AccountLog();
+        accountLog.setBalance(house1.getAccountBalance());
+        accountLog.setHouseCode(house1.getCode());
+        accountLog.setRemark("基金返还");
+        accountLog.setTradeTime(new Date());
+        accountLog.setTradeType(2);
+        accountLog.setTradeMoney(house1.getAccountBalance().negate());
+        accountLog.setHandler(handler);
+        accountLog.setHouseOwner(house1.getOwnerName());
+        accountLogMapper.insert(accountLog);
+        house1.setAccountBalance(new BigDecimal(0f));
+        return houseMapper.updateBalanceByCode(house1);
     }
 
     public List<House> selectByTreePath(String paths) {

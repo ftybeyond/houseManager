@@ -7,7 +7,7 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 
-    <title>业主变更</title>
+    <title>收缴登帐</title>
 
     <link rel="stylesheet" type="text/css" href="<%=path%>/vendors/datatable/datatables-bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="<%=path%>/vendors/zTree/css/metroStyle/metroStyle.css"/>
@@ -31,7 +31,7 @@
                 offset:"100px"
             })
             $(function () {
-                common.loadDeps(["HouseType.json"],function (data) {
+                common.loadDeps(["ChargeBillType.json"],function (data) {
                     var treeObj;
                     var tableObj;
                     treeObj = tree.genTree("selectTree",{
@@ -47,16 +47,17 @@
                         }
                     });
                     var table_config ={
-                        url:'/rest/house/selectByTreeNode.action',
+                        url:'/rest/chargeBill/selectByTreeNode.action',
                         domain:{
                             props:[
                                 {name:"id",showable:false},
-                                {name:"code",showable:true},
-                                {name:"ownerName",showable:true},
-                                {name:"ownerPsptid",showable:true},
-                                {name:"area",showable:true},
-                                {name:"type",showable:true,render:function(row){
-                                    var dic = common.findArrayValue(row,data["HouseType.json"])
+                                {name:"houseCode",showable:true},
+                                {name:"houseArea",showable:true},
+                                {name:"houseUnitPrice",showable:true},
+                                {name:"ratio",showable:true},
+                                {name:"actualSum",showable:true},
+                                {name:"chargeType",showable:true,render:function(row){
+                                    var dic = common.findArrayValue(row,data["ChargeBillType.json"])
                                     return dic&&dic.text?dic.text:"";
                                 }}
                             ]
@@ -64,32 +65,19 @@
                         editable:false,
                         deleteable:false,
                         customBtns:[
-                            {label:'更改业主',callback:function (index,item ){
-                                $("#infoForm input[name='id']").val(item.id);
-                                $("#infoForm input[name='ownerName']").val(item.ownerName?item.ownerName:'');
-                                $("#infoForm input[name='ownerPsptid']").val(item.ownerPsptid?item.ownerPsptid:'');
-                                var win = layer.open({
-                                    type: 1,
-                                    title: "业主信息",
-                                    offset: '20px',
-                                    content: $('#popWin'),
-                                    area: ["400px","270px"],
-                                    btn: ['确定', '取消'],
-                                    yes: function () {
-                                        layer.msg('拼命加载中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
-                                        var formdata = $("#infoForm").serializeJSON()
-                                        $.post("/rest/house/updateOwnerInfo.action",formdata,null,"json").done(function (data) {
-                                            layer.alert(data.description);
-                                            tableObj.ajax.reload();
-                                            layer.close(win);
-                                        }).fail(function (xhr) {
-                                            layer.alert("服务器内部错误!")
-                                        })
-                                    },
-                                    btn2: function () {
-                                        layer.close(win);
-                                    }
-                                })
+                            {label:'登帐',callback:function (index,item ){
+                                layer.confirm('<p>产业编码：'+item.houseCode+'</p><p>登帐金额：'+item.actualSum+'</p>',{title:"登帐确认",yes:function () {
+                                    $.post("/rest/chargeBill/account.action",item,null,"json").done(function (data) {
+                                        if (data.success) {
+                                            layer.alert(data.description,{btn:["开票"],btn1:function () {
+                                                
+                                            }})
+                                            tableObj.ajax.reload()
+                                        } else {
+                                            layer.alert(data.description)
+                                        }
+                                    })
+                                }});
                             }}
                         ]
                     }
@@ -118,7 +106,6 @@
             <form id="searchForm" class="form-horizontal" role="form">
                 <input type="hidden" name="id"/>
                 <input type="hidden" name="level"/>
-                <input type="hidden" name="hasOwner" value="true">
                 <div class="row clearfix" style="padding: 10px;">
                     <div class="col-xs-5 search-form-group">
                         <label class="control-label col-xs-3">业主姓名</label>
@@ -144,10 +131,11 @@
                     <thead>
                     <tr>
                         <th>产业代码</th>
-                        <th>业主姓名</th>
-                        <th>业主证件</th>
                         <th>房屋面积</th>
-                        <th>房屋类型</th>
+                        <th>房屋单价</th>
+                        <th>收缴系数</th>
+                        <th>收缴金额</th>
+                        <th>收缴类型</th>
                         <th>操作</th>
                     </tr>
                     </thead>
@@ -157,27 +145,5 @@
     </div>
 </div>
 
-<div id="popWin" style="display: none">
-    <div class="x_panel">
-        <div class="x_content">
-            <form id="infoForm" class="form-horizontal form-label-left input_mask">
-                <input type="hidden" name="id"/>
-                <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">业主姓名</label>
-                    <div class="col-md-9 col-sm-9 col-xs-9">
-                        <input type="text" class="form-control" name="ownerName" placeholder="请输入业主姓名......">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">业主证件</label>
-                    <div class="col-md-9 col-sm-9 col-xs-9">
-                        <input type="text" class="form-control" name="ownerPsptid" placeholder="请输入业主证件......">
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 </body>
 </html>

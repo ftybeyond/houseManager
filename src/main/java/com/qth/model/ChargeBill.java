@@ -1,6 +1,9 @@
 package com.qth.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.qth.model.common.DataTableReqWrapper;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -19,11 +22,15 @@ public class ChargeBill extends DataTableReqWrapper {
 
     private Integer chargeType;
 
+    @JSONField(format = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date createTime;
 
     private String handler;
 
     private BigDecimal actualSum;
+
+    private String flowNum;
 
     private String invoiceNum;
 
@@ -115,6 +122,14 @@ public class ChargeBill extends DataTableReqWrapper {
 
     public void setInvoiceNum(String invoiceNum) {
         this.invoiceNum = invoiceNum;
+    }
+
+    public String getFlowNum() {
+        return flowNum;
+    }
+
+    public void setFlowNum(String flowNum) {
+        this.flowNum = flowNum;
     }
 
     public Integer getState() {

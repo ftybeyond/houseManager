@@ -39,4 +39,6 @@ public interface IHouseService extends IBaseService<House>
 
     public AlgorithmSwitch getChargeType(Integer user);
 
+    public int backBalance(Integer house,String handler);
+
 }

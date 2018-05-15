@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -67,6 +68,10 @@ public class BaseController {
         commonRsp.setDescription("服务器内部错误：" + e.getMessage());
         e.printStackTrace();
         return commonRsp;
+    }
+
+    public String getHandler(HttpSession session){
+        return "admin";
     }
 }
 

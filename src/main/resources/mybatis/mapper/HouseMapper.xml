@@ -72,6 +72,7 @@
     LEFT JOIN residential_area ra ON ra.id = b.residential_area
     where h.id = #{id,jdbcType=INTEGER}
   </select>
+
   <select id="selectAll" resultMap="BaseResultMap">
     select id, name, unit, floor, code, area, has_elevator, nature, type, building_rise,
     unit_price, owner_name, owner_psptid, account_balance
@@ -151,6 +152,10 @@
 
   <select id="selectBalanceByCode" parameterType="java.lang.String" resultType="java.math.BigDecimal">
     select account_balance from house where code = #{value}
+  </select>
+
+  <select id="selectByCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select * from house where code = #{value}
   </select>
 
   <!-- 结息日期-->
@@ -321,6 +326,12 @@
     </if>
     <if test="houseCode!=null and houseCode.length >0">
       and h.code LIKE '%${houseCode}%'
+    </if>
+    <if test="hasOwner!=null and hasOwner">
+      and h.owner_name is not null
+    </if>
+    <if test="hasOwner!=null and !hasOwner">
+      and h.owner_name is null
     </if>
   </select>
 

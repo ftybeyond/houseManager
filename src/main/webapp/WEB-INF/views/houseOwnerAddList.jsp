@@ -1,5 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%
     String path = request.getContextPath();
 %>
@@ -80,76 +79,81 @@
                                         layer.msg('拼命加载中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
                                         var formdata = $("#infoForm").serializeJSON()
                                         $.post("/rest/house/updateOwnerInfo.action",formdata,null,"json").done(function (data) {
-                                            var chargeAlert = layer.alert(data.description,{btn:["缴费"],closeBtn:0,btn1:function () {
-                                                layer.msg('拼命加载中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
-                                                $.post("/rest/house/chargeInfo.action",{house:item.id},null,"json").done(function (rsp) {
-                                                    if(rsp.success){
-                                                        var houseType = common.findArrayValue(item.type,baseData["HouseType.json"]);
-                                                        var hasElevator = common.findArrayValue(item.hasElevator,baseData["HasOrNot.json"]);
-                                                        var algorithmType = common.findArrayValue(rsp.attr.algorithmSwitch.chargeSwitch,baseData["AlgorithmSwitch.json"]);
-                                                        $("#chargeHouseType").html(houseType?houseType.text:"");
-                                                        $("#chargeHouseElevator").html(hasElevator?hasElevator.text:"");
-                                                        $("#algorithmType").html(algorithmType?algorithmType.text:"");
-                                                        $("#chargeHouseArea").html(item.area);
-                                                        var chargeMoney=0;
-                                                        var param = {};
-                                                        if(rsp.attr.algorithmSwitch.chargeSwitch == 0){
-                                                            //按房价 result = 单价x面积x房价系数
-                                                            var divUnitPrice = '<div class="form-group">' +
-                                                                '                    <label class="control-label col-md-3 col-sm-3 col-xs-3">房屋单价</label>' +
-                                                                '                    <div class="col-md-9 col-sm-9 col-xs-9">' +
-                                                                '                        <div style="width: 100%;padding-top: 8px;">'+item.unitPrice+'</div>' +
-                                                                '                    </div>' +
-                                                                '                </div>';
-                                                            var chargeMoneyDiv = $("#chargeMoney").parents(".form-group");
-                                                            chargeMoneyDiv.before(divUnitPrice);
-                                                            chargeMoney = (item.unitPrice*item.area*rsp.attr.chargeCriterion.priceRatio).toFixed(2);
-                                                            param.ratio = rsp.attr.chargeCriterion.priceRatio;
-                                                            param.chargeType = 0;
-                                                        }else if(rsp.attr.algorithmSwitch.chargeSwitch == 1){
-                                                            //按面积 result = 面积x面积系数
-                                                            $("#chargeRatio").html(rsp.attr.chargeCriterion.areaRatio);
-                                                            chargeMoney = (item.area*rsp.attr.chargeCriterion.areaRatio).toFixed(2);
-                                                            param.ratio = rsp.attr.chargeCriterion.areaRatio;
-                                                            param.chargeType = 1;
+                                            if(data.success){
+                                                var chargeAlert = layer.alert(data.description,{btn:["缴费"],closeBtn:0,btn1:function () {
+                                                    layer.msg('拼命加载中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
+                                                    $.post("/rest/house/chargeInfo.action",{house:item.id},null,"json").done(function (rsp) {
+                                                        if(rsp.success){
+                                                            var houseType = common.findArrayValue(item.type,baseData["HouseType.json"]);
+                                                            var hasElevator = common.findArrayValue(item.hasElevator,baseData["HasOrNot.json"]);
+                                                            var algorithmType = common.findArrayValue(rsp.attr.algorithmSwitch.chargeSwitch,baseData["AlgorithmSwitch.json"]);
+                                                            $("#chargeHouseType").html(houseType?houseType.text:"");
+                                                            $("#chargeHouseElevator").html(hasElevator?hasElevator.text:"");
+                                                            $("#algorithmType").html(algorithmType?algorithmType.text:"");
+                                                            $("#chargeHouseArea").html(item.area);
+                                                            var chargeMoney=0;
+                                                            var param = {};
+                                                            if(rsp.attr.algorithmSwitch.chargeSwitch == 0){
+                                                                //按房价 result = 单价x面积x房价系数
+                                                                var divUnitPrice = '<div class="form-group">' +
+                                                                    '                    <label class="control-label col-md-3 col-sm-3 col-xs-3">房屋单价</label>' +
+                                                                    '                    <div class="col-md-9 col-sm-9 col-xs-9">' +
+                                                                    '                        <div style="width: 100%;padding-top: 8px;">'+item.unitPrice+'</div>' +
+                                                                    '                    </div>' +
+                                                                    '                </div>';
+                                                                var chargeMoneyDiv = $("#chargeMoney").parents(".form-group");
+                                                                chargeMoneyDiv.before(divUnitPrice);
+                                                                chargeMoney = (item.unitPrice*item.area*rsp.attr.chargeCriterion.priceRatio).toFixed(2);
+                                                                param.ratio = rsp.attr.chargeCriterion.priceRatio;
+                                                                param.chargeType = 0;
+                                                            }else if(rsp.attr.algorithmSwitch.chargeSwitch == 1){
+                                                                //按面积 result = 面积x面积系数
+                                                                $("#chargeRatio").html(rsp.attr.chargeCriterion.areaRatio);
+                                                                chargeMoney = (item.area*rsp.attr.chargeCriterion.areaRatio).toFixed(2);
+                                                                param.ratio = rsp.attr.chargeCriterion.areaRatio;
+                                                                param.chargeType = 1;
+                                                            }else{
+                                                                layer.alert("缴费算法开关参数错误!");
+                                                                return;
+                                                            }
+                                                            $("#chargeMoney").html(chargeMoney);
+                                                            var win2 = layer.open({
+                                                                type: 1,
+                                                                title: "缴费信息",
+                                                                offset: '20px',
+                                                                content: $('#popWin2'),
+                                                                area: ["400px","500px"],
+                                                                btn: ['生成缴费单', '取消'],
+                                                                btn1:function(){
+                                                                    param.houseCode = item.code;
+                                                                    param.houseArea = item.area;
+                                                                    param.houseUnitPrice = item.unitPrice;
+                                                                    param.houseOwner = $("#infoForm input[name='ownerName']").val();
+                                                                    param.actualSum = chargeMoney;
+                                                                    layer.msg('拼命加载中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
+                                                                    $.post("/rest/house/genChargeBill.action",param,null,"json").done(function(data){
+                                                                        layer.closeAll();
+                                                                        tableObj.ajax.reload();
+                                                                        layer.alert(data.description)
+                                                                    }).fail(function(){
+                                                                        layer.alert("服务器内部错误!");
+                                                                    })
+                                                                },
+                                                                btn2:function(){layer.close(win2)}
+                                                            })
                                                         }else{
-                                                            layer.alert("缴费算法开关参数错误!");
-                                                            return;
+                                                            layer.alert(rsp.description)
                                                         }
-                                                        $("#chargeMoney").html(chargeMoney);
-                                                        var win2 = layer.open({
-                                                            type: 1,
-                                                            title: "缴费信息",
-                                                            offset: '20px',
-                                                            content: $('#popWin2'),
-                                                            area: ["400px","500px"],
-                                                            btn: ['生成缴费单', '取消'],
-                                                            btn1:function(){
-                                                                param.houseCode = item.code;
-                                                                param.houseArea = item.area;
-                                                                param.houseUnitPrice = item.unitPrice;
-                                                                param.houseOwner = $("#infoForm input[name='ownerName']").val();
-                                                                param.actualSum = chargeMoney;
-                                                                layer.msg('拼命加载中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
-                                                                $.post("/rest/house/genChargeBill.action",param,null,"json").done(function(data){
-                                                                    layer.closeAll();
-                                                                    tableObj.ajax.reload();
-                                                                    layer.alert(data.description)
-                                                                }).fail(function(){
-                                                                    layer.alert("服务器内部错误!");
-                                                                })
-                                                            },
-                                                            btn2:function(){layer.close(win2)}
-                                                        })
-                                                    }else{
-                                                        layer.alert(rsp.description)
-                                                    }
-                                                }).fail(function (xhr) {
-                                                    layer.alert("服务器内部错误!")
-                                                })
-                                            }});
-                                            tableObj.ajax.reload();
-                                            layer.close(win);
+                                                    }).fail(function (xhr) {
+                                                        layer.alert("服务器内部错误!")
+                                                    })
+                                                }});
+                                                tableObj.ajax.reload();
+                                                layer.close(win);
+                                            }else{
+                                                layer.alert(data.description)
+                                            }
+
                                         }).fail(function (xhr) {
                                             layer.alert("服务器内部错误!")
                                         })
