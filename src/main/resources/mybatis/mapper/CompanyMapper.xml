@@ -8,6 +8,7 @@
     <result column="legal_person_name" jdbcType="VARCHAR" property="legalPersonName" />
     <result column="legal_person_license" jdbcType="VARCHAR" property="legalPersonLicense" />
     <result column="nature" jdbcType="INTEGER" property="nature" />
+    <result column="account_num" jdbcType="VARCHAR" property="accountNum"/>
   </resultMap>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
@@ -17,9 +18,9 @@
 
   <insert id="insert" parameterType="com.qth.model.Company">
     insert into company (id, name, legal_person_name, 
-      legal_person_license, nature)
+      legal_person_license, nature,account_num)
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{legalPersonName,jdbcType=VARCHAR}, 
-      #{legalPersonLicense,jdbcType=VARCHAR}, #{nature,jdbcType=INTEGER})
+      #{legalPersonLicense,jdbcType=VARCHAR}, #{nature,jdbcType=INTEGER},#{accountNum,jdbcType=VARCHAR})
   </insert>
 
   <update id="updateByPrimaryKey" parameterType="com.qth.model.Company">
@@ -27,16 +28,17 @@
     set name = #{name,jdbcType=VARCHAR},
       legal_person_name = #{legalPersonName,jdbcType=VARCHAR},
       legal_person_license = #{legalPersonLicense,jdbcType=VARCHAR},
-      nature = #{nature,jdbcType=INTEGER}
+      nature = #{nature,jdbcType=INTEGER},
+      account_num = #{accountNum,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select id, name, legal_person_name, legal_person_license, nature
+    select *
     from company
     where id = #{id,jdbcType=INTEGER}
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
-    select id, name, legal_person_name, legal_person_license, nature
+    select *
     from company
   </select>
 

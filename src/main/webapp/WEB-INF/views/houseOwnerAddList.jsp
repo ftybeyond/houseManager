@@ -134,7 +134,18 @@
                                                                     $.post("/rest/house/genChargeBill.action",param,null,"json").done(function(data){
                                                                         layer.closeAll();
                                                                         tableObj.ajax.reload();
-                                                                        layer.alert(data.description)
+                                                                        layer.alert(data.description,{btn:["打印缴费单"],btn1:function(){
+                                                                            var win = layer.open({
+                                                                                type:2,
+                                                                                offset:"20px",
+                                                                                area:["800px","500px"],
+                                                                                content:'/forward/chargeBillPrint.action?id='+data.data.id,
+                                                                                btn:["打印","取消"],
+                                                                                btn1:function(index,layero){
+                                                                                    console.log(window[layero.find('iframe')[0]['name']].print());
+                                                                                }
+                                                                            })
+                                                                        }})
                                                                     }).fail(function(){
                                                                         layer.alert("服务器内部错误!");
                                                                     })

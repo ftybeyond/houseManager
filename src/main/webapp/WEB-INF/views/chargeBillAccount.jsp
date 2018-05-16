@@ -78,6 +78,18 @@
                                         }
                                     })
                                 }});
+                            }},
+                            {label:"补打缴费单",callback:function (index,item ) {
+                                var win = layer.open({
+                                    type:2,
+                                    offset:"20px",
+                                    area:["800px","500px"],
+                                    content:'/forward/chargeBillPrint.action?id='+item.id,
+                                    btn:["打印","取消"],
+                                    btn1:function(index,layero){
+                                        console.log(window[layero.find('iframe')[0]['name']].print());
+                                    }
+                                })
                             }}
                         ]
                     }

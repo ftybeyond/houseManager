@@ -1,18 +1,26 @@
 package com.qth.action;
 
+import com.qth.model.Company;
 import com.qth.model.House;
 import com.qth.model.common.CommonRsp;
 import com.qth.model.common.Select2;
 import com.qth.model.common.SelectIdstring;
+import com.qth.model.dto.ChargeBillPrintInfo;
+import com.qth.service.IChargeBillService;
+import com.qth.service.ICompanyService;
 import com.qth.service.ISelectService;
+import com.qth.util.DateUtils;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -24,6 +32,36 @@ public class GlobalController {
 
     @Autowired
     ISelectService selectService;
+
+    @Autowired
+    IChargeBillService chargeBillService;
+
+    @Autowired
+    ICompanyService companyService;
+
+    @Value("${busi.coreCompany.id}")
+    Integer company;
+
+    @RequestMapping(value = "/forward/chargeBillPrint")
+    public ModelAndView chargeBillPrint(Integer id){
+        //todo handler
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("error");
+        if(id!=null){
+            ChargeBillPrintInfo printInfo = chargeBillService.getPrintInfo(id);
+            if(printInfo==null){
+                return modelAndView;
+            }
+            Company coreCompany = companyService.findCompanyById(company);
+            printInfo.setHandler("admin");
+            printInfo.setStamp(DateUtils.formatDate(new Date(),"yyyy-MM-dd"));
+            printInfo.setCompanyAccount(coreCompany.getAccountNum());
+            printInfo.setCompanyName(coreCompany.getName());
+            modelAndView.addObject("printInfo",printInfo);
+            modelAndView.setViewName("chargeBillPrint");
+        }
+        return modelAndView;
+    }
 
     /**
      * 通用select2组件数据请求服务

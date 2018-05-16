@@ -2,6 +2,7 @@ package com.qth.service;
 
 import com.qth.model.ChargeBill;
 import com.qth.model.common.DataTableRspWrapper;
+import com.qth.model.dto.ChargeBillPrintInfo;
 import com.qth.model.dto.HouseTreeModel;
 
 import java.util.List;
@@ -23,5 +24,7 @@ public interface IChargeBillService extends IBaseService<ChargeBill>
     public DataTableRspWrapper treeTable(HouseTreeModel model);
 
     public int updateState(ChargeBill chargeBill,Integer toState,String handler);
+
+    public ChargeBillPrintInfo getPrintInfo(Integer id);
 
 }

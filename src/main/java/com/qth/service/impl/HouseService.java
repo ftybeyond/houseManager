@@ -9,6 +9,7 @@ import com.qth.model.common.DataTableRspWrapper;
 import com.qth.model.dto.HouseTreeModel;
 import com.qth.service.IHouseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +31,9 @@ public class HouseService extends BaseService<House> implements IHouseService {
 
     @Autowired
     AccountLogMapper accountLogMapper;
+
+    @Value("${busi.algorithmSwitch.id}")
+    Integer algorithmSwitch;
 
     @Override
     public DataTableRspWrapper<House> selectDataTable2Rsp(House house) {

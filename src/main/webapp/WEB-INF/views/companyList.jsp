@@ -28,6 +28,7 @@
                                 {name:'name',type:'string',showable:true},
                                 {name:'legalPersonName',type:'string',showable:true},
                                 {name:'legalPersonLicense',type:'string',showable:true},
+                                {name:'accountNum',type:'string',showable:true},
                                 {name:'nature',type:'string',showable:true,render:function (row, type, full, meta) {
                                     var dic = main.findArrayValue(full.nature,data["CompanyNature.json"])
                                     return dic&&dic.text?dic.text:"";
@@ -77,6 +78,7 @@
             <th>单位名称</th>
             <th>单位法人</th>
             <th>法人证件</th>
+            <th>银行账户</th>
             <th>单位性质</th>
             <th>操作</th>
         </tr>
@@ -104,6 +106,12 @@
                     <label class="control-label col-md-3 col-sm-3 col-xs-3">身份证号</label>
                     <div class="col-md-9 col-sm-9 col-xs-9">
                         <input type="text" class="form-control" name="legalPersonLicense" placeholder="请输入法人身份证号......">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">银行账户</label>
+                    <div class="col-md-9 col-sm-9 col-xs-9">
+                        <input type="text" class="form-control" name="accountNum" placeholder="请输入银行账户......">
                     </div>
                 </div>
                 <div class="form-group">

@@ -7,6 +7,7 @@ import com.qth.model.AccountLog;
 import com.qth.model.ChargeBill;
 import com.qth.model.House;
 import com.qth.model.common.DataTableRspWrapper;
+import com.qth.model.dto.ChargeBillPrintInfo;
 import com.qth.model.dto.HouseTreeModel;
 import com.qth.service.IChargeBillService;
 import com.qth.service.IHouseService;
@@ -94,5 +95,10 @@ public class ChargeBillService extends BaseService<ChargeBill> implements ICharg
         }
         chargeBill.setState(toState);
         return chargeBillMapper.updateState(chargeBill);
+    }
+
+    @Override
+    public ChargeBillPrintInfo getPrintInfo(Integer id) {
+        return chargeBillMapper.printInfo(id);
     }
 }

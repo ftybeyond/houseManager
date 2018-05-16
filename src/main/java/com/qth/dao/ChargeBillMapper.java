@@ -1,6 +1,7 @@
 package com.qth.dao;
 
 import com.qth.model.ChargeBill;
+import com.qth.model.dto.ChargeBillPrintInfo;
 import com.qth.model.dto.HouseTreeModel;
 
 import java.util.List;
@@ -23,4 +24,6 @@ public interface ChargeBillMapper {
     int selectCountByTreeNode(HouseTreeModel model);
 
     int updateState(ChargeBill chargeBill);
+
+    ChargeBillPrintInfo printInfo(Integer id);
 }

@@ -156,4 +156,24 @@
     </if>
   </select>
 
+  <select id="printInfo" parameterType="int" resultType="com.qth.model.dto.ChargeBillPrintInfo">
+    SELECT
+        cb.flow_num as chargeNum,
+        cb.actual_sum as chargeMoney,
+        b.`name` as buildingName,
+        u.`name` as unitName,
+        h.`name` as houseName,
+        h.owner_name as ownerName,
+        h.owner_psptid as ownerCard,
+        h.area as houseArea,
+        h.unit_price as houseUnitPrice,
+        ra.`name` as residentialAreaName
+    FROM
+        charge_bill cb
+    LEFT JOIN house h ON cb.house_code = h.`code`
+    LEFT JOIN unit u on u.id = h.unit
+    LEFT JOIN building b on b.id = u.building
+    LEFT JOIN residential_area ra on b.residential_area = ra.id
+    WHERE cb.id = #{value}
+  </select>
 </mapper>

@@ -14,6 +14,8 @@ public class Company extends DataTableReqWrapper {
 
     private Integer nature;
 
+    private String accountNum;
+
     public Integer getId() {
         return id;
     }
@@ -52,5 +54,13 @@ public class Company extends DataTableReqWrapper {
 
     public void setNature(Integer nature) {
         this.nature = nature;
+    }
+
+    public String getAccountNum() {
+        return accountNum;
+    }
+
+    public void setAccountNum(String accountNum) {
+        this.accountNum = accountNum;
     }
 }

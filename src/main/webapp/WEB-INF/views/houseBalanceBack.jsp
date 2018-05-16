@@ -65,6 +65,10 @@
                         deleteable:false,
                         customBtns:[
                             {label:'基金返还',callback:function (index,item ){
+                                if(item.accountBalance<=0){
+                                    layer.alert("账户下无可返还基金!")
+                                    return;
+                                }
                                 layer.confirm('<p>产业编码：'+item.code+'</p><p>返还金额：'+item.accountBalance+'</p>',{title:"返还确认",yes:function () {
                                     $.post("/rest/house/balanceBack.action",{house:item.id},null,"json").done(function (data) {
                                         layer.alert(data.description);
