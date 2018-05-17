@@ -53,6 +53,7 @@
                                 {name:"id",showable:false},
                                 {name:"code",showable:true},
                                 {name:"ownerName",showable:true},
+                                {name:"ownerTel",showable:true},
                                 {name:"ownerPsptid",showable:true},
                                 {name:"area",showable:true},
                                 {name:"type",showable:true,render:function(row){
@@ -65,15 +66,12 @@
                         deleteable:false,
                         customBtns:[
                             {label:'添加业主',callback:function (index,item ){
-                                $("#infoForm input[name='id']").val(item.id);
-                                $("#infoForm input[name='ownerName']").val(item.ownerName?item.ownerName:'');
-                                $("#infoForm input[name='ownerPsptid']").val(item.ownerPsptid?item.ownerPsptid:'');
                                 var win = layer.open({
                                     type: 1,
                                     title: " 业主信息",
                                     offset: '20px',
                                     content: $('#popWin'),
-                                    area: ["400px","270px"],
+                                    area: ["400px","300x"],
                                     btn: ['确定', '取消'],
                                     yes: function () {
                                         layer.msg('拼命加载中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
@@ -228,6 +226,7 @@
                     <tr>
                         <th>产业代码</th>
                         <th>业主姓名</th>
+                        <th>业主电话</th>
                         <th>业主证件</th>
                         <th>房屋面积</th>
                         <th>房屋类型</th>
@@ -248,6 +247,13 @@
                     <label class="control-label col-md-3 col-sm-3 col-xs-3">业主姓名</label>
                     <div class="col-md-9 col-sm-9 col-xs-9">
                         <input type="text" class="form-control" name="ownerName" placeholder="请输入业主姓名......">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">业主电话</label>
+                    <div class="col-md-9 col-sm-9 col-xs-9">
+                        <input type="text" class="form-control" name="ownerTel" placeholder="请输入业主电话......">
                     </div>
                 </div>
 

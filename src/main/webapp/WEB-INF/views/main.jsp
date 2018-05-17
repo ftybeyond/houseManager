@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"  %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%
     String path = request.getContextPath();
 %>
@@ -10,7 +11,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>七台河市房管局住房维修基金系统</title>
+    <title>七台河市房管局住房维修基金管理系统</title>
 
     <!-- Bootstrap -->
     <link href="<%=path%>/vendors/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -22,13 +23,32 @@
     <script src="<%=path%>/vendors/requireJS/require.js"></script>
     <script type="text/javascript" src="<%=path%>/vendors/requireJS/require-config.js"></script>
     <script type="text/javascript">
-        require(['main']);
+        require(['main','layer'],function () {
+            layer.config({
+                path: '/vendors/layer/',
+                offset: "200px"
+            });
+            jQuery(function(){
+                jQuery("#main_frame").on("load",function(){
+                    jQuery(this).height(jQuery(".right_col").height())
+                })
+            })
+        });
+        function loginOut() {
+            layer.confirm("确认退出系统？",function () {
+                window.location.href = "/forward/loginOut.action"
+            })
+        }
     </script>
     <style>
         iframe{
             border: 0;
             width:100%;
             height: 100%;
+        }
+        .glyphicon{
+            width:26px;
+            font-size:16px;
         }
     </style>
 </head>
@@ -50,7 +70,7 @@
                     </div>
                     <div class="profile_info">
                         <span>Welcome,</span>
-                        <h2>John Doe</h2>
+                        <h2>${sessionScope.loginUser.realName}</h2>
                     </div>
                 </div>
                 <!-- /menu profile quick info -->
@@ -62,59 +82,15 @@
                     <div class="menu_section">
                         <h3>功能列表</h3>
                         <ul class="nav side-menu">
-                            <li><a><i class="fa fa-home"></i> 政策管理 <span class="fa fa-chevron-down"></span></a>
-                                <ul class="nav child_menu">
-                                    <li><a target="main_frame" href="/page/algorithmSwitch.action">房产算法开关</a></li>
-                                    <li><a target="main_frame" href="/page/chargeCriterion.action">基金缴存标准</a></li>
-                                    <li><a target="main_frame" href="/page/moneyRate.action">利率管理</a></li>
-                                </ul>
-                            </li>
-                            <li><a><i class="fa fa-edit"></i> 基础信息管理 <span class="fa fa-chevron-down"></span></a>
-                                <ul class="nav child_menu">
-                                    <li><a target="main_frame" href="/page/regionList.action">区域管理</a></li>
-                                    <li><a target="main_frame" href="/page/companyList.action">单位管理</a></li>
-                                    <li><a target="main_frame" href="/page/streetList.action">街道管理</a></li>
-                                    <li><a target="main_frame" href="/page/residentialAreaList.action">小区管理</a></li>
-                                    <li><a target="main_frame" href="/page/buildingList.action">楼栋管理</a></li>
-                                    <li><a target="main_frame" href="/page/unitList.action">单元管理</a></li>
-                                    <li><a target="main_frame" href="/page/houseList.action">房屋管理</a></li>
-                                    <li><a href="form_buttons.html">批量导入</a></li>
-                                </ul>
-                            </li>
-                            <li><a><i class="fa fa-desktop"></i> 基金收缴管理 <span class="fa fa-chevron-down"></span></a>
-                                <ul class="nav child_menu">
-                                    <li><a target="main_frame" href="/page/houseOwnerAddList.action">业主增加</a></li>
-                                    <li><a target="main_frame" href="/page/houseOwnerList.action">业主变更</a></li>
-                                    <li><a target="main_frame" href="/page/chargePatch.action">业主补缴</a></li>
-                                    <li><a target="main_frame" href="/page/chargeBillBack.action">收缴退回</a></li>
-                                    <li><a target="main_frame" href="/page/chargeBillAccount.action">收缴登账</a></li>
-                                    <li><a target="main_frame" href="/page/houseBalanceBack.action">基金返还</a></li>
-                                    <li><a target="main_frame" href="/page/accrual.action">基金计息</a></li>
-                                    <li><a target="main_frame" href="/page/accrualResult.action">计息登账</a></li>
-                                </ul>
-                            </li>
-                            <li><a><i class="fa fa-table"></i> 基金使用管理<span class="fa fa-chevron-down"></span></a>
-                                <ul class="nav child_menu">
-                                    <li><a target="main_frame" href="/page/repairRecordList.action">维修信息管理</a></li>
-                                    <li><a target="main_frame" href="/page/repairRecordShare.action">基金分摊</a></li>
-                                    <li><a target="main_frame" href="/page/repairRecordShareBack.action">维修基金回退</a></li>
-                                </ul>
-                            </li>
-                            <li><a><i class="fa fa-bar-chart-o"></i> 查询信息管理 <span class="fa fa-chevron-down"></span></a>
-                                <ul class="nav child_menu">
-                                    <li><a href="chartjs.html">Chart JS</a></li>
-                                    <li><a href="chartjs2.html">Chart JS2</a></li>
-                                    <li><a href="morisjs.html">Moris JS</a></li>
-                                    <li><a href="echarts.html">ECharts</a></li>
-                                    <li><a href="other_charts.html">Other Charts</a></li>
-                                </ul>
-                            </li>
-                            <li><a><i class="fa fa-clone"></i> 用户权限管理 <span class="fa fa-chevron-down"></span></a>
-                                <ul class="nav child_menu">
-                                    <li><a href="fixed_sidebar.html">Fixed Sidebar</a></li>
-                                    <li><a href="fixed_footer.html">Fixed Footer</a></li>
-                                </ul>
-                            </li>
+                            <c:forEach items="${sessionScope.authority}" var="item">
+                                <li><a><i class="${item.value[0].icon}"></i> ${item.key} <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <c:forEach items="${item.value}" var="func">
+                                            <li><a target="main_frame" href="${func.url}">${func.name}</a></li>
+                                        </c:forEach>
+                                    </ul>
+                                </li>
+                            </c:forEach>
                         </ul>
                     </div>
                 </div>
@@ -133,19 +109,12 @@
                     <ul class="nav navbar-nav navbar-right">
                         <li class="">
                             <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                <img src="<%=path%>/images/user.png" alt="">John Doe
+                                <img src="<%=path%>/images/user.png" alt="">${sessionScope.loginUser.realName}
                                 <span class=" fa fa-angle-down"></span>
                             </a>
                             <ul class="dropdown-menu dropdown-usermenu pull-right">
-                                <li><a href="javascript:;"> Profile</a></li>
-                                <li>
-                                    <a href="javascript:;">
-                                        <span class="badge bg-red pull-right">50%</span>
-                                        <span>Settings</span>
-                                    </a>
-                                </li>
-                                <li><a href="javascript:;">Help</a></li>
-                                <li><a href="/index.html"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
+                                <li><a href="javascript:;"> 密码修改</a></li>
+                                <li><a href="javascript:loginOut();"><i class="fa fa-sign-out pull-right"></i> 注销</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -156,7 +125,7 @@
 
         <!-- page content -->
         <div class="right_col" role="main">
-            <iframe name="main_frame"></iframe>
+            <iframe id="main_frame" name="main_frame"></iframe>
         </div>
         <!-- /page content -->
 

@@ -18,7 +18,16 @@
         <property name = "prefix" value="/WEB-INF/views/"></property>
         <property name = "suffix" value = ".jsp"></property>
     </bean>
-    
+
+    <mvc:interceptors>
+        <!--  使用bean定义一个Interceptor，直接定义在mvc:interceptors根下面的Interceptor将拦截所有的请求   -->
+        <mvc:interceptor>
+            <mvc:mapping path="/page/*"/>
+
+            <bean class="com.qth.inspector.LoginInterceptor"></bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
     <mvc:annotation-driven>
 	     <mvc:message-converters>
              <!-- 配置Fastjson支持 -->

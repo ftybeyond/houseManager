@@ -2,8 +2,7 @@ package com.qth.model;
 
 import com.qth.model.common.DataTableReqWrapper;
 
-public class User extends DataTableReqWrapper{
-
+public class User extends DataTableReqWrapper {
     private Integer id;
 
     private String loginName;

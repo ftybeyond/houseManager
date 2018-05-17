@@ -14,6 +14,7 @@
     <result column="building_rise" jdbcType="INTEGER" property="buildingRise" />
     <result column="unit_price" jdbcType="DECIMAL" property="unitPrice" />
     <result column="owner_name" jdbcType="VARCHAR" property="ownerName" />
+    <result column="owner_tel" jdbcType="VARCHAR" property="ownerTel" />
     <result column="owner_psptid" jdbcType="VARCHAR" property="ownerPsptid" />
     <result column="account_balance" jdbcType="DECIMAL" property="accountBalance" />
     <result column="accrual_time" jdbcType="TIMESTAMP" property="accrualTime" />
@@ -27,12 +28,12 @@
     insert into house (id, name, unit, 
       floor, code, area, 
       has_elevator, nature, type,
-      building_rise, unit_price, owner_name,
+      building_rise, unit_price, owner_name,owner_tel,
       owner_psptid, account_balance)
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{unit,jdbcType=INTEGER},
       #{floor,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, #{area,jdbcType=DECIMAL},
       #{hasElevator,jdbcType=INTEGER}, #{nature,jdbcType=INTEGER}, #{type,jdbcType=INTEGER},
-      #{buildingRise,jdbcType=INTEGER}, #{unitPrice,jdbcType=DECIMAL}, #{ownerName,jdbcType=INTEGER},
+      #{buildingRise,jdbcType=INTEGER}, #{unitPrice,jdbcType=DECIMAL}, #{ownerName,jdbcType=INTEGER},#{ownerTel,jdbcType=INTEGER},
       #{ownerPsptid,jdbcType=INTEGER}, #{accountBalance,jdbcType=DECIMAL})
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.qth.model.House">
@@ -48,6 +49,7 @@
       building_rise = #{buildingRise,jdbcType=INTEGER},
       unit_price = #{unitPrice,jdbcType=DECIMAL},
       owner_name = #{ownerName,jdbcType=VARCHAR},
+      owner_tel = #{ownerTel,jdbcType=VARCHAR},
       owner_psptid = #{ownerPsptid,jdbcType=VARCHAR},
       account_balance = #{accountBalance,jdbcType=DECIMAL}
     where id = #{id,jdbcType=INTEGER}
@@ -57,6 +59,7 @@
     update house
     set
       owner_name = #{ownerName,jdbcType=VARCHAR},
+      owner_tel = #{ownerTel,jdbcType=VARCHAR},
       owner_psptid = #{ownerPsptid,jdbcType=VARCHAR}
      where id = #{id,jdbcType=INTEGER}
   </update>
@@ -203,9 +206,9 @@
 
   <!-- houses search-->
 
-  <select id="allHousesInResidentialArea" parameterType="java.lang.Integer" resultType="com.qth.model.House">
+  <select id="allHousesInResidentialArea" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     SELECT
-    h.id,h.area,h.account_balance as accountBalance,h.code,h.owner_name as ownerName,h.accrual_time as accrualTime,h.accrual_balance as accrualBalance
+    h.*
     FROM
     house h
     INNER JOIN unit u ON h.unit = u.id
@@ -215,9 +218,9 @@
   </select>
 
 
-  <select id="allHousesInBuilding" parameterType="java.lang.Integer" resultType="com.qth.model.House">
+  <select id="allHousesInBuilding" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     SELECT
-    h.id,h.area,h.account_balance as accountBalance,h.code,h.owner_name as ownerName,h.accrual_time as accrualTime,h.accrual_balance as accrualBalance
+    h.*
     FROM
     house h
     INNER JOIN unit u ON h.unit = u.id
@@ -227,27 +230,27 @@
   </select>
 
 
-  <select id="allHousesInUnit" parameterType="java.lang.Integer" resultType="com.qth.model.House">
+  <select id="allHousesInUnit" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     SELECT
-    h.id,h.area,h.account_balance as accountBalance,h.code,h.owner_name as ownerName,h.accrual_time as accrualTime,h.accrual_balance as accrualBalance
+    h.*
     FROM
     house h
     WHERE
     h.unit = #{value}
   </select>
 
-  <select id="allHousesInFloor" parameterType="com.qth.model.House" resultType="com.qth.model.House">
+  <select id="allHousesInFloor" parameterType="com.qth.model.House" resultMap="BaseResultMap">
     SELECT
-    h.id,h.area,h.account_balance as accountBalance,h.code,h.owner_name as ownerName ,h.accrual_time as accrualTime,h.accrual_balance as accrualBalance
+    h.*
     FROM
     house h
     WHERE
     h.unit = #{unit} and h.floor = #{floor}
   </select>
 
-  <select id="selectSimpleOne" parameterType="java.lang.Integer" resultType="com.qth.model.House">
+  <select id="selectSimpleOne" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     SELECT
-    h.id,h.area,h.account_balance as accountBalance,h.code,h.owner_name as ownerName ,h.accrual_time as accrualTime,h.accrual_balance as accrualBalance
+    h.*
     FROM
     house h
     WHERE

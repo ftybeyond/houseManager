@@ -1,15 +1,13 @@
 package com.qth.action;
 
-import com.qth.model.Company;
-import com.qth.model.House;
+import com.qth.model.*;
 import com.qth.model.common.CommonRsp;
 import com.qth.model.common.Select2;
 import com.qth.model.common.SelectIdstring;
 import com.qth.model.dto.ChargeBillPrintInfo;
-import com.qth.service.IChargeBillService;
-import com.qth.service.ICompanyService;
-import com.qth.service.ISelectService;
+import com.qth.service.*;
 import com.qth.util.DateUtils;
+import com.qth.util.MD5;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,9 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import javax.servlet.http.HttpSession;
+import java.util.*;
 
 /**
  * 全局管控controller
@@ -37,7 +34,16 @@ public class GlobalController {
     IChargeBillService chargeBillService;
 
     @Autowired
+    IUserService userService;
+
+    @Autowired
+    IRoleService roleService;
+
+    @Autowired
     ICompanyService companyService;
+
+    @Autowired
+    IAuthorityService authorityService;
 
     @Value("${busi.coreCompany.id}")
     Integer company;
@@ -61,6 +67,47 @@ public class GlobalController {
             modelAndView.setViewName("chargeBillPrint");
         }
         return modelAndView;
+    }
+
+    @RequestMapping("/login")
+    public ModelAndView login(User user, HttpSession session){
+        ModelAndView mv = new ModelAndView();
+        user.setPassword(MD5.EncoderByMd5(user.getPassword()));
+        User loginUser = userService.checkPassword(user);
+        if(loginUser!=null){
+            Role role = roleService.findRoleById(loginUser.getRole());
+            session.setAttribute("loginUser",loginUser);
+            List<Authority> list;
+            if(role.getAuthority().contains("\"0\"")){
+                list = authorityService.selectAll();
+            }else {
+                list = authorityService.selectByRole(role);
+            }
+
+            Map<String,List<Authority>> map = new LinkedHashMap<>();
+            for(Authority authority : list){
+                if(!map.keySet().contains(authority.getModule())){
+                    List<Authority> authorityList = new ArrayList<>();
+                    authorityList.add(authority);
+                    map.put(authority.getModule(),authorityList);
+                }else {
+                    map.get(authority.getModule()).add(authority);
+                }
+            }
+            session.setAttribute("authority", map);
+            mv.setViewName("redirect:/page/main.action");
+        }else{
+            mv.setViewName("error");
+        }
+        return mv;
+    }
+
+    @RequestMapping(value = "/forward/loginOut")
+    public ModelAndView loginOut(HttpSession session){
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("redirect:/index.html");
+        session.invalidate();
+        return mv;
     }
 
     /**

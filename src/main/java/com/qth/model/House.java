@@ -42,6 +42,8 @@ public class House extends DataTableReqWrapper {
 
     private String ownerName;
 
+    private String ownerTel;
+
     private String ownerPsptid;
 
     private BigDecimal accountBalance;
@@ -218,5 +220,13 @@ public class House extends DataTableReqWrapper {
 
     public void setAccrualBalance(BigDecimal accrualBalance) {
         this.accrualBalance = accrualBalance;
+    }
+
+    public String getOwnerTel() {
+        return ownerTel;
+    }
+
+    public void setOwnerTel(String ownerTel) {
+        this.ownerTel = ownerTel;
     }
 }

@@ -2,6 +2,7 @@ package com.qth.test;
 
 import com.alibaba.fastjson.JSON;
 import com.qth.model.MoneyRate;
+import com.qth.util.MD5;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -16,7 +17,12 @@ public class Test {
 //        moneyRate.setRate(new BigDecimal(0.000000000000212));
 //        System.out.println(JSON.toJSONString(moneyRate));
 //        System.out.println(new Date().getTime());
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSSSS");
-        System.out.println(sdf.format(new Date()));
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSSSS");
+//        System.out.println(sdf.format(new Date()));
+
+//        System.out.println(MD5.EncoderByMd5("123456"));
+        String s = "[\"0\",\"1\",\"4\"]";
+        System.out.println(s.contains("\"0\""));
     }
+
 }

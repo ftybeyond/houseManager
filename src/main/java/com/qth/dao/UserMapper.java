@@ -4,7 +4,6 @@ import com.qth.model.User;
 import java.util.List;
 
 public interface UserMapper {
-
     int deleteByPrimaryKey(Integer id);
 
     int insert(User record);
@@ -13,9 +12,9 @@ public interface UserMapper {
 
     List<User> selectAll();
 
-    int updateByPrimaryKey(User entity);
+    int updateByPrimaryKey(User record);
 
-    List<User> selectDataTable(User entity);
+    int updatePassword(User user);
 
-    int selectDataTableCount(User entity);
+    User checkPassword(User user);
 }

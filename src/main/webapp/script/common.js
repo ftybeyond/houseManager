@@ -207,7 +207,7 @@ define(["dataTables-bs","layer"], function () {
                     if (rsp.success) {
                         handleObj = rsp.data;
                         //同步表单
-                        obj2Form(rsp)
+                        obj2Form(rsp);
                         popWin(2);
                         if (typeof(editRecordAfter) == "function") {
                             editRecordAfter();
@@ -275,10 +275,10 @@ define(["dataTables-bs","layer"], function () {
                         dataType: 'json',
                         success: function (rsp) {
                             if (rsp.success) {
-                                layer.alert("处理成功", {closeBtn: 0})
+                                layer.alert("处理成功", {closeBtn: 0});
                                 table.ajax.reload();
                             } else {
-                                layer.alert(rsp.description, {closeBtn: 0})
+                                layer.alert(rsp.description, {closeBtn: 0});
                             }
                             layer.close(win);
                         },
@@ -333,7 +333,7 @@ define(["dataTables-bs","layer"], function () {
                         taskComplated++;
                     }
                 })
-            })
+            });
 
             waitTask = setInterval(waitForSynch, 500)
         }

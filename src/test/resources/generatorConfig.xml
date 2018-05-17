@@ -174,7 +174,10 @@
 
             注意，table里面很多参数都是对javaModelGenerator，context等元素的默认属性的一个复写；
          -->
-        <table tableName="charge_bill" domainObjectName="ChargeBill"/>
+        <table tableName="authority" domainObjectName="Authority"/>
+        <table tableName="user" domainObjectName="User"/>
+        <table tableName="role" domainObjectName="Role"/>
+        <table tableName="role_authority" domainObjectName="RoleAuthority"/>
     </context>
 
 </generatorConfiguration>

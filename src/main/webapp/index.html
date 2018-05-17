@@ -15,6 +15,11 @@
     <link href="/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <!-- Custom Theme Style -->
     <link href="/vendors/gentelella/css/custom.min.css" rel="stylesheet">
+    <script>
+        if (window.frames.length != parent.frames.length) {
+            parent.window.location.href="/index.html";
+        }
+    </script>
   </head>
 
   <body class="login">
@@ -25,13 +30,13 @@
       <div class="login_wrapper">
         <div class="animate form login_form">
           <section class="login_content">
-            <form action="/page/main.action" method="post">
+            <form action="/login.action" method="post">
               <h1>七台河房管局</h1>
               <div>
-                <input type="text" class="form-control" placeholder="Username" required="" />
+                <input type="text" class="form-control" placeholder="登录名" name="loginName" required="" />
               </div>
               <div>
-                <input type="password" class="form-control" placeholder="Password" required="" />
+                <input type="password" class="form-control" placeholder="登录密码" name="password" required="" />
               </div>
               <div>
                 <button type="submit" class="btn btn-primary">登　　录</button>
