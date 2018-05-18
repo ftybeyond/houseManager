@@ -16,14 +16,15 @@ define(["zTree"],function(){
     };
 
     var genTree = function(container,setting){
-        if (setting&&setting.check.enable) {
-            if (setting && typeof (setting.onCheck) == "function") {
-                base.callback.onCheck = setting.onCheck
-            } else {
-                base.callback.onCheck = showOnDiv
-            }
+
+        if (setting) {
+            $.extend(true,base,setting);
         }
-        $.extend(true,base,setting);
+        if (typeof (base.onCheck) == "function") {
+            base.callback.onCheck = setting.onCheck
+        } else {
+            base.callback.onCheck = showOnDiv
+        }
         houseTree = $.fn.zTree.init($("#" + container), base);
         return houseTree;
     }

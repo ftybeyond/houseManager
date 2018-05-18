@@ -1,6 +1,8 @@
 package com.qth.dao;
 
 import com.qth.model.InvoiceLog;
+import com.qth.model.dto.InvoiceForm;
+
 import java.util.List;
 
 public interface InvoiceLogMapper {
@@ -13,4 +15,10 @@ public interface InvoiceLogMapper {
     List<InvoiceLog> selectAll();
 
     int updateByPrimaryKey(InvoiceLog record);
+
+    List<InvoiceLog> selectByForm(InvoiceForm invoiceForm);
+
+    int selectCountByForm(InvoiceForm invoiceForm);
+
+    List<InvoiceLog> selectByBill(Integer bill);
 }

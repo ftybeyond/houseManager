@@ -92,7 +92,7 @@
 <body>
 <div class="container">
     <div class="row clearfix">
-        <div class="col-md-4 column" style="min-width: 250px;">
+        <div class="col-md-3 column" style="min-width: 250px;">
             <div class="x_panel">
                 <div class="x_title">
                     <h4><i class="fa fa-align-left"></i> 计息范围 </h4>
@@ -103,7 +103,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-8 column">
+        <div class="col-md-9 column">
             <div class="row clearfix" style="padding: 10px;">
                 <button id="accrualBillBtn" style="float:right" class="btn btn-primary" type="button">计息登帐</button>
                 <button id="accrualBackBtn" style="float:right" class="btn btn-primary" type="button">计息回退</button>

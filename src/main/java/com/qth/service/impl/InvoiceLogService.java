@@ -2,6 +2,8 @@ package com.qth.service.impl;
 
 import com.qth.dao.InvoiceLogMapper;
 import com.qth.model.InvoiceLog;
+import com.qth.model.common.DataTableRspWrapper;
+import com.qth.model.dto.InvoiceForm;
 import com.qth.service.IInvoiceLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,5 +41,18 @@ public class InvoiceLogService extends BaseService<InvoiceLog> implements IInvoi
     @Override
     public int deleteInvoiceLogById(int id) {
         return invoiceLogMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public DataTableRspWrapper<InvoiceLog> selectTable(InvoiceForm invoiceForm) {
+        DataTableRspWrapper<InvoiceLog> rspWrapper = new DataTableRspWrapper<>();
+        rspWrapper.setData(invoiceLogMapper.selectByForm(invoiceForm));
+        rspWrapper.setRecordsTotal(invoiceLogMapper.selectCountByForm(invoiceForm));
+        return rspWrapper;
+    }
+
+    @Override
+    public List<InvoiceLog> selectByBill(Integer billId) {
+        return invoiceLogMapper.selectByBill(billId);
     }
 }

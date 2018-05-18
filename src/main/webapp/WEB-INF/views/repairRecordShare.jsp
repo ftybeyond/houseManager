@@ -12,17 +12,7 @@
     <link rel="stylesheet" type="text/css" href="<%=path%>/vendors/datatable/datatables-bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="<%=path%>/vendors/select2/select2.min.css"/>
     <style>
-        td.details-control {
-            background: url('<%=path%>/images/details_open.png') no-repeat center center;
-            cursor: pointer;
-        }
-        tr.shown td.details-control {
-            background: url('<%=path%>/images/details_close.png') no-repeat center center;
-        }
-        .inner td{
-            font-size: 12px;
-            font-weight: bold;
-        }
+
     </style>
     <!--[if lt IE 8 ]><script src="<%=path%>/vendors/json2.min.js"></script><![endif]-->
     <script src="<%=path%>/vendors/requireJS/require.js"></script>

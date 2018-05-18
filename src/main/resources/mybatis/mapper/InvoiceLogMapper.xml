@@ -4,9 +4,11 @@
   <resultMap id="BaseResultMap" type="com.qth.model.InvoiceLog">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="invoice_num" jdbcType="VARCHAR" property="invoiceNum" />
+    <result column="money" jdbcType="DECIMAL" property="money" />
     <result column="event_type" jdbcType="INTEGER" property="eventType" />
     <result column="stamp" jdbcType="TIMESTAMP" property="stamp" />
     <result column="bill" jdbcType="INTEGER" property="bill" />
+    <result column="payor" jdbcType="VACHAR" property="payor"/>
     <result column="handler" jdbcType="VARCHAR" property="handler" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
   </resultMap>
@@ -15,11 +17,11 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.qth.model.InvoiceLog">
-    insert into invoice_log (id, invoice_num, event_type, 
-      stamp, bill, handler, 
+    insert into invoice_log (id, invoice_num,money, event_type,
+      stamp, bill, handler, payor,
       remark)
-    values (#{id,jdbcType=INTEGER}, #{invoiceNum,jdbcType=VARCHAR}, #{eventType,jdbcType=INTEGER}, 
-      #{stamp,jdbcType=TIMESTAMP}, #{bill,jdbcType=INTEGER}, #{handler,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{invoiceNum,jdbcType=VARCHAR},#{money,jdbcType=DECIMAL}, #{eventType,jdbcType=INTEGER},
+      #{stamp,jdbcType=TIMESTAMP}, #{bill,jdbcType=INTEGER}, #{handler,jdbcType=VARCHAR}, #{payor,jdbcType=VARCHAR},
       #{remark,jdbcType=VARCHAR})
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.qth.model.InvoiceLog">
@@ -33,12 +35,70 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select id, invoice_num, event_type, stamp, bill, handler, remark
+    select *
     from invoice_log
     where id = #{id,jdbcType=INTEGER}
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
-    select id, invoice_num, event_type, stamp, bill, handler, remark
+    select *
     from invoice_log
+  </select>
+
+  <select id="selectByForm" parameterType="com.qth.model.dto.InvoiceForm" resultMap="BaseResultMap">
+    SELECT
+    il.*,ra.name as residentialAreaName , h.owner_name as ownerName,h.owner_tel as ownerTel,h.account_balance as accountBalance
+    FROM
+    charge_bill cb
+    INNER JOIN invoice_log il ON cb.invoice_num = il.invoice_num
+    LEFT JOIN house h ON h.`code` = cb.house_code
+    LEFT JOIN unit u ON h.unit = u.id
+    LEFT JOIN building b ON b.id = u.building
+    LEFT JOIN residential_area ra ON ra.id = b.residential_area
+    <where>
+      <if test="ownerName!=null">
+        and h.owner_name = #{ownerName}
+      </if>
+      <if test="ownerTel!=null">
+        and h.owner_tel = #{ownerTel}
+      </if>
+      <if test="residentialArea!=null">
+        and ra.id = #{residentialArea}
+      </if>
+      <if test="invoiceNum!=null">
+        and il.invoice_num = #{invoiceNum}
+      </if>
+    </where>
+    limit #{start},#{length}
+  </select>
+
+  <select id="selectCountByForm" parameterType="com.qth.model.dto.InvoiceForm" resultType="int">
+    SELECT
+    count(cb.id)
+    FROM
+    charge_bill cb
+    INNER JOIN invoice_log il ON cb.invoice_num = il.invoice_num
+    LEFT JOIN house h ON h.`code` = cb.house_code
+    LEFT JOIN unit u ON h.unit = u.id
+    LEFT JOIN building b ON b.id = u.building
+    LEFT JOIN residential_area ra ON ra.id = b.residential_area
+    <where>
+      <if test="ownerName!=null">
+        and h.owner_name = #{ownerName}
+      </if>
+      <if test="ownerTel!=null">
+        and h.owner_tel = #{ownerTel}
+      </if>
+      <if test="residentialArea!=null">
+        and ra.id = #{residentialArea}
+      </if>
+      <if test="invoiceNum!=null">
+        and il.invoice_num = #{invoiceNum}
+      </if>
+    </where>
+  </select>
+
+  <select id="selectByBill" parameterType="int" resultMap="BaseResultMap">
+    select * from invoice_log il
+      where il.bill = #{value}
   </select>
 </mapper>
