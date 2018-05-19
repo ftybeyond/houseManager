@@ -16,6 +16,7 @@
     <script type="text/javascript">
         require(["common","mySelect"],function (main) {
             var config = {
+                popArea:["400px","300px"],
                 domain:{
                     name:'street',
                     props:[

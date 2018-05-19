@@ -37,7 +37,7 @@ public interface IHouseService extends IBaseService<House>
 
     public ChargeCriterion getChargeCriterionByHouse(Integer house, Integer user);
 
-    public AlgorithmSwitch getChargeType(Integer user);
+    public AlgorithmSwitch getChargeType();
 
     public int backBalance(Integer house,String handler);
 

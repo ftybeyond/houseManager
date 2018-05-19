@@ -95,9 +95,8 @@ public class HouseController extends BaseController {
     @RequestMapping(value = "chargeInfo")
     public CommonRsp getHouseChargeInfo(Integer house,boolean patch, HttpSession session){
         CommonRsp rsp = new CommonRsp();
-        //todo user company
-        ChargeCriterion chargeCriterion = houseService.getChargeCriterionByHouse(house,1);
-        AlgorithmSwitch algorithmSwitch = houseService.getChargeType(1);
+        ChargeCriterion chargeCriterion = houseService.getChargeCriterionByHouse(house,getLoginUser(session).getId());
+        AlgorithmSwitch algorithmSwitch = houseService.getChargeType();
         if (chargeCriterion!=null && algorithmSwitch !=null) {
             rsp.setSuccess(true);
             rsp.setResultCode("0000");

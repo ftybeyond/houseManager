@@ -42,7 +42,7 @@
                                 {name: 'priceRatio', type: 'string', showable: true,render:function (row) {
                                     return row.toFixed(2)
                                 }},
-                                {name: 'priceRatio', type: 'string', showable: true,render:function (row) {
+                                {name: 'areaRatio', type: 'string', showable: true,render:function (row) {
                                     return row.toFixed(2)
                                 }}
                             ]

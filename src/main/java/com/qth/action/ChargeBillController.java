@@ -1,16 +1,18 @@
 package com.qth.action;
 
-import com.qth.model.common.CommonRsp;
 import com.qth.model.ChargeBill;
+import com.qth.model.common.CommonRsp;
+import com.qth.model.common.DataTableRspWrapper;
+import com.qth.model.dto.ChargeBillForm;
 import com.qth.model.dto.HouseTreeModel;
 import com.qth.service.IChargeBillService;
-import com.qth.model.common.DataTableRspWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 @RequestMapping(value = "rest/chargeBill")
@@ -19,21 +21,6 @@ public class ChargeBillController extends BaseController {
 
     @Autowired
     IChargeBillService chargeBillService;
-
-    /**
-     * 区域表格数据请求
-     *
-     * @param chargeBill
-     * @return
-     */
-    @RequestMapping(path = "table")
-    public DataTableRspWrapper<ChargeBill> table(ChargeBill chargeBill) {
-
-        DataTableRspWrapper<ChargeBill> rspWrapper = chargeBillService.selectDataTable2Rsp(chargeBill);
-        //赋值绘制时序标识
-        rspWrapper.setDraw(chargeBill.getDraw());
-        return rspWrapper;
-    }
 
     /**
      * 添加区域信息
@@ -72,26 +59,53 @@ public class ChargeBillController extends BaseController {
 
     @RequestMapping(value = "back")
     public CommonRsp back(ChargeBill chargeBill, HttpSession session) {
-        //todo handler
         //收缴单状态置-1
-        int effect = chargeBillService.updateState(chargeBill,-1,"admin");
+        int effect = chargeBillService.updateState(chargeBill,-1,getHandler(session));
         return dbEffect2Rsp(effect);
     }
 
     @RequestMapping(value = "account")
-    public CommonRsp account(ChargeBill chargeBill) {
+    public CommonRsp account(ChargeBill chargeBill,HttpSession session) {
         //如果收缴单状态为0则置2 1则置3
         int effect = 0;
         //accountLog
-        //todo handler
         if (chargeBill.getState()==0) {
-            effect =chargeBillService.updateState(chargeBill,1,"admin");
+            effect =chargeBillService.updateState(chargeBill,1,getHandler(session));
         }
         if(chargeBill.getState()==2){
-            effect = chargeBillService.updateState(chargeBill,3,"admin");
+            effect = chargeBillService.updateState(chargeBill,3,getHandler(session));
         }
         return dbEffect2Rsp(effect);
 
+    }
+
+    @RequestMapping(value = "table")
+    public DataTableRspWrapper<ChargeBill> selectByForm(ChargeBillForm billForm){
+        DataTableRspWrapper<ChargeBill> rspWrapper = chargeBillService.selectByForm(billForm);
+        rspWrapper.setDraw(billForm.getDraw());
+        return rspWrapper;
+    }
+
+    @RequestMapping(path = "updateInvoiceNum")
+    public CommonRsp updateInvoiceNum(ChargeBill chargeBill,HttpSession session){
+        int count = chargeBillService.selectCountByInvoiceNum(chargeBill.getInvoiceNum());
+        if(count>0){
+            CommonRsp rsp = new CommonRsp();
+            rsp.setSuccess(false);
+            rsp.setResultCode("8000");
+            rsp.setDescription("已存在发票编号，不可重复!");
+            return rsp;
+        }
+        String handler = getHandler(session);
+        int effect = chargeBillService.updateInvoiceNum(chargeBill,handler);
+        return dbEffect2Rsp(effect);
+    }
+
+    @RequestMapping(path = "abolishInvoiceNum")
+    public CommonRsp abolishInvoiceNum(ChargeBill chargeBill,HttpSession session){
+        String handler = getHandler(session);
+        int effect = chargeBillService.abolishInvoiceNum(chargeBill,handler);
+        return dbEffect2Rsp(effect);
     }
 
 }

@@ -7,7 +7,7 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 
-    <title>业主变更</title>
+    <title>个人账户查询</title>
 
     <link rel="stylesheet" type="text/css" href="<%=path%>/vendors/datatable/datatables-bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="<%=path%>/vendors/zTree/css/metroStyle/metroStyle.css"/>
@@ -31,7 +31,7 @@
                 offset:"100px"
             })
             $(function () {
-                common.loadDeps(["HouseType.json"],function (data) {
+                common.loadDeps(["HouseType.json","TradeType.json"],function (data) {
                     var treeObj;
                     var tableObj;
                     treeObj = tree.genTree("selectTree",{
@@ -51,11 +51,16 @@
                         domain:{
                             props:[
                                 {name:"id",showable:false},
+                                {
+                                    className: 'details-control',
+                                    showable: true,
+                                    defaultContent: ''
+                                },
                                 {name:"code",showable:true},
                                 {name:"ownerName",showable:true},
-                                {name:"ownerTel",showable:true},
                                 {name:"ownerPsptid",showable:true},
-                                {name:"area",showable:true},
+                                {name:"ownerTel",showable:true},
+                                {name:"accountBalance",showable:true},
                                 {name:"type",showable:true,render:function(row){
                                     var dic = common.findArrayValue(row,data["HouseType.json"])
                                     return dic&&dic.text?dic.text:"";
@@ -63,39 +68,61 @@
                             ]
                         },
                         editable:false,
-                        deleteable:false,
-                        customBtns:[
-                            {label:'更改业主',callback:function (index,item ){
-                                $("#infoForm input[name='id']").val(item.id);
-                                $("#infoForm input[name='ownerName']").val(item.ownerName?item.ownerName:'');
-                                $("#infoForm input[name='ownerPsptid']").val(item.ownerPsptid?item.ownerPsptid:'');
-                                $("#infoForm input[name='ownerTel']").val(item.ownerTel?item.ownerTel:'');
-                                var win = layer.open({
-                                    type: 1,
-                                    title: "业主信息",
-                                    offset: '20px',
-                                    content: $('#popWin'),
-                                    area: ["400px","300px"],
-                                    btn: ['确定', '取消'],
-                                    yes: function () {
-                                        var loadMask = layer.msg('拼命加载中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
-                                        var formdata = $("#infoForm").serializeJSON()
-                                        $.post("/rest/house/updateOwnerInfo.action",formdata,null,"json").done(function (data) {
-                                            layer.alert(data.description);
-                                            tableObj.ajax.reload();
-                                            layer.close(win);
-                                        }).fail(function (xhr) {
-                                            layer.alert("服务器内部错误!")
-                                        })
-                                    },
-                                    btn2: function () {
-                                        layer.close(win);
-                                    }
-                                })
-                            }}
-                        ]
+                        deleteable:false
                     }
-                    tableObj = common.init(table_config)
+                    tableObj = common.init(table_config);
+                    tableObj.on('click', 'td.details-control', function () {
+                        var tr = $(this).closest('tr');
+                        var row = tableObj.row( tr );
+                        var rowData = row.data();
+
+                        if ( row.child.isShown() ) {
+                            // This row is already open - close it
+                            row.child.hide();
+                            tr.removeClass('shown');
+                        }
+                        else {
+                            if(tr.hasClass("dataLoaded")){
+                                row.child.show();
+                            }else{
+                                $.ajax({
+                                    url:"/rest/accountLog/selectByHouseCode.action",
+                                    type:"POST",
+                                    data:{code:rowData.code},
+                                    dataType:"json"
+                                }).done(function(rsp){
+                                    var rows ='';
+                                    $.each(rsp.data,function(index,item){
+                                        var tradeType = common.findArrayValue(item.tradeType,data["TradeType.json"]);
+                                        rows += '<tr>' +
+                                            '<td>'+(tradeType?tradeType.text:'')+'</td>' +
+                                            '<td>'+item.tradeTime+'</td>' +
+                                            '<td>'+item.tradeMoney+'</td>' +
+                                            '<td>'+item.balance+'</td>' +
+                                            '<td>'+item.houseOwner+'</td>' +
+                                            '<td>'+item.handler+'</td>' +
+                                            '</tr>'
+                                    });
+                                    var showInfo =  '<table class="table inner">'+
+                                        '<tr>'+
+                                        '<th>交易类型</th>'+
+                                        '<th>交易时间</th>'+
+                                        '<th>交易金额</th>'+
+                                        '<th>交易前余额</th>'+
+                                        '<th>业主姓名</th>'+
+                                        '<th>操作员</th>'+
+                                        '</tr>'+
+                                        rows+
+                                        '</table>';
+                                    row.child(showInfo).show();
+                                    tr.addClass('shown');
+                                    tr.addClass("dataLoaded")
+                                }).fail(function(xhr){
+                                    layer.alert(xhr.statusText, {closeBtn: 0});
+                                })
+                            }
+                        }
+                    } );
                 })
             })
         })
@@ -120,7 +147,6 @@
             <form id="searchForm" class="form-horizontal" role="form">
                 <input type="hidden" name="id"/>
                 <input type="hidden" name="level"/>
-                <input type="hidden" name="hasOwner" value="true">
                 <div class="row clearfix" style="padding: 10px;">
                     <div class="col-xs-5 search-form-group">
                         <label class="control-label col-xs-3">业主姓名</label>
@@ -145,13 +171,13 @@
                 <table id="datatable" class="table table-striped table-bordered" style="width:100%">
                     <thead>
                     <tr>
+                        <th>明细</th>
                         <th>产业代码</th>
                         <th>业主姓名</th>
-                        <th>业主电话</th>
                         <th>业主证件</th>
-                        <th>房屋面积</th>
+                        <th>业主电话</th>
+                        <th>账户余额</th>
                         <th>房屋类型</th>
-                        <th>操作</th>
                     </tr>
                     </thead>
                 </table>
@@ -160,34 +186,5 @@
     </div>
 </div>
 
-<div id="popWin" style="display: none">
-    <div class="x_panel">
-        <div class="x_content">
-            <form id="infoForm" class="form-horizontal form-label-left input_mask">
-                <input type="hidden" name="id"/>
-                <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">业主姓名</label>
-                    <div class="col-md-9 col-sm-9 col-xs-9">
-                        <input type="text" class="form-control" name="ownerName" placeholder="请输入业主姓名......">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">业主电话</label>
-                    <div class="col-md-9 col-sm-9 col-xs-9">
-                        <input type="text" class="form-control" name="ownerTel" placeholder="请输入业主电话......">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">业主证件</label>
-                    <div class="col-md-9 col-sm-9 col-xs-9">
-                        <input type="text" class="form-control" name="ownerPsptid" placeholder="请输入业主证件......">
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 </body>
 </html>

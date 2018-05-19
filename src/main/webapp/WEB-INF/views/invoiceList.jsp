@@ -29,11 +29,11 @@
                                     defaultContent: ''
                                 },
                                 {name:'residentialAreaName',type:'string',showable:true},
-                                {name:'ownerName',type:'string',showable:true},
-                                {name:'ownerTel',type:'string',showable:true},
+                                {name:'houseOwner',type:'string',showable:true},
+                                {name:'houseTel',type:'string',showable:true},
                                 {name:'accountBalance',type:'string',showable:true},
-                                {name:'money',type:'string',showable:true},
-                                {name:'stamp',type:'string',showable:true},
+                                {name:'actualSum',type:'string',showable:true},
+                                {name:'createTime',type:'string',showable:true},
                                 {name:'invoiceNum',type:'string',showable:true}
                             ]
                         },
@@ -41,10 +41,30 @@
                         deleteable:false,
                         customBtns:[
                             {label:'修改',callback:function (index,item) {
-
+                                layer.confirm('<p>新发票号：</p><p><input style="width: 100%"/></p>',{title:"修改票据",area:["400px"],btn:["确认","取消"]},function (index,layObj) {
+                                    var invoiceNum = layObj.find("input").val();
+                                    if(!invoiceNum){
+                                        layer.alert("请填入发票号!");
+                                        return
+                                    }
+                                    item.invoiceNum = invoiceNum;
+                                    var loadMask = layer.msg('拼命加载中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
+                                    $.post("/rest/chargeBill/updateInvoiceNum.action",item,null,"json").done(function(data){
+                                        layer.alert(data.description);
+                                        table.ajax.reload();
+                                    }).fail(function(xhr){
+                                        layer.alert(xhr.statusText)
+                                    });
+                                })
                             }},
                             {label:'作废',callback:function (index,item) {
-
+                                var loadMask = layer.msg('拼命加载中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
+                                $.post("/rest/chargeBill/abolishInvoiceNum.action",item,null,"json").done(function(data){
+                                    layer.alert(data.description);
+                                    table.ajax.reload();
+                                }).fail(function(xhr){
+                                    layer.alert(xhr.statusText)
+                                });
                             }}
                         ]
                     }
@@ -66,7 +86,7 @@
                                 $.ajax({
                                     url:"/rest/invoiceLog/selectByBill.action",
                                     type:"POST",
-                                    data:{bill:rowData.bill},
+                                    data:{bill:rowData.id},
                                     dataType:"json"
                                 }).done(function(rsp){
                                     var rows ='';
@@ -152,13 +172,13 @@
     <table id="datatable" class="table table-striped table-bordered" style="width:100%">
         <thead>
         <tr>
-            <th>明细</th>
+            <th>开票明细</th>
             <th>所属小区</th>
             <th>业主姓名</th>
             <th>业主电话</th>
             <th>账户余额</th>
-            <th>票据金额</th>
-            <th>收款日期</th>
+            <th>收缴金额</th>
+            <th>收缴日期</th>
             <th>票据号</th>
             <th>操作</th>
         </tr>
@@ -166,43 +186,5 @@
     </table>
 </div>
 
-<div id="popWin" style="display: none;">
-    <div class="x_panel">
-        <div class="x_content">
-            <form id="infoForm" class="form-horizontal form-label-left input_mask">
-                <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">单位名称</label>
-                    <div class="col-md-9 col-sm-9 col-xs-9">
-                        <input type="text" class="form-control" name="name" placeholder="请输入单位名称......">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">法人姓名</label>
-                    <div class="col-md-9 col-sm-9 col-xs-9">
-                        <input type="text" class="form-control" name="legalPersonName" placeholder="请输入法人姓名......">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">身份证号</label>
-                    <div class="col-md-9 col-sm-9 col-xs-9">
-                        <input type="text" class="form-control" name="legalPersonLicense" placeholder="请输入法人身份证号......">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">银行账户</label>
-                    <div class="col-md-9 col-sm-9 col-xs-9">
-                        <input type="text" class="form-control" name="accountNum" placeholder="请输入银行账户......">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">单位性质</label>
-                    <div class="col-md-9 col-sm-9 col-xs-9">
-                        <select id="natureSelect" name="nature" class="form-control" style="width:100%;"></select>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 </body>
 </html>

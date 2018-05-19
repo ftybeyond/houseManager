@@ -19,7 +19,7 @@
                 main.loadDeps(["CompanyNature.json"],function (data) {
                     $("#natureSelect").mySelect2({data:data["CompanyNature.json"]})
                     var config = {
-                        popArea:['400px','350px'],
+                        popArea:['400px','380px'],
                         domain:{
                             name:'company',
                             props:[

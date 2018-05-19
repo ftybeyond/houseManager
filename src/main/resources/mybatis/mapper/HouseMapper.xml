@@ -29,12 +29,12 @@
       floor, code, area, 
       has_elevator, nature, type,
       building_rise, unit_price, owner_name,owner_tel,
-      owner_psptid, account_balance)
+      owner_psptid, account_balance,accrual_time,accrual_balance)
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{unit,jdbcType=INTEGER},
       #{floor,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, #{area,jdbcType=DECIMAL},
       #{hasElevator,jdbcType=INTEGER}, #{nature,jdbcType=INTEGER}, #{type,jdbcType=INTEGER},
       #{buildingRise,jdbcType=INTEGER}, #{unitPrice,jdbcType=DECIMAL}, #{ownerName,jdbcType=INTEGER},#{ownerTel,jdbcType=INTEGER},
-      #{ownerPsptid,jdbcType=INTEGER}, #{accountBalance,jdbcType=DECIMAL})
+      #{ownerPsptid,jdbcType=INTEGER}, #{accountBalance,jdbcType=DECIMAL},#{accrualTime,jdbcType=TIMESTAMP},#{accrualBalance,jdbcType=DECIMAL})
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.qth.model.House">
     update house

@@ -1,8 +1,10 @@
 package com.qth.dao;
 
 import com.qth.model.ChargeBill;
+import com.qth.model.dto.ChargeBillForm;
 import com.qth.model.dto.ChargeBillPrintInfo;
 import com.qth.model.dto.HouseTreeModel;
+import com.qth.model.dto.InvoiceForm;
 
 import java.util.List;
 
@@ -26,4 +28,18 @@ public interface ChargeBillMapper {
     int updateState(ChargeBill chargeBill);
 
     ChargeBillPrintInfo printInfo(Integer id);
+
+    List<ChargeBill> selectByForm(ChargeBillForm chargeBillForm);
+
+    int selectCountByForm(ChargeBillForm chargeBillForm);
+
+    List<ChargeBill> selectInvoiceByForm(InvoiceForm invoiceForm);
+
+    int selectCountInvoiceByForm(InvoiceForm invoiceForm);
+
+    int updateInvoiceNum(ChargeBill chargeBill);
+
+    int abolishInvoiceNum(ChargeBill chargeBill);
+
+    int selectCountByInvoiceNum(String invoiceNum);
 }

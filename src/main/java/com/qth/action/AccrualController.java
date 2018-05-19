@@ -62,9 +62,7 @@ public class AccrualController extends BaseController {
     @ResponseBody
     public CommonRsp accrualCalculate(String paths,String toDate,HttpSession session) throws ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        // todo
-// String handler = session.getAttribute("");
-        int count = accrualService.accrualCalculate(paths,dateFormat.parse(toDate),"admin");
+        int count = accrualService.accrualCalculate(paths,dateFormat.parse(toDate),getHandler(session));
         return description2Rsp("累计成功计息"+count + "条");
     }
 
@@ -89,9 +87,7 @@ public class AccrualController extends BaseController {
     @RequestMapping("/rest/accrual/bill")
     @ResponseBody
     public CommonRsp accrualBill(AccrualResult accrualResult, HttpSession session) {
-// todo
-// String handler = session.getAttribute("");
-        int effect = accrualService.billBatch(accrualResult,"admin");
+        int effect = accrualService.billBatch(accrualResult,getHandler(session));
         ;return dbEffect2Rsp(effect);
     }
 }

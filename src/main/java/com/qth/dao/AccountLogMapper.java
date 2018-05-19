@@ -20,4 +20,6 @@ public interface AccountLogMapper {
     List<AccountLog> selectByRecord(RepairRecord record);
 
     List<AccountLog> selectHouseChangeWithDateRange(Map map);
+
+    List<AccountLog> selectByHouseCode(String code);
 }

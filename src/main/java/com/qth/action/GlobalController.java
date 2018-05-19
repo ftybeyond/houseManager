@@ -25,7 +25,7 @@ import java.util.*;
  * 全局管控controller
  */
 @Controller
-public class GlobalController {               
+public class GlobalController extends BaseController{
 
     @Autowired
     ISelectService selectService;
@@ -49,8 +49,7 @@ public class GlobalController {
     Integer company;
 
     @RequestMapping(value = "/forward/chargeBillPrint")
-    public ModelAndView chargeBillPrint(Integer id){
-        //todo handler
+    public ModelAndView chargeBillPrint(Integer id,HttpSession session){
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("error");
         if(id!=null){
@@ -59,7 +58,7 @@ public class GlobalController {
                 return modelAndView;
             }
             Company coreCompany = companyService.findCompanyById(company);
-            printInfo.setHandler("admin");
+            printInfo.setHandler(getHandler(session));
             printInfo.setStamp(DateUtils.formatDate(new Date(),"yyyy-MM-dd"));
             printInfo.setCompanyAccount(coreCompany.getAccountNum());
             printInfo.setCompanyName(coreCompany.getName());

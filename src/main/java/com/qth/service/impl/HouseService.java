@@ -53,6 +53,9 @@ public class HouseService extends BaseService<House> implements IHouseService {
 
     @Override
     public int insertHouse(House house) {
+        house.setAccountBalance(new BigDecimal(0f));
+        house.setAccrualBalance(new BigDecimal(0f));
+        house.setAccrualTime(new Date());
         return houseMapper.insert(house);
     }
 
@@ -97,8 +100,8 @@ public class HouseService extends BaseService<House> implements IHouseService {
     }
 
     @Override
-    public AlgorithmSwitch getChargeType(Integer user) {
-        return algorithmSwitchMapper.selectByPrimaryKey(1);
+    public AlgorithmSwitch getChargeType() {
+        return algorithmSwitchMapper.selectByPrimaryKey(algorithmSwitch);
     }
 
     @Transactional

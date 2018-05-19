@@ -12,11 +12,17 @@ public class ChargeBill extends DataTableReqWrapper {
 
     private String houseCode;
 
+    private String residentialAreaName;
+
+    private BigDecimal accountBalance;
+
     private BigDecimal houseArea;
 
     private BigDecimal houseUnitPrice;
 
     private String houseOwner;
+
+    private String houseTel;
 
     private BigDecimal ratio;
 
@@ -52,6 +58,22 @@ public class ChargeBill extends DataTableReqWrapper {
         this.houseCode = houseCode;
     }
 
+    public String getResidentialAreaName() {
+        return residentialAreaName;
+    }
+
+    public void setResidentialAreaName(String residentialAreaName) {
+        this.residentialAreaName = residentialAreaName;
+    }
+
+    public BigDecimal getAccountBalance() {
+        return accountBalance;
+    }
+
+    public void setAccountBalance(BigDecimal accountBalance) {
+        this.accountBalance = accountBalance;
+    }
+
     public BigDecimal getHouseArea() {
         return houseArea;
     }
@@ -74,6 +96,14 @@ public class ChargeBill extends DataTableReqWrapper {
 
     public void setHouseOwner(String houseOwner) {
         this.houseOwner = houseOwner;
+    }
+
+    public String getHouseTel() {
+        return houseTel;
+    }
+
+    public void setHouseTel(String houseTel) {
+        this.houseTel = houseTel;
     }
 
     public BigDecimal getRatio() {

@@ -1,5 +1,6 @@
 package com.qth.action;
 
+import com.qth.model.User;
 import com.qth.model.common.CommonRsp;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.web.bind.ServletRequestDataBinder;
@@ -71,7 +72,13 @@ public class BaseController {
     }
 
     public String getHandler(HttpSession session){
-        return "admin";
+
+        return getLoginUser(session).getRealName();
+    }
+
+    public User getLoginUser(HttpSession session){
+        User user = (User) session.getAttribute("loginUser");
+        return user;
     }
 }
 

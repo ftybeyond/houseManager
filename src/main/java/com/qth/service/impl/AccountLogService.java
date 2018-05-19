@@ -40,4 +40,9 @@ public class AccountLogService extends BaseService<AccountLog> implements IAccou
     public int deleteAccountLogById(int id) {
         return accountLogMapper.deleteByPrimaryKey(id);
     }
+
+    @Override
+    public List<AccountLog> selectByHouseCode(String code) {
+        return accountLogMapper.selectByHouseCode(code);
+    }
 }

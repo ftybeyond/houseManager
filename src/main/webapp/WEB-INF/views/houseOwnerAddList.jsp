@@ -74,13 +74,16 @@
                                     area: ["400px","300x"],
                                     btn: ['确定', '取消'],
                                     yes: function () {
-                                        layer.msg('拼命加载中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
-                                        var formdata = $("#infoForm").serializeJSON()
+                                        var loadMask = layer.msg('拼命加载中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
+                                        var formdata = $("#infoForm").serializeJSON();
+                                        formdata.id = item.id
                                         $.post("/rest/house/updateOwnerInfo.action",formdata,null,"json").done(function (data) {
+                                            layer.close(loadMask)
                                             if(data.success){
                                                 var chargeAlert = layer.alert(data.description,{btn:["缴费"],closeBtn:0,btn1:function () {
-                                                    layer.msg('拼命加载中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
+                                                    var loadMask = layer.msg('拼命加载中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
                                                     $.post("/rest/house/chargeInfo.action",{house:item.id},null,"json").done(function (rsp) {
+                                                        layer.close(loadMask)
                                                         if(rsp.success){
                                                             var houseType = common.findArrayValue(item.type,baseData["HouseType.json"]);
                                                             var hasElevator = common.findArrayValue(item.hasElevator,baseData["HasOrNot.json"]);
@@ -127,6 +130,7 @@
                                                                     param.houseArea = item.area;
                                                                     param.houseUnitPrice = item.unitPrice;
                                                                     param.houseOwner = $("#infoForm input[name='ownerName']").val();
+                                                                    param.houseTel = $("#infoForm input[name='ownerTel']").val();
                                                                     param.actualSum = chargeMoney;
                                                                     layer.msg('拼命加载中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
                                                                     $.post("/rest/house/genChargeBill.action",param,null,"json").done(function(data){
@@ -148,7 +152,7 @@
                                                                         layer.alert("服务器内部错误!");
                                                                     })
                                                                 },
-                                                                btn2:function(){layer.close(win2)}
+                                                                btn2:function(){layer.closeAll()}
                                                             })
                                                         }else{
                                                             layer.alert(rsp.description)
@@ -242,7 +246,6 @@
     <div class="x_panel">
         <div class="x_content">
             <form id="infoForm" class="form-horizontal form-label-left input_mask">
-                <input type="hidden" name="id"/>
                 <div class="form-group">
                     <label class="control-label col-md-3 col-sm-3 col-xs-3">业主姓名</label>
                     <div class="col-md-9 col-sm-9 col-xs-9">

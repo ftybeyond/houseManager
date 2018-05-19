@@ -3,14 +3,17 @@ package com.qth.service.impl;
 import com.qth.dao.AccountLogMapper;
 import com.qth.dao.ChargeBillMapper;
 import com.qth.dao.HouseMapper;
+import com.qth.dao.InvoiceLogMapper;
 import com.qth.model.AccountLog;
 import com.qth.model.ChargeBill;
 import com.qth.model.House;
+import com.qth.model.InvoiceLog;
 import com.qth.model.common.DataTableRspWrapper;
+import com.qth.model.dto.ChargeBillForm;
 import com.qth.model.dto.ChargeBillPrintInfo;
 import com.qth.model.dto.HouseTreeModel;
+import com.qth.model.dto.InvoiceForm;
 import com.qth.service.IChargeBillService;
-import com.qth.service.IHouseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +30,9 @@ public class ChargeBillService extends BaseService<ChargeBill> implements ICharg
 
     @Autowired
     AccountLogMapper accountLogMapper;
+
+    @Autowired
+    InvoiceLogMapper invoiceLogMapper;
 
     @Autowired
     HouseMapper houseMapper;
@@ -100,5 +106,56 @@ public class ChargeBillService extends BaseService<ChargeBill> implements ICharg
     @Override
     public ChargeBillPrintInfo getPrintInfo(Integer id) {
         return chargeBillMapper.printInfo(id);
+    }
+
+    @Override
+    public DataTableRspWrapper<ChargeBill> selectByForm(ChargeBillForm chargeBillForm) {
+        DataTableRspWrapper<ChargeBill> rspWrapper = new DataTableRspWrapper<>();
+        rspWrapper.setData(chargeBillMapper.selectByForm(chargeBillForm));
+        rspWrapper.setRecordsTotal(chargeBillMapper.selectCountByForm(chargeBillForm));
+        return rspWrapper;
+    }
+
+    @Override
+    public DataTableRspWrapper<ChargeBill> selectInvoiceByForm(InvoiceForm invoiceForm) {
+        DataTableRspWrapper<ChargeBill> rspWrapper = new DataTableRspWrapper<>();
+        rspWrapper.setData(chargeBillMapper.selectInvoiceByForm(invoiceForm));
+        rspWrapper.setRecordsTotal(chargeBillMapper.selectCountInvoiceByForm(invoiceForm));
+        return rspWrapper;
+    }
+
+    @Override
+    public int updateInvoiceNum(ChargeBill chargeBill,String handler) {
+        //记录日志
+        InvoiceLog invoiceLog = new InvoiceLog();
+        invoiceLog.setEventType(2);
+        invoiceLog.setBill(chargeBill.getId());
+        invoiceLog.setHandler(handler);
+        invoiceLog.setInvoiceNum(chargeBill.getInvoiceNum());
+        invoiceLog.setStamp(new Date());
+        invoiceLog.setPayor(chargeBill.getHouseOwner());
+        invoiceLog.setMoney(chargeBill.getActualSum());
+        invoiceLogMapper.insert(invoiceLog);
+        return chargeBillMapper.updateInvoiceNum(chargeBill);
+    }
+
+    @Override
+    public int abolishInvoiceNum(ChargeBill chargeBill,String handler) {
+        //记录日志
+        InvoiceLog invoiceLog = new InvoiceLog();
+        invoiceLog.setEventType(4);
+        invoiceLog.setBill(chargeBill.getId());
+        invoiceLog.setHandler(handler);
+        invoiceLog.setInvoiceNum(chargeBill.getInvoiceNum());
+        invoiceLog.setStamp(new Date());
+        invoiceLog.setPayor(chargeBill.getHouseOwner());
+        invoiceLog.setMoney(chargeBill.getActualSum());
+        invoiceLogMapper.insert(invoiceLog);
+        return chargeBillMapper.abolishInvoiceNum(chargeBill);
+    }
+
+    @Override
+    public int selectCountByInvoiceNum(String invoiceNum) {
+        return chargeBillMapper.selectCountByInvoiceNum(invoiceNum);
     }
 }

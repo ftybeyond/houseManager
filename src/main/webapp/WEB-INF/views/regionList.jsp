@@ -78,6 +78,7 @@
                 <div class="form-group">
                     <label class="control-label col-md-3 col-sm-3 col-xs-3">区域名称</label>
                     <div class="col-md-9 col-sm-9 col-xs-9">
+                        <input type="hidden"/>
                         <input type="text" class="form-control" name="name" placeholder="请输入区域名称......">
                     </div>
                 </div>

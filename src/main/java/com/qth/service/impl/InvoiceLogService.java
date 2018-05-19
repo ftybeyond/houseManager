@@ -1,6 +1,7 @@
 package com.qth.service.impl;
 
 import com.qth.dao.InvoiceLogMapper;
+import com.qth.model.ChargeBill;
 import com.qth.model.InvoiceLog;
 import com.qth.model.common.DataTableRspWrapper;
 import com.qth.model.dto.InvoiceForm;
@@ -55,4 +56,5 @@ public class InvoiceLogService extends BaseService<InvoiceLog> implements IInvoi
     public List<InvoiceLog> selectByBill(Integer billId) {
         return invoiceLogMapper.selectByBill(billId);
     }
+
 }

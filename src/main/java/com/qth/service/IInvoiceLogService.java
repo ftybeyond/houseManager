@@ -1,5 +1,6 @@
 package com.qth.service;
 
+import com.qth.model.ChargeBill;
 import com.qth.model.InvoiceLog;
 import com.qth.model.common.DataTableRspWrapper;
 import com.qth.model.dto.InvoiceForm;

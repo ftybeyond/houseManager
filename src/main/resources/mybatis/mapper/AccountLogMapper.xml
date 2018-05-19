@@ -61,4 +61,13 @@
     where house_code = #{houseCode} and  trade_time BETWEEN #{fromDate,jdbcType=TIMESTAMP} and #{endDate,jdbcType=TIMESTAMP}
   </select>
 
+  <select id="selectByHouseCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT
+	  al.*
+    FROM
+        account_log al
+    WHERE
+        al.house_code = #{value}
+  </select>
+
 </mapper>

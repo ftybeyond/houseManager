@@ -67,8 +67,9 @@
                         customBtns:[
                             {label:'补缴',callback:function (index, item) {
                                 $("div.unitPrice").remove();
-                                layer.msg('拼命加载中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
+                                var loadMask = layer.msg('拼命加载中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
                                 $.post("/rest/house/chargeInfo.action",{house:item.id,patch:true},null,"json").done(function (rsp) {
+                                    layer.close(loadMask)
                                     if(rsp.success){
                                         if(rsp.attr.chargeBillCount>0){
                                             var confirmWin = layer.confirm("已存在缴费信息，确认继续补缴基金？",{yes:function(){
@@ -144,6 +145,7 @@
                                 param.houseArea = item.area;
                                 param.houseUnitPrice = item.unitPrice;
                                 param.houseOwner = item.ownerName;
+                                param.houseTel = item.ownerTel;
                                 if($('#customSwitch').prop('checked')){
                                     param.chargeType = 2;
                                     param.actualSum = $("#infoForm input[name='chargeMoney']").val()
@@ -174,7 +176,7 @@
                                     layer.alert("服务器内部错误!");
                                 })
                             },
-                            btn2:function(){layer.close(win)}
+                            btn2:function(){layer.closeAll()}
                         })
                     }
 

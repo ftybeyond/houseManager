@@ -8,7 +8,7 @@
     <result column="event_type" jdbcType="INTEGER" property="eventType" />
     <result column="stamp" jdbcType="TIMESTAMP" property="stamp" />
     <result column="bill" jdbcType="INTEGER" property="bill" />
-    <result column="payor" jdbcType="VACHAR" property="payor"/>
+    <result column="payor" jdbcType="VARCHAR" property="payor"/>
     <result column="handler" jdbcType="VARCHAR" property="handler" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
   </resultMap>

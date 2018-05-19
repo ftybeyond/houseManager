@@ -15,4 +15,6 @@ public interface IAccountLogService extends IBaseService<AccountLog>
     public AccountLog findAccountLogById(int id);
 
     public int deleteAccountLogById(int id);
+
+    public List<AccountLog> selectByHouseCode(String code);
 }

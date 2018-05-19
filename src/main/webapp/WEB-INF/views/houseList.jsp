@@ -83,6 +83,7 @@
                                 {name: 'floor', type: 'string', showable: true},
                                 {name: 'name', type: 'string', showable: true},
                                 {name: 'area', type: 'string', showable: true},
+                                {name: 'unitPrice', type: 'string', showable: true},
                                 {name: 'hasElevator', type: 'string', showable: true,render:function (row) {
                                     var dic = main.findArrayValue(row,data["HasOrNot.json"])
                                     return dic&&dic.text?dic.text:"";
@@ -201,7 +202,8 @@
             <th>楼层</th>
             <th>房号</th>
             <th>面积</th>
-            <th>是否有电梯</th>
+            <th>单价</th>
+            <th>电梯</th>
             <th>房屋性质</th>
             <th>住宅类型</th>
             <th>操作</th>
@@ -262,7 +264,13 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">是否有电梯</label>
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">单价</label>
+                    <div class="col-md-9 col-sm-9 col-xs-9">
+                        <input type="text" class="form-control" name="unitPrice" placeholder="请输入单价......">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">电梯</label>
                     <div class="col-md-9 col-sm-9 col-xs-9">
                         <select id="hasElevatorSelect" name="hasElevator" class="form-control"
                                 style="width:100%;"></select>

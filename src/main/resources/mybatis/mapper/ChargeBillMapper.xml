@@ -7,6 +7,7 @@
     <result column="house_area" jdbcType="DECIMAL" property="houseArea" />
     <result column="house_unit_price" jdbcType="DECIMAL" property="houseUnitPrice" />
     <result column="house_owner" jdbcType="VARCHAR" property="houseOwner" />
+    <result column="house_tel" jdbcType="VARCHAR" property="houseTel" />
     <result column="ratio" jdbcType="DECIMAL" property="ratio" />
     <result column="charge_type" jdbcType="INTEGER" property="chargeType" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
@@ -25,12 +26,12 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into charge_bill (id, house_code, house_area,
-      house_unit_price, house_owner, ratio,
+      house_unit_price, house_owner,house_tel, ratio,
       charge_type, create_time, handler,
       actual_sum, invoice_num,flow_num, state
       )
     values (#{id,jdbcType=INTEGER}, #{houseCode,jdbcType=VARCHAR}, #{houseArea,jdbcType=DECIMAL},
-      #{houseUnitPrice,jdbcType=DECIMAL}, #{houseOwner,jdbcType=VARCHAR}, #{ratio,jdbcType=DECIMAL},
+      #{houseUnitPrice,jdbcType=DECIMAL}, #{houseOwner,jdbcType=VARCHAR},#{houseTel,jdbcType=VARCHAR}, #{ratio,jdbcType=DECIMAL},
       #{chargeType,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{handler,jdbcType=VARCHAR},
       #{actualSum,jdbcType=DECIMAL}, #{invoiceNum,jdbcType=VARCHAR},#{flowNum,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER}
       )
@@ -57,9 +58,28 @@
     state = #{state}
     where id = #{id}
   </update>
+
+  <select id="selectCountByInvoiceNum" parameterType="java.lang.String" resultType="int">
+    select count(*) from charge_bill
+    where invoice_num = #{value}
+  </select>
+
+  <update id="updateInvoiceNum" parameterType="com.qth.model.ChargeBill">
+    update charge_bill
+    set
+    invoice_num = #{invoiceNum}
+    WHERE  id = #{id}
+  </update>
+
+  <update id="abolishInvoiceNum" parameterType="com.qth.model.ChargeBill">
+    update charge_bill
+    set
+    invoice_num = NULL
+    WHERE  id = #{id}
+  </update>
+
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select id, house_code, house_area, house_unit_price, house_owner, ratio, charge_type,
-    create_time, handler, actual_sum, invoice_num, state
+    select *
     from charge_bill
     where id = #{id,jdbcType=INTEGER}
   </select>
@@ -156,6 +176,125 @@
     </if>
   </select>
 
+  <select id="selectByForm" parameterType="com.qth.model.dto.ChargeBillForm" resultMap="BaseResultMap">
+    SELECT
+        cb.*,ra.`name` as residentialAreaName
+    FROM
+        charge_bill cb
+    LEFT JOIN house h ON cb.house_code = h.`code`
+    LEFT JOIN unit u ON h.unit = u.id
+    LEFT JOIN building b ON b.id = u.building
+    LEFT JOIN residential_area ra ON ra.id = b.residential_area
+    <where>
+      <if test="residentialArea!=null">
+        AND ra.id = #{residentialArea}
+      </if>
+      <if test="fromDate!=null">
+        AND cb.create_time &gt;= #{fromDate}
+      </if>
+      <if test="endDate!=null">
+        AND cb.create_time &lt;= #{endDate}
+      </if>
+      <if test="handler!=null">
+        AND cb.`handler` = #{handler}
+      </if>
+      <if test="ownerName!=null">
+        AND cb.house_owner = #{ownerName}
+      </if>
+      <if test="flowNum!=null">
+        AND cb.flow_num = #{flowNum}
+      </if>
+    </where>
+      limit #{start},#{length}
+
+  </select>
+
+  <select id="selectCountByForm" parameterType="com.qth.model.dto.ChargeBillForm" resultType="int">
+    SELECT
+      count(cb.id)
+    FROM
+    charge_bill cb
+    LEFT JOIN house h ON cb.house_code = h.`code`
+    LEFT JOIN unit u ON h.unit = u.id
+    LEFT JOIN building b ON b.id = u.building
+    LEFT JOIN residential_area ra ON ra.id = b.residential_area
+    <where>
+      <if test="residentialArea!=null">
+        AND ra.id = #{residentialArea}
+      </if>
+      <if test="fromDate!=null">
+        AND cb.create_time &gt;= #{fromDate}
+      </if>
+      <if test="endDate!=null">
+        AND cb.create_time &lt;= #{endDate}
+      </if>
+      <if test="handler!=null">
+        AND cb.`handler` = #{handler}
+      </if>
+      <if test="ownerName!=null">
+        AND cb.house_owner = #{ownerName}
+      </if>
+      <if test="flowNum!=null">
+        AND cb.flow_num = #{flowNum}
+      </if>
+    </where>
+  </select>
+
+  <select id="selectInvoiceByForm" parameterType="com.qth.model.dto.InvoiceForm" resultMap="BaseResultMap">
+    SELECT
+    cb.*,ra.name as residentialAreaName ,h.account_balance as accountBalance
+    FROM
+    charge_bill cb
+    LEFT JOIN invoice_log il ON cb.invoice_num = il.invoice_num
+    LEFT JOIN house h ON h.`code` = cb.house_code
+    LEFT JOIN unit u ON h.unit = u.id
+    LEFT JOIN building b ON b.id = u.building
+    LEFT JOIN residential_area ra ON ra.id = b.residential_area
+    <where>
+      (cb.state = 1 or cb.state = 3)
+      <if test="ownerName!=null">
+        and h.owner_name = #{ownerName}
+      </if>
+      <if test="ownerTel!=null">
+        and h.owner_tel = #{ownerTel}
+      </if>
+      <if test="residentialArea!=null">
+        and ra.id = #{residentialArea}
+      </if>
+      <if test="invoiceNum!=null">
+        and il.invoice_num = #{invoiceNum}
+      </if>
+    </where>
+    limit #{start},#{length}
+  </select>
+
+  <select id="selectCountInvoiceByForm" parameterType="com.qth.model.dto.InvoiceForm" resultType="int">
+    SELECT
+    count(cb.id)
+    FROM
+    charge_bill cb
+    LEFT JOIN invoice_log il ON cb.invoice_num = il.invoice_num
+    LEFT JOIN house h ON h.`code` = cb.house_code
+    LEFT JOIN unit u ON h.unit = u.id
+    LEFT JOIN building b ON b.id = u.building
+    LEFT JOIN residential_area ra ON ra.id = b.residential_area
+    <where>
+      (cb.state = 1 or cb.state = 3)
+      <if test="ownerName!=null">
+        and h.owner_name = #{ownerName}
+      </if>
+      <if test="ownerTel!=null">
+        and h.owner_tel = #{ownerTel}
+      </if>
+      <if test="residentialArea!=null">
+        and ra.id = #{residentialArea}
+      </if>
+      <if test="invoiceNum!=null">
+        and il.invoice_num = #{invoiceNum}
+      </if>
+    </where>
+  </select>
+
   <select id="printInfo" parameterType="int" resultType="com.qth.model.dto.ChargeBillPrintInfo">
     SELECT
         cb.flow_num as chargeNum,
@@ -176,4 +315,5 @@
     LEFT JOIN residential_area ra on b.residential_area = ra.id
     WHERE cb.id = #{value}
   </select>
+
 </mapper>

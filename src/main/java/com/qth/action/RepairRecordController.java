@@ -53,9 +53,7 @@ public DataTableRspWrapper<RepairRecord> table(RepairRecord repairRecord){
     */
     @RequestMapping(value = "insert")
     public CommonRsp insert(RepairRecord repairRecord, HttpSession session){
-        //todo
-//        User user = (User) session.getAttribute("login_user");
-//        repairRecord.setHandler(user.getRealName());
+        repairRecord.setHandler(getHandler(session));
         repairRecord.setStamp(new Date());
         repairRecord.setState(0);
         int effect = repairRecordService.insertRepairRecord(repairRecord);

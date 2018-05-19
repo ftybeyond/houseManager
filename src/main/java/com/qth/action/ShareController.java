@@ -66,9 +66,7 @@ public class ShareController extends BaseController{
     public CommonRsp doShare(String paths, Integer shareType, BigDecimal sumArea, Integer totalHouse, BigDecimal cost,Integer record, HttpSession session){
         CommonRsp rsp = new CommonRsp();
         if (paths!=null&&paths.length()>0) {
-            //todo
-            //String handler = session.getAttribute("");
-            List<House> unBalance = shareService.share(paths,shareType,sumArea,totalHouse,cost,record,"admin");
+            List<House> unBalance = shareService.share(paths,shareType,sumArea,totalHouse,cost,record,getHandler(session));
             rsp.setSuccess(true);
             rsp.setDescription("分摊入账成功");
             rsp.setResultCode("0000");
@@ -84,8 +82,7 @@ public class ShareController extends BaseController{
     @RequestMapping(value = "/rest/share/doShareBack")
     @ResponseBody
     public CommonRsp doShareBack(Integer record,HttpSession session){
-        //todo handler
-        int effect = shareService.shareBack(record,"admin");
+        int effect = shareService.shareBack(record,getHandler(session));
         return dbEffect2Rsp(effect);
     }
 

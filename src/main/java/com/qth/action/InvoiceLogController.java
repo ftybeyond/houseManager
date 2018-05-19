@@ -1,8 +1,10 @@
 package com.qth.action;
 
+import com.qth.model.ChargeBill;
 import com.qth.model.common.CommonRsp;
 import com.qth.model.InvoiceLog;
 import com.qth.model.dto.InvoiceForm;
+import com.qth.service.IChargeBillService;
 import com.qth.service.IInvoiceLogService;
 import com.qth.model.common.DataTableRspWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,9 @@ public class InvoiceLogController extends BaseController {
     @Autowired
     IInvoiceLogService invoiceLogService;
 
+    @Autowired
+    IChargeBillService chargeBillService;
+
     /**
      * 区域表格数据请求
      *
@@ -27,8 +32,8 @@ public class InvoiceLogController extends BaseController {
      * @return
      */
     @RequestMapping(path = "table")
-    public DataTableRspWrapper<InvoiceLog> table(InvoiceForm invoiceForm) {
-        DataTableRspWrapper<InvoiceLog> rspWrapper = invoiceLogService.selectTable(invoiceForm);
+    public DataTableRspWrapper<ChargeBill> table(InvoiceForm invoiceForm) {
+        DataTableRspWrapper<ChargeBill> rspWrapper = chargeBillService.selectInvoiceByForm(invoiceForm);
         //赋值绘制时序标识
         rspWrapper.setDraw(invoiceForm.getDraw());
         return rspWrapper;
