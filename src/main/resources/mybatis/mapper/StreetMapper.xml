@@ -50,7 +50,9 @@
         and s.region = region
       </if>
     </where>
-    limit #{start} ,#{length}
+    <if test="length>0">
+      limit #{start} ,#{length}
+    </if>
   </select>
 
   <select id="selectDataTableCount" resultType="int" parameterType="com.qth.model.Street">

@@ -2,6 +2,7 @@ package com.qth.action;
 
 import com.qth.model.common.CommonRsp;
 import com.qth.model.AccountLog;
+import com.qth.model.dto.ReportForm;
 import com.qth.service.IAccountLogService;
 import com.qth.model.common.DataTableRspWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +69,16 @@ public class AccountLogController extends BaseController {
     public CommonRsp selectByHouseCode(String code){
         List<AccountLog> list = accountLogService.selectByHouseCode(code);
         return data2Rsp(list);
+    }
+
+    @RequestMapping(value = "report")
+    public DataTableRspWrapper<AccountLog> report(ReportForm reportForm){
+        return accountLogService.reportDetail(reportForm);
+    }
+
+    @RequestMapping(value = "reportSummary")
+    public DataTableRspWrapper<AccountLog> reportSummary(ReportForm reportForm){
+        return accountLogService.reportSummary(reportForm);
     }
 
 }

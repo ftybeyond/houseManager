@@ -140,13 +140,13 @@
             <div class="col-xs-4 search-form-group">
                 <label class="control-label col-xs-3">业主姓名</label>
                 <div class="col-md-9 col-sm-9 col-xs-9">
-                    <input type="text" class="form-control" placeholder="要查询的业主姓名" name="ownerName"/>
+                    <input type="text" class="form-control" placeholder="要查询的缴费业主姓名" name="ownerName"/>
                 </div>
             </div>
             <div class="col-xs-4 search-form-group">
                 <label class="control-label col-xs-3">业主电话</label>
                 <div class="col-xs-9">
-                    <input type="text" class="form-control" placeholder="要查询的票据号" name="ownerTel"/>
+                    <input type="text" class="form-control" placeholder="要查询的缴费业主电话" name="ownerTel"/>
                 </div>
             </div>
         </div>

@@ -114,7 +114,9 @@
       and h.has_elevator=#{hasElevator,jdbcType=VARCHAR}
     </if>
     </where>
-    limit #{start} ,#{length}
+    <if test="length>0">
+      limit #{start} ,#{length}
+    </if>
   </select>
   <select id="selectDataTableCount" resultType="int" parameterType="com.qth.model.House">
     SELECT
@@ -295,7 +297,9 @@
       <if test="hasOwner!=null and !hasOwner">
         and h.owner_name is null
       </if>
-    limit #{start},#{length}
+    <if test="length>0">
+      limit #{start} ,#{length}
+    </if>
   </select>
 
   <select id="selectCountByTreeNode" parameterType="com.qth.model.dto.HouseTreeModel" resultType="int">

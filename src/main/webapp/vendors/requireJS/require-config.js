@@ -9,6 +9,8 @@ require.config({
         'select2':'select2/select2',
         'datatable':'datatable/dataTables.min',
         'dataTables-bs':'datatable/dataTables.bootstrap.min',
+        'datatables-buttons':'datatable/dataTables.buttons.min',
+        'datatables-print':'datatable/buttons.print.min',
         'jquery-serializejson':'jquery/jquery.serializejson',
         'layer':'layer/layer',
         'laydate':'layer/laydate',

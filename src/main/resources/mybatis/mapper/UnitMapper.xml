@@ -91,7 +91,9 @@
     <if test="building!=null">
       and rb.building=#{building}
     </if>
-    limit #{start} ,#{length}
+    <if test="length>0">
+      limit #{start} ,#{length}
+    </if>
   </select>
   <select id="selectDataTableCount" resultType="int" parameterType="com.qth.model.Unit">
     select count(*)

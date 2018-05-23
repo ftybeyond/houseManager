@@ -84,7 +84,9 @@
     <if test="state != null">
       and ar.state = #{state}
     </if>
-    Limit #{start},#{Length}
+    <if test="length>0">
+      limit #{start} ,#{length}
+    </if>
   </select>
 
 
@@ -101,7 +103,9 @@
     <if test="state != null">
       and ar.state = #{state}
     </if>
-    Limit #{start},#{Length}
+    <if test="length>0">
+      limit #{start} ,#{length}
+    </if>
   </select>
 
 
@@ -117,7 +121,9 @@
     <if test="state != null">
       and ar.state = #{state}
     </if>
-    Limit #{start},#{Length}
+    <if test="length>0">
+      limit #{start} ,#{length}
+    </if>
   </select>
 
   <select id="allResultInFloor" parameterType="com.qth.model.AccrualResult" resultMap="BaseResultMap">
@@ -131,7 +137,9 @@
     <if test="state != null">
       and ar.state = #{state}
     </if>
-    Limit #{start},#{Length}
+    <if test="length>0">
+      limit #{start} ,#{length}
+    </if>
   </select>
 
   <select id="allResultInHouse" parameterType="com.qth.model.AccrualResult" resultMap="BaseResultMap">
@@ -145,7 +153,9 @@
     <if test="state != null">
       and ar.state = #{state}
     </if>
-    Limit #{start},#{Length}
+    <if test="length>0">
+      limit #{start} ,#{length}
+    </if>
   </select>
 
   <!--counts-->

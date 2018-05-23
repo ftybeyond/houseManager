@@ -38,6 +38,20 @@ define(["zTree"],function(){
         }
     }
 
+    var getAllSelectPath = function(){
+        var allCheckedNodes = loadAllChecksNodes();
+        var result = '';
+        //显示到页面
+        for(key in allCheckedNodes){
+            result += getNamePath(allCheckedNodes[key]);
+            result +=","
+        }
+        if(result.length > 0){
+            result = result.substr(0,result.lastIndexOf(","));
+        }
+        return result;
+    }
+
     var loadAllChecksNodes = function (){
         var checkedNodes = treeObj.getNodesByParam("checked",true);//获取所有已选中的节点
         var result = new Object()//结果对象
@@ -118,6 +132,7 @@ define(["zTree"],function(){
         getPathParam:getPathParam,
         getIdPath:getIdPath,
         getNamePath:getNamePath,
-        loadAllChecksNodes:loadAllChecksNodes
+        loadAllChecksNodes:loadAllChecksNodes,
+        getAllSelectPath:getAllSelectPath
     }
 })

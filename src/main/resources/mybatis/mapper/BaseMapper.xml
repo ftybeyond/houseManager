@@ -55,7 +55,9 @@
         ${column} ${val}
       </foreach>
     </if>
-  limit #{start} ,#{length}
+    <if test="length>0">
+      limit #{start} ,#{length}
+    </if>
 </select>
   <!--通用查询datatable总行数，配合分页-->
   <select id="selectDataTableCount" parameterType="com.qth.model.common.SelectDataTableMap" resultType="int">

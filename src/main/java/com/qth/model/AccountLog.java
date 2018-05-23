@@ -1,5 +1,6 @@
 package com.qth.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.qth.model.common.DataTableReqWrapper;
 import com.qth.util.AccountLogRateChangeComparatorHelper;
 
@@ -17,6 +18,7 @@ public class AccountLog extends DataTableReqWrapper implements AccountLogRateCha
 
     private BigDecimal tradeMoney;
 
+    @JSONField(format = "yyyy-MM-dd")
     private Date tradeTime;
 
     private Integer tradeType;
@@ -26,6 +28,19 @@ public class AccountLog extends DataTableReqWrapper implements AccountLogRateCha
     private Long seq;
 
     private String remark;
+
+    //------------------以下非数据库字段，关联查询属性
+
+    private String residentialAreaName;
+
+    private String unitName;
+
+    private String buildingName;
+
+    private String houseName;
+
+    //汇总结果字段，可以是余额，交易额等等的汇总金额
+    private BigDecimal sumResult;
 
     public Integer getId() {
         return id;
@@ -105,6 +120,46 @@ public class AccountLog extends DataTableReqWrapper implements AccountLogRateCha
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getResidentialAreaName() {
+        return residentialAreaName;
+    }
+
+    public void setResidentialAreaName(String residentialAreaName) {
+        this.residentialAreaName = residentialAreaName;
+    }
+
+    public String getUnitName() {
+        return unitName;
+    }
+
+    public void setUnitName(String unitName) {
+        this.unitName = unitName;
+    }
+
+    public String getBuildingName() {
+        return buildingName;
+    }
+
+    public void setBuildingName(String buildingName) {
+        this.buildingName = buildingName;
+    }
+
+    public String getHouseName() {
+        return houseName;
+    }
+
+    public void setHouseName(String houseName) {
+        this.houseName = houseName;
+    }
+
+    public BigDecimal getSumResult() {
+        return sumResult;
+    }
+
+    public void setSumResult(BigDecimal sumResult) {
+        this.sumResult = sumResult;
     }
 
     @Override

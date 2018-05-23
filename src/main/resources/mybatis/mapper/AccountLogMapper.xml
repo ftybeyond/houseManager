@@ -70,4 +70,79 @@
         al.house_code = #{value}
   </select>
 
+  <select id="selectReportDetail" parameterType="com.qth.model.dto.ReportForm" resultMap="BaseResultMap">
+    SELECT
+        al.*, ra.`name` AS residentialAreaName,
+        u.`name` AS unitName,
+        b.`name` AS buildingName,
+        h.`name` AS houseName
+    FROM
+        account_log al
+    RIGHT JOIN house h ON h.`code` = al.house_code
+    INNER JOIN unit u ON u.id = h.unit
+    INNER JOIN building b ON b.id = u.building
+    INNER JOIN residential_area ra ON ra.id = b.residential_area
+    <where>
+      <include refid="reportConditions"/>
+    </where>
+    <if test="length>0">
+      limit #{start} ,#{length}
+    </if>
+  </select>
+
+  <select id="selectReportDetailCount" parameterType="com.qth.model.dto.ReportForm" resultType="int">
+    SELECT
+    count(*)
+    FROM
+    account_log al
+    RIGHT JOIN house h ON h.`code` = al.house_code
+    INNER JOIN unit u ON u.id = h.unit
+    INNER JOIN building b ON b.id = u.building
+    INNER JOIN residential_area ra ON ra.id = b.residential_area
+    <where>
+      <include refid="reportConditions"/>
+    </where>
+  </select>
+
+  <select id="selectReportSummary" parameterType="com.qth.model.dto.ReportForm" resultMap="BaseResultMap">
+    SELECT
+        al.*, ra.`name` AS residentialAreaName,
+        u.`name` AS unitName,
+        b.`name` AS buildingName,
+        h.`name` AS houseName,
+        sum(al.trade_money) as sumResult
+    FROM
+        account_log al
+    right JOIN house h ON h.`code` = al.house_code
+    INNER JOIN unit u ON u.id = h.unit
+    INNER JOIN building b ON b.id = u.building
+    INNER JOIN residential_area ra ON ra.id = b.residential_area
+    <where>
+      <include refid="reportConditions"/>
+    </where>
+    GROUP BY ${groupByColumn}
+  </select>
+
+  <sql id="reportConditions">
+    <if test="sqlAppend != null">
+      and ${sqlAppend}
+    </if>
+    <if test="fromDate != null">
+      and al.trade_time &gt;= #{fromDate}
+    </if>
+    <if test="fromDate != null">
+      and al.trade_time &lt;= #{endDate}
+    </if>
+    <!-- 未缴 -->
+    <if test="summaryType !=null and summaryType==-1">
+      and al.id is null
+    </if>
+    <if test="summaryType !=null and summaryType &gt;0 and summaryType &lt;4">
+      and al.trade_type = #{summaryType}
+    </if>
+    <!-- 分摊，包含回滚 -->
+    <if test="summaryType !=null and summaryType == 4">
+      and (al.trade_type = 4 or al.trade_type = 5)
+    </if>
+  </sql>
 </mapper>
