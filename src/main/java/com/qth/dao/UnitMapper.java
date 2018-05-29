@@ -18,4 +18,6 @@ public interface UnitMapper {
     List<Unit> selectDataTable(Unit entity);
 
     int selectDataTableCount(Unit entity);
+
+    Unit findByName(Integer building,String name);
 }

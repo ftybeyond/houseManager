@@ -55,7 +55,7 @@
         h.floor
 
   </select>
-    <select id="loadHouseNodes" parameterType="java.lang.Integer" resultType="com.qth.model.common.ZTreeModel">
+    <select id="loadHouseNodes" parameterType="com.qth.model.common.ZTreeNodeReq" resultType="com.qth.model.common.ZTreeModel">
     SELECT
         h.id,
         h.`name`
@@ -64,7 +64,7 @@
     WHERE
         h.unit = #{id}
         and
-        h.floor = ${name}
+        h.floor = #{name}
   </select>
 
     <select id="allAreaInResidentialArea" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">

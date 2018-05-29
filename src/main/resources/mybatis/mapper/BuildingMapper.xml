@@ -14,6 +14,9 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.qth.model.Building">
+    <selectKey resultType="java.lang.Integer" keyProperty="id">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
     insert into building (id, name, residential_area, 
       units, has_elevator, has_underground
       )
@@ -78,5 +81,16 @@
         and name LIKE '%${name}%'
       </if>
     </where>
+  </select>
+
+  <select id="findByName" resultMap="BaseResultMap">
+    SELECT
+        *
+    FROM
+        building b
+    WHERE
+        b.residential_area = #{arg0}
+    AND b. NAME = #{arg1}
+    LIMIT 0,1
   </select>
 </mapper>

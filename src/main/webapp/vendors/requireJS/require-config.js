@@ -12,6 +12,7 @@ require.config({
         'datatables-buttons':'datatable/dataTables.buttons.min',
         'datatables-print':'datatable/buttons.print.min',
         'jquery-serializejson':'jquery/jquery.serializejson',
+        'jquery-ajaxForm':'jquery/jquery.form.min',
         'layer':'layer/layer',
         'laydate':'layer/laydate',
         'common':'../script/common',

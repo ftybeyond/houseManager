@@ -13,6 +13,9 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.qth.model.Unit">
+    <selectKey resultType="java.lang.Integer" keyProperty="id">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
     insert into unit (id, name, building, 
       total_floor, house_per_floor
       )
@@ -119,5 +122,15 @@
     <if test="building!=null">
       and rb.building=#{building}
     </if>
+  </select>
+  <select id="findByName" resultMap="BaseResultMap">
+    SELECT
+        *
+    FROM
+        unit u
+    WHERE
+        u.building = #{arg0}
+    AND u.`name` = #{arg1}
+    LIMIT 0,1
   </select>
 </mapper>

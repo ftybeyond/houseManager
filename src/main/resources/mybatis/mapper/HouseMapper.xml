@@ -347,4 +347,13 @@
     where code = #{houseCode}
   </update>
 
+  <select id="findByUnitAndFloor"  resultMap="BaseResultMap">
+    SELECT
+    h.*
+    FROM
+    house h
+    WHERE
+    h.unit = #{arg0} and h.floor = #{arg1} and h.`name`=#{arg2}
+    limit 0,1
+  </select>
 </mapper>

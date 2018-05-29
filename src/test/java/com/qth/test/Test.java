@@ -7,9 +7,7 @@ import com.qth.util.MD5;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class Test {
 
@@ -28,6 +26,15 @@ public class Test {
 
         String s1 =" or ra.id = 1";
         System.out.println(s1.substring(2));
+
+        String s2 = "123.xls";
+        System.out.println(s2.split("\\.")[1]);
+
+        Map<String,String> map = new HashMap<>();
+        map.put("1","aaa");
+        map.put("1","bbb");
+        map.put("3",null);
+        System.out.println(map);
     }
 
 }

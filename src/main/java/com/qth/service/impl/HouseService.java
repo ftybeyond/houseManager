@@ -1,16 +1,15 @@
 package com.qth.service.impl;
 
-import com.qth.dao.AccountLogMapper;
-import com.qth.dao.AlgorithmSwitchMapper;
-import com.qth.dao.ChargeCriterionMapper;
-import com.qth.dao.HouseMapper;
+import com.qth.dao.*;
 import com.qth.model.*;
 import com.qth.model.common.DataTableRspWrapper;
+import com.qth.model.common.ImportCacheNode;
 import com.qth.model.dto.HouseTreeModel;
 import com.qth.service.IHouseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -22,6 +21,12 @@ public class HouseService extends BaseService<House> implements IHouseService {
 
     @Autowired
     HouseMapper houseMapper;
+
+    @Autowired
+    BuildingMapper buildingMapper;
+
+    @Autowired
+    UnitMapper unitMapper;
 
     @Autowired
     ChargeCriterionMapper chargeCriterionMapper;
@@ -122,6 +127,92 @@ public class HouseService extends BaseService<House> implements IHouseService {
         return houseMapper.updateBalanceByCode(house1);
     }
 
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    public int importByExcel(Integer residentialArea, Integer parentId, Map<String, ImportCacheNode> node,String handler,Date stamp) throws Exception {
+        int effect = insertByTreeNode(residentialArea,parentId,node,handler,stamp);
+        return effect;
+    }
+
+    private int insertByTreeNode(Integer residentialArea, Integer parentId, Map<String, ImportCacheNode> node,String handler,Date stamp) throws Exception {
+        int count = 0;
+        for(String name:node.keySet()){
+            ImportCacheNode currentNode = node.get(name);
+            if(currentNode.getLevel() == 0 && currentNode.getDbObj() == null){
+                Building building = buildingMapper.findByName(parentId,currentNode.getKey());
+                if(building==null){
+                    building = new Building();
+                    building.setName(currentNode.getKey());
+                    building.setResidentialArea(residentialArea);
+                    building.setUnits(currentNode.getChildren().keySet().size());
+                    buildingMapper.insert(building);
+                    currentNode.setNewInsert(true);
+                    parentId = building.getId();
+                }
+                currentNode.setDbObj(building);
+            }else if(currentNode.getLevel() == 1 && currentNode.getDbObj() == null){
+                Unit unit =  unitMapper.findByName(parentId,currentNode.getKey());
+                if(unit == null){
+                    unit = new Unit();
+                    unit.setBuilding(parentId);
+                    unit.setName(currentNode.getKey());
+                    unit.setTotalFloor(currentNode.getChildren().keySet().size());
+                    unitMapper.insert(unit);
+                    currentNode.setNewInsert(true);
+                    parentId = unit.getId();
+                }
+                currentNode.setDbObj(unit);
+            }else if(currentNode.getLevel() == 2){
+                //楼层咱不处理
+            }else if(currentNode.getLevel() == 3){
+                Unit unit = (Unit)currentNode.getFather().getFather().getDbObj();
+                String floor = currentNode.getFather().getKey();
+                String houseName = currentNode.getImportExcelRow().getHouse();
+                House house = houseMapper.findByUnitAndFloor(unit.getId(),floor,houseName);
+                if(house != null){
+                    throw new Exception("行：" + currentNode.getImportExcelRow().getRowNum() + "已存在");
+                }else{
+                    house = new House();
+                    house.setAccrualBalance(currentNode.getImportExcelRow().getBalance());
+                    house.setAccountBalance(currentNode.getImportExcelRow().getBalance());
+                    house.setAccrualTime(currentNode.getImportExcelRow().getAccrualTime());
+                    Building building = (Building)currentNode.getFather().getFather().getFather().getDbObj();
+
+                    house.setName(houseName);
+                    house.setUnit(unit.getId());
+                    house.setUnitPrice(currentNode.getImportExcelRow().getUnitPrice());
+                    house.setCode(residentialArea.toString() + building.getId() + unit.getId()+house.getName());
+                    house.setFloor(floor);
+                    house.setOwnerName(currentNode.getImportExcelRow().getOwnerName());
+                    house.setOwnerPsptid(currentNode.getImportExcelRow().getOwnerLicense());
+                    house.setOwnerTel(currentNode.getImportExcelRow().getOwnerTel());
+                    house.setArea(currentNode.getImportExcelRow().getArea());
+                    house.setHasElevator(currentNode.getImportExcelRow().getElevator());
+                    house.setNature(currentNode.getImportExcelRow().getNature());
+                    house.setType(currentNode.getImportExcelRow().getType());
+                    currentNode.setNewInsert(true);
+                    count ++;
+
+                    houseMapper.insert(house);
+                    AccountLog accountLog = new AccountLog();
+                    accountLog.setHouseCode(house.getCode());
+                    accountLog.setHouseOwner(house.getOwnerName());
+                    accountLog.setTradeMoney(house.getAccountBalance());
+                    accountLog.setTradeTime(stamp);
+                    accountLog.setTradeType(0);
+                    accountLog.setRemark("excel导入");
+                    accountLog.setBalance(new BigDecimal(0f));
+                    accountLog.setHandler(handler);
+                    accountLog.setSeq(stamp.getTime());
+                    accountLogMapper.insert(accountLog);
+
+                }
+            }
+            //递归
+            insertByTreeNode(residentialArea,parentId,currentNode.getChildren(),handler,stamp);
+        }
+        return count;
+    }
+
     public List<House> selectByTreePath(String paths) {
         //解析第一层路径，每个元素都是一个小区-房屋的层级关系
         String[] pathsArr = paths.split(",");
@@ -196,5 +287,11 @@ public class HouseService extends BaseService<House> implements IHouseService {
             }
         }
         return lastDate;
+    }
+
+
+    private int insertByTreeNode(Integer parentId,ImportCacheNode node){
+
+        return 0;
     }
 }

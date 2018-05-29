@@ -19,4 +19,6 @@ public interface BuildingMapper {
     List<Building> selectDataTable(Building entity);
 
     int selectDataTableCount(Building entity);
+
+    Building findByName(Integer residentialArea,String name);
 }

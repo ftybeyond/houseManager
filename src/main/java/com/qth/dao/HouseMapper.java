@@ -2,6 +2,8 @@ package com.qth.dao;
 
 import com.qth.model.House;
 import com.qth.model.Unit;
+import com.qth.model.common.ImportCacheNode;
+import com.qth.model.common.ImportExcelRow;
 import com.qth.model.dto.AccrualInfo;
 import com.qth.model.dto.HouseTreeModel;
 
@@ -56,5 +58,7 @@ public interface HouseMapper {
     int selectCountByTreeNode(HouseTreeModel model);
 
     int updateByAccrualInfo(AccrualInfo accrualInfo);
+
+    House findByUnitAndFloor(Integer unit,String floor,String name);
 
 }
