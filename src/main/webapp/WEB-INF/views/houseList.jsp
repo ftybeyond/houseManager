@@ -97,6 +97,33 @@
                                     return dic&&dic.text?dic.text:"";
                                 }}
                             ]
+                        },
+                        validateRules: {
+                            residentialArea: 'required',
+                            building: 'required',
+                            unit: 'required',
+                            type: 'required',
+                            name: {
+                                required: true,
+                                maxlength: 20
+                            },
+                            area: {
+                                number: true,
+                                required: true
+                            },
+                            unitPrice: {
+                                number: true,
+                                required: true
+                            },
+                            floor: {
+                                required: true
+                            },
+                            hasElevator: {
+                                required: true
+                            },
+                            nature: {
+                                required: true
+                            }
                         }
                     }
                     var table = main.init(config);

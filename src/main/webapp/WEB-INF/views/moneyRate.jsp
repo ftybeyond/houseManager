@@ -7,7 +7,7 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 
-    <title>缴费规则管理</title>
+    <title>利率管理</title>
 
     <link rel="stylesheet" type="text/css" href="<%=path%>/vendors/datatable/datatables-bootstrap.min.css"/>
     <script src="<%=path%>/vendors/requireJS/require.js"></script>
@@ -27,6 +27,18 @@
                                     return row.toFixed(12)
                                 }}
                             ]
+                        },
+                        afterSyncFormData:function(rsp){
+                            var rate = rsp.data.rate ;
+                            $("#infoForm input[name='rate']").val(rate.toFixed(12))
+                        },
+                        validateRules:{
+                            term:"required",
+                            rate:{
+                                number:true,
+                                required:true
+                            }
+
                         }
                     }
                     var table = main.init(config);

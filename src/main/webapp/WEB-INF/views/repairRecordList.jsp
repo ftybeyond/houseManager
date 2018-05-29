@@ -90,15 +90,34 @@
                         beforeSaveOrUpdate:function (param,type) {
                             //追加维修项目参数
                             var repairItems = new Array();
+                            var errMsg;
                             $("#infoForm div.addItemDiv").each(function (index) {
-                                var remark = $(this).find("textarea[name=remark]").val()
-                                var price = $(this).find("input[name=price]").val()
+                                var remark = $(this).find("textarea[name=remark]").val();
+                                if(!remark){
+                                    errMsg = "事项描述不能为空";
+                                    return false;
+                                }
+                                var price = $(this).find("input[name=price]").val();
+                                if(!price || isNaN(price)){
+                                    errMsg = "事项价格必须为有效数字";
+                                    return false;
+                                }
                                 repairItems.push({remark:remark,price:price})
                             })
+                            if(errMsg){
+                                return errMsg
+                            }
                             if (repairItems.length>0) {
                                 var supplement = JSON.stringify(repairItems);
                                 param.supplement = supplement
                             }
+                        },
+                        validateRules:{
+                            residentialArea:'required',
+                            developer:'required',
+                            shareType:'required',
+                            owners:'required',
+                            propertyCompany:'required'
                         }
                     }
                     var table = main.init(config);

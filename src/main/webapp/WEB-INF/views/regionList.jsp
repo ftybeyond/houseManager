@@ -22,6 +22,12 @@
                         {name:'id',type:'string',showable:true},
                         {name:'name',type:'string',showable:true}
                     ]
+                },
+                validateRules:{
+                    name:{
+                        required:true,
+                        maxlength:20
+                    }
                 }
             }
             $(function(){

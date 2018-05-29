@@ -36,6 +36,14 @@
                                     return dic&&dic.text?dic.text:"";
                                 }}
                             ]
+                        },
+                        validateRules:{
+                            loginName:{
+                                required:true,
+                                maxlength:20
+                            },
+                            role:'required',
+                            org:'required'
                         }
                     }
                     var table = main.init(config);

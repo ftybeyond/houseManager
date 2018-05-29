@@ -43,6 +43,26 @@
                                     return dic&&dic.text?dic.text:"";
                                 }}
                             ]
+                        },
+                        validateRules:{
+                            name:{
+                                required:true,
+                                maxlength:50
+                            },
+                            units:{
+                                digits:true,
+                                required:true,
+                                maxlength:2
+                            },
+                            residentialArea:{
+                                required:true
+                            },
+                            hasElevator:{
+                                required:true
+                            },
+                            hasUnderground:{
+                                required:true
+                            }
                         }
                     }
                     var table = main.init(config);

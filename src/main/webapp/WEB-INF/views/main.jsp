@@ -23,7 +23,8 @@
     <script src="<%=path%>/vendors/requireJS/require.js"></script>
     <script type="text/javascript" src="<%=path%>/vendors/requireJS/require-config.js"></script>
     <script type="text/javascript">
-        require(['main','layer'],function () {
+        var validator;
+        require(['main','layer','jquery_validate_zh'],function () {
             layer.config({
                 path: '/vendors/layer/',
                 offset: "200px"
@@ -31,13 +32,45 @@
             jQuery(function(){
                 jQuery("#main_frame").on("load",function(){
                     jQuery(this).height(jQuery(".right_col").height())
+                });
+                validator = $("#infoForm").validate({
+                    rules: {
+                        oldPassword: "required",
+                        newPassword: "required",
+                        checkPassword: {
+                            required: true,
+                            equalTo: "#newPassword"
+                        }
+                    }
                 })
-            })
+            });
         });
         function loginOut() {
             layer.confirm("确认退出系统？",function () {
                 window.location.href = "/forward/loginOut.action"
             })
+        }
+        function pswWin(){
+            validator.resetForm();
+            $("#infoForm")[0].reset()
+            var win = layer.open({
+                type: 1,
+                title: "密码修改",
+                offset: '20px',
+                content: $('#popWin'),
+                area: ["400px","300px"],
+                btn: ['确定', '取消'],
+                btn1:function(index,layObj){
+                    if($("#infoForm").valid()){
+                        $.post("/rest/updatePassword.action",{newPassword:$("#newPassword").val(),oldPassword:$("#oldPassword").val()},null,"json").done(function (data) {
+                            if(data.success){
+                                layer.close(index)
+                            }
+                            layer.alert(data.description);
+                        })
+                    }
+                }
+            });
         }
     </script>
     <style>
@@ -113,7 +146,7 @@
                                 <span class=" fa fa-angle-down"></span>
                             </a>
                             <ul class="dropdown-menu dropdown-usermenu pull-right">
-                                <li><a href="javascript:;"> 密码修改</a></li>
+                                <li><a href="javascript:pswWin();"> 密码修改</a></li>
                                 <li><a href="javascript:loginOut();"><i class="fa fa-sign-out pull-right"></i> 注销</a></li>
                             </ul>
                         </li>
@@ -139,5 +172,33 @@
         <!-- /footer content -->
     </div>
 </div>
+
+<div id="popWin" style="display: none;">
+    <div class="x_panel">
+        <div class="x_content">
+            <form id="infoForm" class="form-horizontal form-label-left input_mask">
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">原密码</label>
+                    <div class="col-md-9 col-sm-9 col-xs-9">
+                        <input type="password" class="form-control" id="oldPassword" name="oldPassword"  placeholder="请输入原密码......">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">新密码</label>
+                    <div class="col-md-9 col-sm-9 col-xs-9">
+                        <input type="password" id="newPassword" class="form-control" name="newPassword"  placeholder="请输入新密码......">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">确认密码</label>
+                    <div class="col-md-9 col-sm-9 col-xs-9">
+                        <input type="password" name="checkPassword" class="form-control" placeholder="请确认新密码......">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>

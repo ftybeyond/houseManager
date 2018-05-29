@@ -1,4 +1,4 @@
-define(["dataTables-bs","layer"], function () {
+define(["dataTables-bs","layer","jquery_validate_zh"], function () {
     layer.config({
         path: '/vendors/layer/',
         offset: "100px"
@@ -28,6 +28,7 @@ define(["dataTables-bs","layer"], function () {
         beforeSaveOrUpdate: null,//保存或更新前回调方法，提供ajax 即将提交的param参数,用于表单校验和参数补充
         afterSyncFormData: null, //selectById后同步表单后回调方法，此回调用于不能自动同步到表单项的值的组件,传入当前查询回的对象
         beforePopWin:null,
+        validateRules:{},
         order:null
     };
     var handleObj;//当前编辑的Region对象
@@ -222,6 +223,7 @@ define(["dataTables-bs","layer"], function () {
             })
         }
 
+        var validator;
         /**
          *
          * @param type 1 :添加 2：修改
@@ -229,6 +231,11 @@ define(["dataTables-bs","layer"], function () {
         function popWin(type) {
             //声明添加和修改页面影响的变量
             var title, url, param;
+            if(validator){
+                validator.resetForm();
+            }else{
+                validator = $("#" + baseConfig.infoFrom).validate({rules:baseConfig.validateRules});
+            }
             if (type == 1) {
                 handleObj = null;
                 $("#" + baseConfig.infoFrom)[0].reset();
@@ -256,6 +263,9 @@ define(["dataTables-bs","layer"], function () {
                 area: baseConfig.popArea,
                 btn: ['确定', '取消'],
                 yes: function () {
+                    if(!$("#" + baseConfig.infoFrom).valid()){
+                        return false;
+                    }
                     var formdata = $("#" + baseConfig.infoFrom).serializeJSON();
                     if (type == 1) {
                         //添加时，直接序列化form作为参数
@@ -266,7 +276,11 @@ define(["dataTables-bs","layer"], function () {
                         param = handleObj
                     }
                     if (typeof (baseConfig.beforeSaveOrUpdate)=='function') {
-                        baseConfig.beforeSaveOrUpdate(param,type)
+                        var result = baseConfig.beforeSaveOrUpdate(param,type)
+                        if(typeof (result) == 'string' && result.length > 0){
+                            layer.alert(result)
+                            return
+                        }
                     }
                     $.ajax({
                         url: url,

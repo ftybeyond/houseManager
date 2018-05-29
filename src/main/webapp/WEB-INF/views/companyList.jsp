@@ -33,6 +33,11 @@
                                     return dic&&dic.text?dic.text:"";
                                 }}
                             ]
+                        },
+                        validateRules:{
+                            name:'required',
+                            legalPersonName:'required',
+                            nature:'required'
                         }
                     }
                     var table = main.init(config);

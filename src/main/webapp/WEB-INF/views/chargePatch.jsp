@@ -118,6 +118,7 @@
                                 '                    </div>' +
                                 '                </div>';
                             var chargeMoneyDiv = $("#chargeMoney").parents(".form-group");
+                            $("#chargeRatio").html(rsp.attr.chargeCriterion.priceRatio);
                             chargeMoneyDiv.before(divUnitPrice);
                             chargeMoney = (item.unitPrice*item.area*rsp.attr.chargeCriterion.priceRatio).toFixed(2);
                             param.ratio = rsp.attr.chargeCriterion.priceRatio;

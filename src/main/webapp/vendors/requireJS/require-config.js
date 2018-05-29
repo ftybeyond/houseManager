@@ -13,6 +13,8 @@ require.config({
         'datatables-print':'datatable/buttons.print.min',
         'jquery-serializejson':'jquery/jquery.serializejson',
         'jquery-ajaxForm':'jquery/jquery.form.min',
+        'jquery_validate':'jquery/jquery.validate.min',
+        'jquery_validate_zh':'jquery/jquery.validate.zh',
         'layer':'layer/layer',
         'laydate':'layer/laydate',
         'common':'../script/common',

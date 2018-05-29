@@ -114,6 +114,22 @@ public class GlobalController extends BaseController {
         return mv;
     }
 
+    @RequestMapping(value = "/rest/updatePassword")
+    @ResponseBody
+    public CommonRsp updatePassword(String oldPassword ,String newPassword,HttpSession session){
+        User user = getLoginUser(session);
+        User userCheck = new User();
+        userCheck.setLoginName(user.getLoginName());
+        userCheck.setPassword(MD5.EncoderByMd5(oldPassword));
+        userCheck = userService.checkPassword(userCheck);
+        if(userCheck ==null){
+            return new CommonRsp(false,"8765","原始密码错误");
+        }
+        user.setPassword(MD5.EncoderByMd5(newPassword));
+        int effect = userService.updatePassword(user);
+        return dbEffect2Rsp(effect);
+    }
+
     /**
      * 通用select2组件数据请求服务
      *

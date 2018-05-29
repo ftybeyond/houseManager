@@ -46,6 +46,22 @@
                                     return row.toFixed(2)
                                 }}
                             ]
+                        },
+                        validateRules:{
+                            term:{
+                                required:true
+                            },
+                            houseType:'required',
+                            chargeType:'required',
+                            elevatorSign:'required',
+                            priceRatio:{
+                                number:true,
+                                required:true
+                            },
+                            areaRatio:{
+                                number:true,
+                                required:true
+                            }
                         }
                     }
                     var table = main.init(config);

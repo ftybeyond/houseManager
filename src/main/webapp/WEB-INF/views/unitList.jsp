@@ -46,6 +46,20 @@
                                 {name: 'totalFloor',type: 'string',showable: true},
                                 {name: 'housePerFloor',type: 'string',showable: true}
                             ]
+                        },
+                        validateRules:{
+                            residentialArea:'required',
+                            building:'required',
+                            name:{
+                                required:true,
+                                maxlength:20
+                            },
+                            totalFloor:{
+                                digits:true
+                            },
+                            housePerFloor:{
+                                digits:true
+                            }
                         }
                     }
                     var table = main.init(config);

@@ -35,6 +35,12 @@
                         },
                         afterSyncFormData:function (rsp) {
                             $("#authoritySelect").val(eval(rsp.data.authority)).trigger("change");
+                        },
+                        validateRules:{
+                            name:{
+                                required:true,
+                                maxlength:20
+                            }
                         }
                     };
                     var table = main.init(config);
