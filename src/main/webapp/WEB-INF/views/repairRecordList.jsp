@@ -132,13 +132,13 @@
                     function genItem(item){
                         var div = '<div class="addItemDiv">' +
                             '               <div class="col-xs-6 row" style="margin-left:3px">' +
-                            '                    <label class="control-label col-xs-3">事项描述</label>' +
+                            '                    <label class="control-label col-xs-3">维修项目</label>' +
                             '                    <div class="col-xs-9">' +
                             '                        <textarea type="text" class="form-control" name="remark" placeholder="具体维修内容...">'+(item?item.remark:'')+'</textarea>' +
                             '                    </div>' +
                             '                </div>' +
                             '                <div class="col-xs-6 form-group">' +
-                            '                    <label class="control-label col-xs-3">项目价格</label>' +
+                            '                    <label class="control-label col-xs-3">金额（元）</label>' +
                             '                    <div class="col-xs-7">' +
                             '                        <input type="text" class="form-control" name="price" placeholder="项目价格..." value="'+(item?item.price:'')+'">' +
                             '                    </div>' +
@@ -159,7 +159,7 @@
 <div class="container" style="padding-left: 0px;">
     <form id="searchForm" class="form-horizontal" role="form">
         <div class="col-xs-5 form-group">
-            <label class="control-label col-xs-3">所属小区</label>
+            <label class="control-label col-xs-3">项目名称</label>
             <div class="col-xs-9">
                 <select name="residentialArea" class="form-control" style="width:100%;"></select>
             </div>
@@ -186,13 +186,13 @@
     <table id="datatable" class="table table-striped table-bordered" style="width:1200px;">
         <thead>
         <tr>
-            <th>所属小区</th>
+            <th>项目名称</th>
             <th>地址</th>
-            <th>开发商</th>
+            <th>开发企业</th>
             <th>物业公司</th>
             <th>物业公司电话</th>
-            <th>业委会</th>
-            <th>业委会电话</th>
+            <th>业主委员会</th>
+            <th>业主委员会电话</th>
             <th>分摊方式</th>
             <th>状态</th>
             <th>操作</th>
@@ -206,7 +206,7 @@
         <div class="x_content">
             <form id="infoForm" class="form-horizontal form-label-left input_mask">
                 <div class="col-xs-6 form-group">
-                    <label class="control-label col-xs-3">所属小区</label>
+                    <label class="control-label col-xs-3">项目名称</label>
                     <div class="col-xs-9">
                         <select name="residentialArea" class="form-control" style="width:100%;"></select>
                     </div>
@@ -218,7 +218,7 @@
                     </div>
                 </div>
                 <div class="col-xs-6 form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">开发商</label>
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">开发企业</label>
                     <div class="col-md-9 col-sm-9 col-xs-9">
                         <input type="text" class="form-control" name="developer" placeholder="请输入开发商名称......">
                     </div>
@@ -236,13 +236,13 @@
                     </div>
                 </div>
                 <div class="col-xs-6 form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">业委会</label>
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">业主委员会</label>
                     <div class="col-md-9 col-sm-9 col-xs-9">
                         <input type="text" class="form-control" name="owners" placeholder="请输入业委会成员......">
                     </div>
                 </div>
                 <div class="col-xs-6 form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">业委会电话</label>
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">业主委员会电话</label>
                     <div class="col-md-9 col-sm-9 col-xs-9">
                         <input type="text" class="form-control" name="ownersTel" placeholder="请输入业委会成员电话......">
                     </div>
@@ -254,7 +254,7 @@
                     </div>
                 </div>
                 <div class="col-xs-12 form-group">
-                    <button id="addItemBtn" class="btn btn-primary btn-sm" style="float: right;" type="button">新增维修项
+                    <button id="addItemBtn" class="btn btn-primary btn-sm" style="float: right;" type="button">新增维修事宜
                     </button>
                 </div>
             </form>

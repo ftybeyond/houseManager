@@ -3,6 +3,10 @@ define(["dataTables-bs","layer","jquery_validate_zh"], function () {
         path: '/vendors/layer/',
         offset: "100px"
     });
+    $(function(){
+        console.log($('form input').size())
+        $('form input').attr('autocomplete', 'off');
+    })
 
     var baseConfig = {
         baseUrl: '/rest/',//请求前置URL
@@ -29,19 +33,22 @@ define(["dataTables-bs","layer","jquery_validate_zh"], function () {
         afterSyncFormData: null, //selectById后同步表单后回调方法，此回调用于不能自动同步到表单项的值的组件,传入当前查询回的对象
         beforePopWin:null,
         validateRules:{},
+        tableSettings:{},
         order:null
     };
     var handleObj;//当前编辑的Region对象
     var table;//表格对象
     var init = function (config) {
         $.extend(true, baseConfig, config);
-        table = $("#" + baseConfig.tableId).table({
+        var settings = {
             ajax: {
                 url: getUrl("table")
             },
             searchForm: baseConfig.searchForm,
             columns: generateColumns()
-        });
+        }
+        $.extend(true,settings,baseConfig.tableSettings);
+        table = $("#" + baseConfig.tableId).table(settings);
         //查询按钮事件
         $("#" + baseConfig.searchBtn).on("click", function () {
             table.ajax.reload();

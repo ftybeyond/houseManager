@@ -101,7 +101,8 @@ public class GlobalController extends BaseController {
             session.setAttribute("authority", map);
             mv.setViewName("redirect:/page/main.action");
         } else {
-            mv.setViewName("error");
+            mv.addObject("message","密码错误!");
+            mv.setViewName("index");
         }
         return mv;
     }
@@ -109,7 +110,7 @@ public class GlobalController extends BaseController {
     @RequestMapping(value = "/forward/loginOut")
     public ModelAndView loginOut(HttpSession session) {
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("redirect:/index.html");
+        mv.setViewName("redirect:/page/index.action");
         session.invalidate();
         return mv;
     }

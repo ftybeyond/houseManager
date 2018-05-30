@@ -228,8 +228,8 @@
             <th>单元</th>
             <th>楼层</th>
             <th>房号</th>
-            <th>面积</th>
-            <th>单价</th>
+            <th>面积(㎡)</th>
+            <th>单价(元/㎡)</th>
             <th>电梯</th>
             <th>房屋性质</th>
             <th>住宅类型</th>
@@ -281,17 +281,17 @@
                 <div class="form-group">
                     <label class="control-label col-md-3 col-sm-3 col-xs-3">房号</label>
                     <div class="col-md-9 col-sm-9 col-xs-9">
-                        <input type="text" class="form-control" id="name" name="name" placeholder="请输入房号......">
+                        <input type="text" class="form-control" id="name" autocomplete="off" name="name" placeholder="请输入房号......">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">面积</label>
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">面积(㎡)</label>
                     <div class="col-md-9 col-sm-9 col-xs-9">
                         <input type="text" class="form-control" name="area" placeholder="请输入面积......">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">单价</label>
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">单价(元/㎡)</label>
                     <div class="col-md-9 col-sm-9 col-xs-9">
                         <input type="text" class="form-control" name="unitPrice" placeholder="请输入单价......">
                     </div>

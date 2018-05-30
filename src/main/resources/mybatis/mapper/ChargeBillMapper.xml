@@ -269,6 +269,7 @@
         and il.invoice_num = #{invoiceNum}
       </if>
     </where>
+    GROUP BY cb.id
     <if test="length>0">
       limit #{start} ,#{length}
     </if>
@@ -305,6 +306,7 @@
     SELECT
         cb.flow_num as chargeNum,
         cb.actual_sum as chargeMoney,
+        cb.state as state,
         b.`name` as buildingName,
         u.`name` as unitName,
         h.`name` as houseName,

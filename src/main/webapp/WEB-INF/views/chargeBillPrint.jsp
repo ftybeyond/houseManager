@@ -17,7 +17,7 @@
 </head>
 <body>
 <div class="container">
-    <h2>缴费单</h2>
+    <h2>${printInfo.state==2?"补缴单":"收缴单"}</h2>
     <table width="100%" border="1" cellspacing="10" cellpadding="5" style="border-collapse: collapse;">
         <tr>
             <td style="width: 25%">户名</td>
@@ -46,13 +46,13 @@
         <tr>
             <td>房号</td>
             <td>${printInfo.houseName}</td>
-            <td>面积</td>
+            <td>面积(㎡)</td>
             <td>${printInfo.houseArea}</td>
         </tr>
         <tr>
-            <td>单价</td>
+            <td>单价(元/㎡)</td>
             <td>${printInfo.houseUnitPrice}</td>
-            <td>金额</td>
+            <td>金额(元)</td>
             <td>${printInfo.chargeMoney}</td>
         </tr>
     </table>

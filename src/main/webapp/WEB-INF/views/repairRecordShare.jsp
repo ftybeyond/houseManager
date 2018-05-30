@@ -97,7 +97,7 @@
                                     })
                                     var showInfo =  '<table class="table inner">'+
                                         '<tr>'+
-                                        '<td width="80px">开发商:</td>'+
+                                        '<td width="80px">开发企业:</td>'+
                                         '<td>'+rowData.developer+'</td>'+
                                         '</tr>'+
                                         '<tr>'+
@@ -129,7 +129,7 @@
 <div class="container" style="padding-left: 0px;">
     <form id="searchForm" class="form-horizontal" role="form">
         <div class="col-xs-5 form-group">
-            <label class="control-label col-xs-3">所属小区</label>
+            <label class="control-label col-xs-3">项目名称</label>
             <div class="col-xs-9">
                 <select name="residentialArea" class="form-control" style="width:100%;"></select>
             </div>
@@ -149,8 +149,8 @@
         <thead>
         <tr>
             <th></th>
-            <th>所属小区</th>
-            <th>开发商</th>
+            <th>项目名称</th>
+            <th>开发企业</th>
             <th>分摊方式</th>
             <th>登记日期</th>
             <th>操作</th>

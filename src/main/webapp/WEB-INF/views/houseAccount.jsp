@@ -99,7 +99,7 @@
                                             '<td>'+item.tradeTime+'</td>' +
                                             '<td>'+item.tradeMoney+'</td>' +
                                             '<td>'+item.balance+'</td>' +
-                                            '<td>'+item.houseOwner+'</td>' +
+                                            '<td>'+(item.houseOwner?item.houseOwner:'')+'</td>' +
                                             '<td>'+item.handler+'</td>' +
                                             '</tr>'
                                     });
@@ -107,7 +107,7 @@
                                         '<tr>'+
                                         '<th>交易类型</th>'+
                                         '<th>交易时间</th>'+
-                                        '<th>交易金额</th>'+
+                                        '<th>交易金额(元)</th>'+
                                         '<th>交易前余额</th>'+
                                         '<th>业主姓名</th>'+
                                         '<th>操作员</th>'+
@@ -176,7 +176,7 @@
                         <th>业主姓名</th>
                         <th>业主证件</th>
                         <th>业主电话</th>
-                        <th>账户余额</th>
+                        <th>账户余额(单位:元)</th>
                         <th>房屋类型</th>
                     </tr>
                     </thead>

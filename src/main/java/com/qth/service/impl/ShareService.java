@@ -10,6 +10,7 @@ import com.qth.model.RepairRecord;
 import com.qth.model.House;
 import com.qth.model.common.ZTreeModel;
 import com.qth.model.common.ZTreeNodeReq;
+import com.qth.service.IHouseService;
 import com.qth.service.IShareService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,9 @@ public class ShareService implements IShareService{
 
     @Autowired
     AccountLogMapper accountLogMapper;
+
+    @Autowired
+    IHouseService houseService;
 
     @Override
     public List<ZTreeModel> loadTreeNodes(ZTreeNodeReq req) {
@@ -65,55 +69,28 @@ public class ShareService implements IShareService{
         }
     }
 
+    public List<House> checkShare(String paths,Integer shareType,BigDecimal sumArea,Integer totalHouse,BigDecimal cost ,Integer record){
+        List<House> list = houseService.selectByTreePath(paths);
+        return houseShare(list,shareType,sumArea,totalHouse,cost,null,null,record,false);
+    }
+
     @Override
     @Transactional
-    public List<House> share(String paths,Integer shareType,BigDecimal sumArea,Integer totalHouse,BigDecimal cost ,Integer record,String handler) {
+    public int share(String paths,Integer shareType,BigDecimal sumArea,Integer totalHouse,BigDecimal cost ,Integer record,String handler) {
 
-        //解析第一层路径，每个元素都是一个小区-房屋的层级关系
-        String[] pathsArr = paths.split(",");
-        int sum = 0;
-        List<House> unBalance = new ArrayList<>();
         Date stamp = new Date();
-        for(String path:pathsArr){
-            //解析第二层路径，每一个元素代表具体的小区、楼栋、单元等
-            String[] ids = path.split("-");
-            List<House> list;
-            switch (ids.length-1){
-                case HouseTree.RESIDENTIALAREA_LEVEL:
-                    //指定小区下所有房屋信息
-                    list = houseMapper.allHousesInResidentialArea(Integer.parseInt(ids[HouseTree.RESIDENTIALAREA_LEVEL]));
-                    break;
-                case HouseTree.BUILDING_LEVEL:
-                    list = houseMapper.allHousesInBuilding(Integer.parseInt(ids[HouseTree.BUILDING_LEVEL]));
-                    break;
-                case HouseTree.UNIT_LEVEL:
-                    list = houseMapper.allHousesInUnit(Integer.parseInt(ids[HouseTree.UNIT_LEVEL]));
-                    break;
-                case HouseTree.FLOOR_LEVEL:
-                    House house = new House();
-                    house.setUnit(Integer.parseInt(ids[HouseTree.UNIT_LEVEL]));
-                    house.setFloor(ids[HouseTree.FLOOR_LEVEL]);
-                    list = houseMapper.allHousesInFloor(house);
-                    break;
-                case HouseTree.HOUSE_LEVEL:
-                    list = new ArrayList<>(1);
-                    list.add(houseMapper.selectSimpleOne(Integer.parseInt(ids[HouseTree.HOUSE_LEVEL])));
-                    break;
-                default:
-                    list = new ArrayList<>();
-                    break;
-            }
-            sum += houseShare(list,shareType,sumArea,totalHouse,cost,handler,stamp,unBalance,record);
-        }
+        List<House> list = houseService.selectByTreePath(paths);
+        houseShare(list,shareType,sumArea,totalHouse,cost,handler,stamp,record,true);
+
         RepairRecord repairRecord = recordMapper.selectByPrimaryKey(record);
         repairRecord.setStamp(stamp);
         repairRecord.setState(1);
         repairRecord.setShareSeq(stamp.getTime());
         recordMapper.stateChange(repairRecord);
-        return unBalance;
+        return list.size();
     }
 
-    private int houseShare(List<House> houses,Integer shareType,BigDecimal sumArea,Integer totalHouse,BigDecimal cost,String handler,Date stamp,List<House> unBalance,Integer record){
+    private List<House> houseShare(List<House> houses,Integer shareType,BigDecimal sumArea,Integer totalHouse,BigDecimal cost,String handler,Date stamp,Integer record,boolean insert){
         //每户花销
         BigDecimal houseCost;
         //平米均摊价，按面积分摊时使用
@@ -122,6 +99,8 @@ public class ShareService implements IShareService{
         BigDecimal everyHouseCost = cost.divide(new BigDecimal(totalHouse),2, BigDecimal.ROUND_HALF_EVEN);
 
         BigDecimal totalCost = new BigDecimal(0f);
+
+        List<House> unBalance = new ArrayList<>();
         for (int i=0;i<houses.size();i++){
             House house = houses.get(i);
             if(shareType == 1){
@@ -131,7 +110,7 @@ public class ShareService implements IShareService{
                 //按户分摊
                 houseCost = everyHouseCost;
             }else{
-                return 0;
+                return unBalance;
             }
             if(i == houses.size()-1){
                 //最后一个 花费= 总额-前面总花销
@@ -143,25 +122,29 @@ public class ShareService implements IShareService{
             if(newBalance.compareTo(new BigDecimal(0f))==-1) {
                 unBalance.add(house);
             }
-            //余额变更记录
-            AccountLog accountLog = new AccountLog();
-            accountLog.setBalance(house.getAccountBalance());
-            accountLog.setHouseCode(house.getCode());
-            accountLog.setTradeType(4);
-            accountLog.setHandler(handler);
-            accountLog.setHouseOwner(house.getOwnerName());
-            accountLog.setTradeMoney(houseCost.negate());
-            accountLog.setTradeTime(stamp);
-            accountLog.setSeq(stamp.getTime());
-            accountLog.setRemark(record.toString());
-            //余额变更
-            house.setAccountBalance(newBalance);
-            houseMapper.updateBalanceByCode(house);
-            accountLogMapper.insert(accountLog);
+            if(insert){
+                insertShareAccountLog(house,handler,houseCost,stamp,record,newBalance);
+            }
         }
+        return unBalance;
+    }
 
-
-        return 0;
+    public void insertShareAccountLog(House house,String handler,BigDecimal houseCost,Date stamp,Integer record,BigDecimal newBalance){
+        //余额变更记录
+        AccountLog accountLog = new AccountLog();
+        accountLog.setBalance(house.getAccountBalance());
+        accountLog.setHouseCode(house.getCode());
+        accountLog.setTradeType(4);
+        accountLog.setHandler(handler);
+        accountLog.setHouseOwner(house.getOwnerName());
+        accountLog.setTradeMoney(houseCost.negate());
+        accountLog.setTradeTime(stamp);
+        accountLog.setSeq(stamp.getTime());
+        accountLog.setRemark(record.toString());
+        //余额变更
+        house.setAccountBalance(newBalance);
+        houseMapper.updateBalanceByCode(house);
+        accountLogMapper.insert(accountLog);
     }
 
     @Override

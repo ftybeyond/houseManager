@@ -66,7 +66,7 @@
                         deleteable:false,
                         customBtns:[
                             {label:'登帐',callback:function (index,item ){
-                                layer.confirm('<p>产业编码：'+item.houseCode+'</p><p>登帐金额：'+item.actualSum+'</p>',{title:"登帐确认",yes:function () {
+                                layer.confirm('<p>产业编码：'+item.houseCode+'</p><p>登帐金额：'+item.actualSum+'(元)</p>',{title:"登帐确认",yes:function () {
                                     $.post("/rest/chargeBill/account.action",item,null,"json").done(function (data) {
                                         if (data.success) {
                                             layer.alert(data.description,{btn:["开票"],btn1:function () {
@@ -143,10 +143,10 @@
                     <thead>
                     <tr>
                         <th>产业代码</th>
-                        <th>房屋面积</th>
-                        <th>房屋单价</th>
+                        <th>房屋面积(㎡)</th>
+                        <th>房屋单价(元/㎡)</th>
                         <th>收缴系数</th>
-                        <th>收缴金额</th>
+                        <th>收缴金额(元)</th>
                         <th>收缴类型</th>
                         <th>操作</th>
                     </tr>

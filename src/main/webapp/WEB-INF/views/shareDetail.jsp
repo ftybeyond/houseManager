@@ -59,32 +59,36 @@
                                 return;
                             }else{
                                 var loadingMask = parent.layer.msg('拼命计算中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
-                                //分摊入账
-                                $.ajax({
-                                    url:'/rest/share/doShare.action',
-                                    dataType:'json',
-                                    type:"POST",
-                                    data:{paths:param,sumArea:data.attr.sumArea,totalHouse:data.attr.sumHouses,shareType:${record.shareType},cost:${record.moneySum},record:${record.id}}
-                                }).done(function (data) {
-                                    parent.layer.close(loadingMask);
-                                    var content='';
-                                    var title="提示";
-                                    if (data.dataList&&data.dataList.length>0) {
-                                        content = "<p>以下账户余额已不足</p>"
-                                        $.each(data.dataList,function(index, item){
-                                            content += '<p>产业代码：' + item.code + '，余额：' +item.accountBalance.toFixed(2)+ '</p>';
-                                        });
-                                    } else {
-                                        content=data.description;
-                                    }
-                                    layer.alert(content,{clostBtn:0},function(index){
-                                        layer.close(index);
-                                        parent.layer.closeAll();
-                                    });
-                                    parent.table.ajax.reload();
 
-                                }).fail(function (xhr) {
-                                    layer.alert(xhr.statusText);
+                                //检测余额不足账户
+                                $.post("/rest/share/shareCheck.action",{paths:param,sumArea:data.attr.sumArea,totalHouse:data.attr.sumHouses,shareType:${record.shareType},cost:${record.moneySum},record:${record.id}},null,"json").done(function(checkData){
+                                    parent.layer.close(loadingMask)
+                                    var warn = "<p>确认入账分摊信息？</p>";
+                                    if(checkData.data&&checkData.data.length > 0){
+                                        warn += "<p>以下账户余额已不足</p>";
+                                        $.each(checkData.data,function(index,item){
+                                            warn += '<p>产业代码：' + item.code + '，业主：'+item.ownerName+'，余额：' +item.accountBalance.toFixed(2)+ '</p>';
+                                        });
+                                    }
+                                    layer.confirm( warn,{yes:function(){
+                                        var loadingMask = parent.layer.msg('拼命计算中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
+                                        //分摊入账
+                                        $.ajax({
+                                            url:'/rest/share/doShare.action',
+                                            dataType:'json',
+                                            type:"POST",
+                                            data:{paths:param,sumArea:data.attr.sumArea,totalHouse:data.attr.sumHouses,shareType:${record.shareType},cost:${record.moneySum},record:${record.id}}
+                                        }).done(function (data) {
+                                            parent.layer.closeAll();
+                                            layer.alert(data.description,{clostBtn:0},function(index){
+                                                layer.close(index);
+                                            });
+                                            parent.table.ajax.reload();
+
+                                        }).fail(function (xhr) {
+                                            layer.alert(xhr.statusText);
+                                        })
+                                    }});
                                 })
                             }
                             layer.close(index);

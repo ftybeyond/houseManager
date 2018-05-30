@@ -61,16 +61,34 @@ public class ShareController extends BaseController{
         return rsp;
     }
 
+    @RequestMapping(value = "/rest/share/shareCheck")
+    @ResponseBody
+    public CommonRsp shareCheck(String paths, Integer shareType, BigDecimal sumArea, Integer totalHouse, BigDecimal cost,Integer record, HttpSession session){
+        CommonRsp rsp = new CommonRsp();
+        if (paths!=null&&paths.length()>0) {
+            List<House> unBalance = shareService.checkShare(paths,shareType,sumArea,totalHouse,cost,record);
+            if(unBalance.size()>0){
+                rsp.setData(unBalance);
+            }else{
+
+            }
+        } else {
+            rsp.setSuccess(false);
+            rsp.setResultCode("1001");
+            rsp.setDescription("无效参数");
+        }
+        return rsp;
+    }
+
     @RequestMapping(value = "/rest/share/doShare")
     @ResponseBody
     public CommonRsp doShare(String paths, Integer shareType, BigDecimal sumArea, Integer totalHouse, BigDecimal cost,Integer record, HttpSession session){
         CommonRsp rsp = new CommonRsp();
         if (paths!=null&&paths.length()>0) {
-            List<House> unBalance = shareService.share(paths,shareType,sumArea,totalHouse,cost,record,getHandler(session));
+            int result = shareService.share(paths,shareType,sumArea,totalHouse,cost,record,getHandler(session));
             rsp.setSuccess(true);
-            rsp.setDescription("分摊入账成功");
+            rsp.setDescription("分摊入账" +result + "户");
             rsp.setResultCode("0000");
-            rsp.setDataList(unBalance);
         } else {
             rsp.setSuccess(false);
             rsp.setResultCode("1001");

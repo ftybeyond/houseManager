@@ -112,7 +112,7 @@
                         if(rsp.attr.algorithmSwitch.chargeSwitch == 0){
                             //按房价 result = 单价x面积x房价系数
                             var divUnitPrice = '<div class="form-group unitPrice">' +
-                                '                    <label class="control-label col-md-3 col-sm-3 col-xs-3">房屋单价</label>' +
+                                '                    <label class="control-label col-md-3 col-sm-3 col-xs-3">房屋单价(元/㎡)</label>' +
                                 '                    <div class="col-md-9 col-sm-9 col-xs-9">' +
                                 '                        <div style="width: 100%;padding-top: 8px;">'+item.unitPrice+'</div>' +
                                 '                    </div>' +
@@ -161,7 +161,7 @@
                                 $.post("/rest/house/chargeBillPatch.action",param,null,"json").done(function(data){
                                     layer.closeAll();
                                     tableObj.ajax.reload();
-                                    layer.alert(data.description,{btn:["打印缴费单"],btn1:function(){
+                                    layer.alert(data.description,{btn:["打印补缴单"],btn1:function(){
                                         var win = layer.open({
                                             type:2,
                                             offset:"20px",
@@ -233,9 +233,9 @@
                         <th>产业代码</th>
                         <th>业主姓名</th>
                         <th>业主证件</th>
-                        <th>房屋面积</th>
+                        <th>房屋面积(㎡)</th>
                         <th>房屋类型</th>
-                        <th>账户余额</th>
+                        <th>账户余额(单位:元)</th>
                         <th>操作</th>
                     </tr>
                     </thead>
@@ -272,7 +272,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">房屋面积</label>
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">房屋面积(㎡)</label>
                     <div class="col-md-9 col-sm-9 col-xs-9">
                         <div style="width: 100%;padding-top: 8px;" id="chargeHouseArea"></div>
                     </div>
@@ -285,7 +285,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">自定义金额</label>
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">自定义金额(元)</label>
                     <div class="col-md-9 col-sm-9 col-xs-9">
                         <input type="checkbox" style="width: 15px;height: 15px;margin-top: 8px;" id="customSwitch"/>
                     </div>

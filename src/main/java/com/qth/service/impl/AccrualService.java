@@ -106,7 +106,7 @@ public class AccrualService implements IAccrualService {
                 if (helper instanceof AccountLog) {
                     //时间点上余额变化
                     AccountLog log = (AccountLog) helper;
-                    balance = log.getBalance();
+                    balance = log.getBalance().add(log.getTradeMoney());
                     if (balance.compareTo(new BigDecimal(0f)) < 1) {
                         //余额小于等于0，此阶段不计息
                         continue;

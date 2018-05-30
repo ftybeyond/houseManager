@@ -30,9 +30,6 @@
             clear:both;
             float:right;
         }
-        .buttons-print{
-            float: right;
-        }
     </style>
     <script src="<%=path%>/vendors/requireJS/require.js"></script>
     <script type="text/javascript" src="<%=path%>/vendors/requireJS/require-config.js"></script>
@@ -245,7 +242,7 @@
                         <th>交易类型</th>
                         <th>交易时间</th>
                         <th>处理人</th>
-                        <th>交易金额</th>
+                        <th>交易金额(元)</th>
                     </tr>
                     </thead>
                 </table>
@@ -262,7 +259,7 @@
                 <th>楼栋</th>
                 <th>单元</th>
                 <th>产业代码</th>
-                <th>合计金额</th>
+                <th>合计金额(元)</th>
             </tr>
             </thead>
         </table>

@@ -148,7 +148,7 @@
                                                             if(rsp.attr.algorithmSwitch.chargeSwitch == 0){
                                                                 //按房价 result = 单价x面积x房价系数
                                                                 var divUnitPrice = '<div class="form-group">' +
-                                                                    '                    <label class="control-label col-md-3 col-sm-3 col-xs-3">房屋单价</label>' +
+                                                                    '                    <label class="control-label col-md-3 col-sm-3 col-xs-3">房屋单价(元/㎡)</label>' +
                                                                     '                    <div class="col-md-9 col-sm-9 col-xs-9">' +
                                                                     '                        <div style="width: 100%;padding-top: 8px;">'+item.unitPrice+'</div>' +
                                                                     '                    </div>' +

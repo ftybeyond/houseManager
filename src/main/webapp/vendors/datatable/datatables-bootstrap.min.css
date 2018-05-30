@@ -27,5 +27,5 @@ tr.shown td.details-control {
 .inner td{
     font-size: 12px;
     font-weight: bold;
-}.error{color:red;}
+}.error{color:red;}.buttons-print{float: right;}
 

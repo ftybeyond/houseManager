@@ -63,26 +63,28 @@
                     ]
                 })
                 $("#accrualBackBtn").on("click",function(){
-                    if(table.data().length>0){
-                        $.post("/rest/accrual/accrualBack.action",{paths:tree.getPathParam(),state:0},null,"json").done(function (data) {
-                            layer.alert(data.description);
-                            table.ajax.reload();
-                        });
-                    }else{
-                        layer.alert("未找到可回退的计息记录!")
-                    }
-
+                    layer.confirm('确定回退计息记录？', {icon: 3, title: '提示'}, function (index) {
+                        if(table.data().length>0){
+                            $.post("/rest/accrual/accrualBack.action",{paths:tree.getPathParam(),state:0},null,"json").done(function (data) {
+                                layer.alert(data.description);
+                                table.ajax.reload();
+                            });
+                        }else{
+                            layer.alert("未找到可回退的计息记录!")
+                        }
+                    })
                 });
                 $("#accrualBillBtn").on("click",function(){
-                    if(table.data().length>0){
-                        $.post("/rest/accrual/bill.action",{paths:tree.getPathParam(),state:0},null,"json").done(function (data) {
-                            layer.alert(data.description);
-                            table.ajax.reload();
-                        });
-                    }else{
-                        layer.alert("未找到可登帐的计息记录!")
-                    }
-
+                    layer.confirm('确定登帐计息记录？', {icon: 3, title: '提示'}, function (index) {
+                        if(table.data().length>0){
+                            $.post("/rest/accrual/bill.action",{paths:tree.getPathParam(),state:0},null,"json").done(function (data) {
+                                layer.alert(data.description);
+                                table.ajax.reload();
+                            });
+                        }else{
+                            layer.alert("未找到可登帐的计息记录!")
+                        }
+                    });
                 });
             })
         })
@@ -113,11 +115,11 @@
                     <thead>
                     <tr>
                         <th>产业代码</th>
-                        <th>利息</th>
+                        <th>利息(单位:元)</th>
                         <th>起始时间</th>
                         <th>截至时间</th>
-                        <th>计息金额</th>
-                        <th>利率</th>
+                        <th>计息金额(元)</th>
+                        <th>利率(日)</th>
                     </tr>
                     </thead>
                 </table>

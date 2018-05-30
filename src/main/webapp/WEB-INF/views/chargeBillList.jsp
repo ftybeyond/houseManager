@@ -14,7 +14,7 @@
     <script src="<%=path%>/vendors/requireJS/require.js"></script>
     <script type="text/javascript" src="<%=path%>/vendors/requireJS/require-config.js"></script>
     <script type="text/javascript">
-        require(["common","mySelect","my97date"],function (main) {
+        require(["common","mySelect","my97date","datatables-print"],function (main) {
             $(function(){
                 main.loadDeps(["residential_area","ChargeBillState.json"],function (data) {
                     $("#queryResidentialAreaSelect").mySelect2({data:data["residential_area"]})
@@ -37,7 +37,17 @@
                             ]
                         },
                         editable:false,
-                        deleteable:false
+                        deleteable:false,
+                        tableSettings:{
+                            dom: 'Blrtip',
+                            buttons: [
+                                {
+                                    extend: 'print',
+                                    className:'btn btn-dark',
+                                    text: '打印'
+                                }
+                            ]
+                        }
                     }
                     var table = main.init(config);
                 })
@@ -109,7 +119,7 @@
             <th>业主姓名</th>
             <th>收缴单号</th>
             <th>发票号</th>
-            <th>收缴金额</th>
+            <th>收缴金额(元)</th>
             <th>收款日期</th>
             <th>收缴人</th>
             <th>状态</th>

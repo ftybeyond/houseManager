@@ -17,6 +17,8 @@ public class ChargeBillPrintInfo {
 
     private String unitName;
 
+    private Integer state;
+
     private String ownerName;
 
     private String ownerCard;
@@ -49,6 +51,14 @@ public class ChargeBillPrintInfo {
 
     public void setCompanyAccount(String companyAccount) {
         this.companyAccount = companyAccount;
+    }
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
     }
 
     public String getResidentialAreaName() {

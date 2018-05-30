@@ -11,7 +11,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>七台河市房管局住房维修基金管理系统</title>
+    <title>七台河市房管局住宅专项维修资金管理系统</title>
 
     <!-- Bootstrap -->
     <link href="<%=path%>/vendors/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -91,7 +91,7 @@
         <div class="col-md-3 left_col">
             <div class="left_col scroll-view">
                 <div class="navbar nav_title" style="border: 0;">
-                    <a href="/index.html" class="site_title"><i class="fa fa-paw"></i> <span>七台河房管局</span></a>
+                    <a href="#" class="site_title"><i class="fa fa-paw"></i> <span>七台河房管局</span></a>
                 </div>
 
                 <div class="clearfix"></div>

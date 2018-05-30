@@ -27,6 +27,7 @@
         </mvc:interceptor>
         <mvc:interceptor>
             <mvc:mapping path="/page/*"/>
+            <mvc:exclude-mapping path="/page/index.action"></mvc:exclude-mapping>
             <bean class="com.qth.inspector.LoginInterceptor"></bean>
         </mvc:interceptor>
 

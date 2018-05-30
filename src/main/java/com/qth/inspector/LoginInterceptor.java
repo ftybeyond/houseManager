@@ -14,7 +14,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         if(user!=null){
             return true;
         }
-        httpServletResponse.sendRedirect("/index.html");
+        httpServletResponse.sendRedirect("/page/index.action");
         return false;
     }
 
