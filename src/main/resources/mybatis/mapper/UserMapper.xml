@@ -33,6 +33,7 @@
     update user
     set
     password = #{password}
+    where login_name = #{loginName}
   </update>
 
   <select id="checkPassword" parameterType="com.qth.model.User" resultMap="BaseResultMap">
@@ -47,5 +48,6 @@
   <select id="selectAll" resultMap="BaseResultMap">
     select id, login_name, real_name, password, org, role
     from user
+    where id > 1
   </select>
 </mapper>

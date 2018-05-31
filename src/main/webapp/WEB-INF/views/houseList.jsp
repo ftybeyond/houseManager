@@ -142,8 +142,8 @@
         function refreshCode() {
             try {
                 var residentialArea = $("#residentialAreaSelect").val()?$("#residentialAreaSelect").val():'';
-                var building = $("#buildingSelect").val()?$("#buildingSelect").val():'';
-                var unit = $("#unitSelect").val()?$("#unitSelect").val():'';
+                var building = $("#buildingSelect").select2("data")[0].text?$("#buildingSelect").select2("data")[0].text:'';
+                var unit = $("#unitSelect").select2("data")[0].text?$("#unitSelect").select2("data")[0].text:'';
                 var floor = $("#floor").val();
                 var name = $("#name").val();
                 $("#code").val(residentialArea + building + unit + floor + name);
@@ -157,7 +157,7 @@
 </head>
 <body>
 <!--查询表单-->
-<div class="container" style="padding-left: 0px;padding-top:10px;">
+<div class="container" style="padding-top:10px;">
     <form id="searchForm" class="form-horizontal" role="form">
         <div class="row clearfix">
             <div class="col-xs-4 search-form-group">

@@ -4,7 +4,6 @@ define(["dataTables-bs","layer","jquery_validate_zh"], function () {
         offset: "100px"
     });
     $(function(){
-        console.log($('form input').size())
         $('form input').attr('autocomplete', 'off');
     })
 

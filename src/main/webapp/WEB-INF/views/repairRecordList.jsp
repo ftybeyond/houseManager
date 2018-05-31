@@ -156,7 +156,7 @@
 </head>
 <body>
 <!--查询表单-->
-<div class="container" style="padding-left: 0px;">
+<div class="container">
     <form id="searchForm" class="form-horizontal" role="form">
         <div class="col-xs-5 form-group">
             <label class="control-label col-xs-3">项目名称</label>

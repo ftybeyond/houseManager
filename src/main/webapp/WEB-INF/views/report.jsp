@@ -76,6 +76,9 @@
                             {data:"residentialAreaName"},
                             {data:"buildingName"},
                             {data:"unitName"},
+                            {data:"houseFloor"},
+                            {data:"houseName"},
+                            {data:"houseArea"},
                             {data:"tradeType",render:function (row) {
                                 var dic = common.findArrayValue(row,data["TradeType.json"])
                                 return dic&&dic.text?dic.text:"";
@@ -239,6 +242,9 @@
                         <th>所属小区</th>
                         <th>楼栋</th>
                         <th>单元</th>
+                        <th>层号</th>
+                        <th>房号</th>
+                        <th>面积</th>
                         <th>交易类型</th>
                         <th>交易时间</th>
                         <th>处理人</th>

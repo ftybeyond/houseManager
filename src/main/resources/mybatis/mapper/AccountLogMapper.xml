@@ -75,7 +75,9 @@
         al.*, ra.`name` AS residentialAreaName,
         u.`name` AS unitName,
         b.`name` AS buildingName,
-        h.`name` AS houseName
+        h.`name` AS houseName,
+        h.area as houseArea,
+        h.floor as houseFloor
     FROM
         account_log al
     RIGHT JOIN house h ON h.`code` = al.house_code

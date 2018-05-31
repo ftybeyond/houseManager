@@ -21,9 +21,9 @@ $(document).ready(function() {
             contentHeight = bodyHeight < leftColHeight ? leftColHeight : bodyHeight;
 
         // normalize content
-        contentHeight -= $NAV_MENU.height() + footerHeight;
+        var right_col_height = $("html").height()-$NAV_MENU.height();
 
-        $RIGHT_COL.css('min-height', contentHeight);
+        $RIGHT_COL.css('min-height', Math.max(leftColHeight,right_col_height));
     };
 
     $SIDEBAR_MENU.find('a').on('click', function(ev) {

@@ -128,7 +128,7 @@
 </head>
 <body>
 <!--查询表单-->
-<div class="container" style="padding-left: 0px;" >
+<div class="container" >
     <form id="searchForm" class="form-horizontal" role="form">
         <div class="row clearfix">
             <div class="col-xs-4 search-form-group">

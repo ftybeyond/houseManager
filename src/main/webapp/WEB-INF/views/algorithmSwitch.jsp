@@ -46,7 +46,7 @@
 </head>
 <body>
 
-<div class="container" style="padding-left: 0px;" >
+<div class="container">
 </div>
 
 <!-- 数据表格 -->

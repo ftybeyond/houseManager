@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class AccountLog extends DataTableReqWrapper implements AccountLogRateChangeComparatorHelper{
+
     private Integer id;
 
     private String houseCode;
@@ -38,6 +39,10 @@ public class AccountLog extends DataTableReqWrapper implements AccountLogRateCha
     private String buildingName;
 
     private String houseName;
+
+    private String houseFloor;
+
+    private String houseArea;
 
     //汇总结果字段，可以是余额，交易额等等的汇总金额
     private BigDecimal sumResult;
@@ -152,6 +157,22 @@ public class AccountLog extends DataTableReqWrapper implements AccountLogRateCha
 
     public void setHouseName(String houseName) {
         this.houseName = houseName;
+    }
+
+    public String getHouseFloor() {
+        return houseFloor;
+    }
+
+    public void setHouseFloor(String houseFloor) {
+        this.houseFloor = houseFloor;
+    }
+
+    public String getHouseArea() {
+        return houseArea;
+    }
+
+    public void setHouseArea(String houseArea) {
+        this.houseArea = houseArea;
     }
 
     public BigDecimal getSumResult() {

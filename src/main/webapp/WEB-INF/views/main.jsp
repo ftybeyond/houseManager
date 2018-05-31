@@ -22,6 +22,14 @@
 
     <script src="<%=path%>/vendors/requireJS/require.js"></script>
     <script type="text/javascript" src="<%=path%>/vendors/requireJS/require-config.js"></script>
+    <!--[if IE]>
+    <script src="/vendors/html5shiv.min.js"></script>
+    <style>
+        footer{
+            margin-left: 230px;
+        }
+    </style>
+    <![endif]-->
     <script type="text/javascript">
         var validator;
         require(['main','layer','jquery_validate_zh'],function () {
@@ -78,6 +86,7 @@
             border: 0;
             width:100%;
             height: 100%;
+            border-style: none;
         }
         .glyphicon{
             width:26px;
@@ -158,7 +167,7 @@
 
         <!-- page content -->
         <div class="right_col" role="main">
-            <iframe id="main_frame" name="main_frame"></iframe>
+            <iframe id="main_frame" name="main_frame"  border="0" frameborder=no marginheight="0px" marginwidth="0px"></iframe>
         </div>
         <!-- /page content -->
 

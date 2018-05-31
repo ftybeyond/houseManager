@@ -17,6 +17,10 @@
     <link href="/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <!-- Custom Theme Style -->
     <link href="/vendors/gentelella/css/custom.min.css" rel="stylesheet">
+
+    <!--[if IE]>
+    <script src="/vendors/html5shiv.min.js"></script>
+    <![endif]-->
     <script>
         if (window.frames.length != parent.frames.length) {
             parent.window.location.href="/page/index.action";

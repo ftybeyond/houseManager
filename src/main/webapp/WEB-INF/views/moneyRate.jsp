@@ -49,7 +49,7 @@
 </head>
 <body>
 
-<div class="container" style="padding-left: 0px;">
+<div class="container">
     <button id="addBtn" class="btn btn-primary" style="float:right" type="button">新增</button>
 </div>
 
