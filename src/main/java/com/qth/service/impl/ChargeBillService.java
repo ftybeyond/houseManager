@@ -100,6 +100,18 @@ public class ChargeBillService extends BaseService<ChargeBill> implements ICharg
             houseMapper.updateBalanceByCode(house);
         }
         chargeBill.setState(toState);
+        if(chargeBill.getInvoiceNum()!=null&&chargeBill.getInvoiceNum().length()>0){
+            //记录开票日志
+            InvoiceLog invoiceLog = new InvoiceLog();
+            invoiceLog.setEventType(1);
+            invoiceLog.setBill(chargeBill.getId());
+            invoiceLog.setHandler(handler);
+            invoiceLog.setInvoiceNum(chargeBill.getInvoiceNum());
+            invoiceLog.setStamp(new Date());
+            invoiceLog.setPayor(chargeBill.getHouseOwner());
+            invoiceLog.setMoney(chargeBill.getActualSum());
+            invoiceLogMapper.insert(invoiceLog);
+        }
         return chargeBillMapper.updateState(chargeBill);
     }
 

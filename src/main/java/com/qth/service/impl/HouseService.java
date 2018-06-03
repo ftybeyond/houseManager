@@ -5,6 +5,7 @@ import com.qth.model.*;
 import com.qth.model.common.DataTableRspWrapper;
 import com.qth.model.common.ImportCacheNode;
 import com.qth.model.dto.HouseTreeModel;
+import com.qth.model.dto.InvoiceInfo;
 import com.qth.service.IHouseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -289,9 +290,8 @@ public class HouseService extends BaseService<House> implements IHouseService {
         return lastDate;
     }
 
-
-    private int insertByTreeNode(Integer parentId,ImportCacheNode node){
-
-        return 0;
+    @Override
+    public InvoiceInfo invoiceInfoByCode(String code){
+        return houseMapper.invoiceInfoByCode(code);
     }
 }

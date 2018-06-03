@@ -7,6 +7,7 @@ import com.qth.model.User;
 import com.qth.model.common.DataTableRspWrapper;
 import com.qth.model.common.ImportCacheNode;
 import com.qth.model.dto.HouseTreeModel;
+import com.qth.model.dto.InvoiceInfo;
 
 import javax.print.attribute.IntegerSyntax;
 import java.util.Date;
@@ -43,4 +44,6 @@ public interface IHouseService extends IBaseService<House> {
     public int backBalance(Integer house, String handler);
 
     public int importByExcel(Integer residentialArea, Integer parentId, Map<String, ImportCacheNode> node, String handler, Date stamp) throws Exception;
+
+    public InvoiceInfo invoiceInfoByCode(String code);
 }

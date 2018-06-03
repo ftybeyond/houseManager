@@ -4,6 +4,7 @@ import com.qth.model.*;
 import com.qth.model.common.*;
 import com.qth.model.dto.ChargeBillPrintInfo;
 import com.qth.model.dto.ImportLog;
+import com.qth.model.dto.InvoiceInfo;
 import com.qth.service.*;
 import com.qth.util.DateUtils;
 import com.qth.util.ImportUtil;
@@ -21,6 +22,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -52,6 +55,12 @@ public class GlobalController extends BaseController {
 
     @Value("${busi.coreCompany.id}")
     Integer company;
+
+    @Value("${busi.invoice.account}")
+    String invoiceAccount;
+
+    @Value("${busi.invoice.bank}")
+    String invoiceBank;
 
     @RequestMapping(value = "/forward/chargeBillPrint")
     public ModelAndView chargeBillPrint(Integer id, HttpSession session) {
@@ -259,5 +268,42 @@ public class GlobalController extends BaseController {
         } else {
             return new CommonRsp(false,"8804","文件不能为空!");
         }
+    }
+
+    @RequestMapping("/page/invoice")
+    public ModelAndView invoice(@RequestParam(value = "chargeBillId",required = true) Integer chargeBillId){
+        ModelAndView mv = new ModelAndView("invoice");
+        ChargeBill chargeBill = chargeBillService.findChargeBillById(chargeBillId);
+        if(chargeBill == null){
+            return null;
+        }
+        InvoiceInfo invoiceInfo = houseService.invoiceInfoByCode(chargeBill.getHouseCode());
+        if(invoiceInfo.getHouseType()==1){
+            invoiceInfo.setChargeItem("住宅专项维修基金(住宅)");
+        }else if(invoiceInfo.getHouseType()==2){
+            invoiceInfo.setChargeItem("住宅专项维修基金(非住宅)");
+        }else if(invoiceInfo.getHouseType()==3){
+            invoiceInfo.setChargeItem("住宅专项维修基金(非住宅)");
+        }else{
+            invoiceInfo.setChargeItem("");
+        }
+        DecimalFormat df2 =new DecimalFormat("0.00");
+        if(chargeBill.getChargeType() == 0){
+            //按房价
+            invoiceInfo.setCount(df2.format(chargeBill.getHouseArea().multiply(chargeBill.getHouseUnitPrice())));
+        }else if(chargeBill.getChargeType() == 1){
+            //按面积
+            invoiceInfo.setCount(df2.format(chargeBill.getHouseArea()));
+        }else if(chargeBill.getChargeType() == 2){
+            invoiceInfo.setCount("1");
+            chargeBill.setRatio(new BigDecimal(0f));
+        }else{
+            invoiceInfo.setCount("0");
+        }
+        invoiceInfo.setInvoiceBank(invoiceBank);
+        invoiceInfo.setInvoiceAccount(invoiceAccount);
+        mv.addObject("invoiceInfo",invoiceInfo);
+        mv.addObject("chargeBill",chargeBill);
+        return mv;
     }
 }

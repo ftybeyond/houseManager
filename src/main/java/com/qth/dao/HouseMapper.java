@@ -6,6 +6,7 @@ import com.qth.model.common.ImportCacheNode;
 import com.qth.model.common.ImportExcelRow;
 import com.qth.model.dto.AccrualInfo;
 import com.qth.model.dto.HouseTreeModel;
+import com.qth.model.dto.InvoiceInfo;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -60,5 +61,7 @@ public interface HouseMapper {
     int updateByAccrualInfo(AccrualInfo accrualInfo);
 
     House findByUnitAndFloor(Integer unit,String floor,String name);
+
+    InvoiceInfo invoiceInfoByCode(String code);
 
 }

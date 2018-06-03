@@ -26,6 +26,8 @@
     <script src="<%=path%>/vendors/requireJS/require.js"></script>
     <script type="text/javascript" src="<%=path%>/vendors/requireJS/require-config.js"></script>
     <script type="text/javascript">
+        var handleItem;
+        var tableObj;
         require(["houseTree","dataTables-bs","layer","common"],function (tree,table,layer,common) {
             layer.config({
                 offset:"100px"
@@ -33,7 +35,6 @@
             $(function () {
                 common.loadDeps(["ChargeBillType.json"],function (data) {
                     var treeObj;
-                    var tableObj;
                     treeObj = tree.genTree("selectTree",{
                         check:{
                             enable:false
@@ -66,17 +67,34 @@
                         deleteable:false,
                         customBtns:[
                             {label:'登帐',callback:function (index,item ){
+                                handleItem = item;
                                 layer.confirm('<p>产业编码：'+item.houseCode+'</p><p>登帐金额：'+item.actualSum+'(元)</p>',{title:"登帐确认",yes:function () {
-                                    $.post("/rest/chargeBill/account.action",item,null,"json").done(function (data) {
-                                        if (data.success) {
-                                            layer.alert(data.description,{btn:["开票"],btn1:function () {
-                                                
+                                    //开票
+                                    layer.open({
+                                        title:'开票',
+                                        area: ['800px', '500px'],
+                                        offset:'t',
+                                        type: 2,
+                                        content: '/page/invoice.action?chargeBillId='+item.id, //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                                        btn:["转入开票","强制登帐"],
+                                        btn1:function(index,layObj){
+                                            var iframeWin = window[layObj.find('iframe')[0]['name']];
+                                            iframeWin.vbInvoice()
+                                        },
+                                        btn2:function () {
+                                            layer.confirm("强制登帐会跳过开票过程，直接入帐，确认执行此操作？",{title:'提示',yes:function() {
+                                                $.post("/rest/chargeBill/account.action",handleItem,null,"json").done(function (data) {
+                                                    if (data.success) {
+                                                        layer.alert(data.description);
+                                                        tableObj.ajax.reload()
+                                                    } else {
+                                                        layer.alert(data.description)
+                                                    }
+                                                })
                                             }})
-                                            tableObj.ajax.reload()
-                                        } else {
-                                            layer.alert(data.description)
                                         }
-                                    })
+                                    });
+                                    return
                                 }});
                             }},
                             {label:"补打缴费单",callback:function (index,item ) {
@@ -97,6 +115,23 @@
                 })
             })
         })
+        function updateChargeBill(id,invoiceNo) {
+            if(handleItem&&handleItem.id == id){
+                handleItem.invoiceNum = invoiceNo
+                $.post("/rest/chargeBill/account.action",handleItem,null,"json").done(function (data) {
+                    if (data.success) {
+                        layer.alert(data.description,function () {
+                            layer.closeAll()
+                        });
+                        tableObj.ajax.reload()
+                    } else {
+                        layer.alert(data.description)
+                    }
+                })
+            }else{
+                layer.alert("参数错误!")
+            }
+        }
     </script>
 
 </head>

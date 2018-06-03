@@ -56,6 +56,9 @@
     update charge_bill
     set
     state = #{state}
+    <if test="invoiceNum!=null and invoiceNum.length >0 ">
+      ,invoice_num = #{invoiceNum}
+    </if>
     where id = #{id}
   </update>
 

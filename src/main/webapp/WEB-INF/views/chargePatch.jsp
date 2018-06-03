@@ -149,6 +149,7 @@
                                 param.houseTel = item.ownerTel;
                                 if($('#customSwitch').prop('checked')){
                                     param.chargeType = 2;
+                                    param.ratio = 0;
                                     param.actualSum = $("#infoForm input[name='chargeMoney']").val()
                                     if(!param.actualSum || isNaN(param.actualSum)){
                                         layer.alert("请填入有效的缴费金额!");

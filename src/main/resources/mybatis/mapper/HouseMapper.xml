@@ -356,4 +356,28 @@
     h.unit = #{arg0} and h.floor = #{arg1} and h.`name`=#{arg2}
     limit 0,1
   </select>
+
+  <select id="invoiceInfoByCode" parameterType="java.lang.String" resultType="com.qth.model.dto.InvoiceInfo">
+    SELECT
+        ra. NAME AS projectName,
+        h.type as houseType,
+        CONCAT(
+            ra. NAME,
+            b. NAME,
+            '栋',
+            u. NAME,
+            '单元',
+            h.floor,
+            '层',
+            h.`name`,
+            '号'
+        ) AS address
+    FROM
+        house h
+    LEFT JOIN unit u ON u.id = h.unit
+    LEFT JOIN building b ON b.id = u.building
+    LEFT JOIN residential_area ra ON ra.id = b.residential_area
+    WHERE
+        h. CODE = #{value}
+  </select>
 </mapper>
