@@ -43,7 +43,7 @@ public interface IHouseService extends IBaseService<House> {
 
     public int backBalance(Integer house, String handler);
 
-    public int importByExcel(Integer residentialArea, Integer parentId, Map<String, ImportCacheNode> node, String handler, Date stamp) throws Exception;
+    public int importByExcel(Map<String, ImportCacheNode> node, String handler, Date stamp) throws Exception;
 
     public InvoiceInfo invoiceInfoByCode(String code);
 }

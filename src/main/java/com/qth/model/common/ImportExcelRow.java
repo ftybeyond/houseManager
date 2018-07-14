@@ -1,11 +1,15 @@
 package com.qth.model.common;
 
+import com.qth.model.ResidentialArea;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
 public class ImportExcelRow {
 
     private Integer rowNum;
+
+    private String residentialArea;
 
     private String building;
 
@@ -33,9 +37,13 @@ public class ImportExcelRow {
 
     private BigDecimal balance;
 
+    private Date accountTime;
+
     private Date accrualTime;
 
     private Integer patchCharge;
+
+    private String invoiceNum;
 
     public Integer getRowNum() {
         return rowNum;
@@ -163,5 +171,29 @@ public class ImportExcelRow {
 
     public void setPatchCharge(Integer patchCharge) {
         this.patchCharge = patchCharge;
+    }
+
+    public String getResidentialArea() {
+        return residentialArea;
+    }
+
+    public void setResidentialArea(String residentialArea) {
+        this.residentialArea = residentialArea;
+    }
+
+    public String getInvoiceNum() {
+        return invoiceNum;
+    }
+
+    public void setInvoiceNum(String invoiceNum) {
+        this.invoiceNum = invoiceNum;
+    }
+
+    public Date getAccountTime() {
+        return accountTime;
+    }
+
+    public void setAccountTime(Date accountTime) {
+        this.accountTime = accountTime;
     }
 }

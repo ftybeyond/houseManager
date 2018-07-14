@@ -7,8 +7,10 @@ import com.qth.model.common.ImportCacheNode;
 import com.qth.model.dto.HouseTreeModel;
 import com.qth.model.dto.InvoiceInfo;
 import com.qth.service.IHouseService;
+import com.qth.util.ImportUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +29,9 @@ public class HouseService extends BaseService<House> implements IHouseService {
     BuildingMapper buildingMapper;
 
     @Autowired
+    ResidentialAreaMapper residentialAreaMapper;
+
+    @Autowired
     UnitMapper unitMapper;
 
     @Autowired
@@ -37,6 +42,12 @@ public class HouseService extends BaseService<House> implements IHouseService {
 
     @Autowired
     AccountLogMapper accountLogMapper;
+
+    @Autowired
+    ChargeBillMapper chargeBillMapper;
+
+    @Autowired
+    InvoiceLogMapper invoiceLogMapper;
 
     @Value("${busi.algorithmSwitch.id}")
     Integer algorithmSwitch;
@@ -129,42 +140,51 @@ public class HouseService extends BaseService<House> implements IHouseService {
     }
 
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
-    public int importByExcel(Integer residentialArea, Integer parentId, Map<String, ImportCacheNode> node,String handler,Date stamp) throws Exception {
-        int effect = insertByTreeNode(residentialArea,parentId,node,handler,stamp);
+    public int importByExcel(Map<String, ImportCacheNode> node,String handler,Date stamp) throws Exception {
+        int effect = insertByTreeNode(node,handler,stamp);
         return effect;
     }
 
-    private int insertByTreeNode(Integer residentialArea, Integer parentId, Map<String, ImportCacheNode> node,String handler,Date stamp) throws Exception {
+    private int insertByTreeNode(Map<String, ImportCacheNode> node,String handler,Date stamp) throws Exception {
         int count = 0;
         for(String name:node.keySet()){
             ImportCacheNode currentNode = node.get(name);
-            if(currentNode.getLevel() == 0 && currentNode.getDbObj() == null){
-                Building building = buildingMapper.findByName(parentId,currentNode.getKey());
+            if(currentNode.getLevel() == ImportUtil.RESIDENTIAL_LEVEL && currentNode.getDbObj() == null){
+                ResidentialArea residentialArea = residentialAreaMapper.findByName(currentNode.getKey());
+                if(residentialArea==null){
+                    residentialArea = new ResidentialArea();
+                    residentialArea.setName(currentNode.getKey());
+                    residentialAreaMapper.insert(residentialArea);
+                    currentNode.setNewInsert(true);
+                }
+                currentNode.setDbObj(residentialArea);
+            }else if(currentNode.getLevel() == ImportUtil.BUILDING_LEVEL && currentNode.getDbObj() == null){
+                ResidentialArea residentialArea = (ResidentialArea) currentNode.getFather().getDbObj();
+                Building building = buildingMapper.findByName(residentialArea.getId(),currentNode.getKey());
                 if(building==null){
                     building = new Building();
                     building.setName(currentNode.getKey());
-                    building.setResidentialArea(residentialArea);
+                    building.setResidentialArea(residentialArea.getId());
                     building.setUnits(currentNode.getChildren().keySet().size());
                     buildingMapper.insert(building);
                     currentNode.setNewInsert(true);
-                    parentId = building.getId();
                 }
                 currentNode.setDbObj(building);
-            }else if(currentNode.getLevel() == 1 && currentNode.getDbObj() == null){
-                Unit unit =  unitMapper.findByName(parentId,currentNode.getKey());
+            }else if(currentNode.getLevel() == ImportUtil.UNIT_LEVEL && currentNode.getDbObj() == null){
+                Building building = (Building) currentNode.getFather().getDbObj();
+                Unit unit =  unitMapper.findByName(building.getId(),currentNode.getKey());
                 if(unit == null){
                     unit = new Unit();
-                    unit.setBuilding(parentId);
+                    unit.setBuilding(building.getId());
                     unit.setName(currentNode.getKey());
                     unit.setTotalFloor(currentNode.getChildren().keySet().size());
                     unitMapper.insert(unit);
                     currentNode.setNewInsert(true);
-                    parentId = unit.getId();
                 }
                 currentNode.setDbObj(unit);
-            }else if(currentNode.getLevel() == 2){
+            }else if(currentNode.getLevel() == ImportUtil.FLOOR_LEVEL){
                 //楼层咱不处理
-            }else if(currentNode.getLevel() == 3){
+            }else if(currentNode.getLevel() == ImportUtil.HOUSE_LEVEL){
                 Unit unit = (Unit)currentNode.getFather().getFather().getDbObj();
                 String floor = currentNode.getFather().getKey();
                 String houseName = currentNode.getImportExcelRow().getHouse();
@@ -181,7 +201,7 @@ public class HouseService extends BaseService<House> implements IHouseService {
                     house.setName(houseName);
                     house.setUnit(unit.getId());
                     house.setUnitPrice(currentNode.getImportExcelRow().getUnitPrice());
-                    house.setCode(residentialArea.toString() + building.getId() + unit.getId()+house.getName());
+                    house.setCode(building.getResidentialArea().toString()+"" + building.getName() + unit.getName()+floor+house.getName());
                     house.setFloor(floor);
                     house.setOwnerName(currentNode.getImportExcelRow().getOwnerName());
                     house.setOwnerPsptid(currentNode.getImportExcelRow().getOwnerLicense());
@@ -194,11 +214,12 @@ public class HouseService extends BaseService<House> implements IHouseService {
                     count ++;
 
                     houseMapper.insert(house);
+                    //账户变更记录
                     AccountLog accountLog = new AccountLog();
                     accountLog.setHouseCode(house.getCode());
                     accountLog.setHouseOwner(house.getOwnerName());
                     accountLog.setTradeMoney(house.getAccountBalance());
-                    accountLog.setTradeTime(stamp);
+                    accountLog.setTradeTime(currentNode.getImportExcelRow().getAccountTime());
                     accountLog.setTradeType(0);
                     accountLog.setRemark("excel导入");
                     accountLog.setBalance(new BigDecimal(0f));
@@ -206,10 +227,41 @@ public class HouseService extends BaseService<House> implements IHouseService {
                     accountLog.setSeq(stamp.getTime());
                     accountLogMapper.insert(accountLog);
 
+                    if (currentNode.getImportExcelRow().getPatchCharge()==1) {
+                        //收缴单记录
+                        String invoiceNum = currentNode.getImportExcelRow().getInvoiceNum();
+                        ChargeBill chargeBill = new ChargeBill();
+                        chargeBill.setState(1);
+                        chargeBill.setHandler(handler);
+                        chargeBill.setInvoiceNum(invoiceNum);
+                        chargeBill.setActualSum(house.getAccountBalance());
+                        chargeBill.setFlowNum(String.valueOf(stamp.getTime()));
+                        chargeBill.setCreateTime(stamp);
+                        chargeBill.setHouseArea(house.getArea());
+                        chargeBill.setHouseCode(house.getCode());
+                        chargeBill.setHouseUnitPrice(house.getUnitPrice());
+                        chargeBill.setHouseOwner(house.getOwnerName());
+                        chargeBill.setHouseTel(house.getOwnerTel());
+                        chargeBillMapper.insert(chargeBill);
+
+                        //开票记录
+                        if(invoiceNum!=null&&invoiceNum.trim().length()>0){
+                            InvoiceLog invoiceLog = new InvoiceLog();
+                            invoiceLog.setEventType(2);
+                            invoiceLog.setBill(chargeBill.getId());
+                            invoiceLog.setHandler(handler);
+                            invoiceLog.setInvoiceNum(chargeBill.getInvoiceNum());
+                            invoiceLog.setStamp(stamp);
+                            invoiceLog.setPayor(chargeBill.getHouseOwner());
+                            invoiceLog.setMoney(chargeBill.getActualSum());
+                            invoiceLogMapper.insert(invoiceLog);
+                        }
+                    }
+
                 }
             }
             //递归
-            insertByTreeNode(residentialArea,parentId,currentNode.getChildren(),handler,stamp);
+            insertByTreeNode(currentNode.getChildren(),handler,stamp);
         }
         return count;
     }

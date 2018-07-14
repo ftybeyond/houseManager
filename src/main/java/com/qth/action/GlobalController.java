@@ -239,10 +239,7 @@ public class GlobalController extends BaseController {
 
     @RequestMapping("/rest/upload/import")
     @ResponseBody
-    public CommonRsp excelImport(@RequestParam("file") MultipartFile file, Integer residentialArea,HttpSession session) throws Exception {
-        if(residentialArea == null){
-            return new CommonRsp(false,"8801","请选择导入的小区信息!");
-        }
+    public CommonRsp excelImport(@RequestParam("file") MultipartFile file,HttpSession session) throws Exception {
         if (file != null) {
             if (file.getOriginalFilename().indexOf(".") > 0 && file.getOriginalFilename().split("\\.")[1].equals("xls")) {
                 Workbook wb = new HSSFWorkbook(file.getInputStream());
@@ -260,7 +257,7 @@ public class GlobalController extends BaseController {
                     }
                     count++;
                 }
-                houseService.importByExcel(residentialArea,residentialArea,tree,getHandler(session),stamp);
+                houseService.importByExcel(tree,getHandler(session),stamp);
                 return new CommonRsp(true,"0000","成功导入"+  count + "条内容");
             } else {
                 return new CommonRsp(false,"8802","不支持的文件类型");

@@ -36,9 +36,11 @@ public class Test {
 //        map.put("1","bbb");
 //        map.put("3",null);
 //        System.out.println(map);
-       BigDecimal decimal = new BigDecimal(0.32823123123123123);
-        DecimalFormat df2 =new DecimalFormat("0.00");
-        System.out.println(df2.format(decimal));
+//       BigDecimal decimal = new BigDecimal(0.32823123123123123);
+//        DecimalFormat df2 =new DecimalFormat("0.00");
+//        System.out.println(df2.format(decimal));
+        Integer i = 1000;
+        System.out.println(i.toString()+"0006");
     }
 
 }

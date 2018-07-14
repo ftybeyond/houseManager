@@ -17,4 +17,6 @@ public interface ResidentialAreaMapper {
     List<ResidentialArea> selectDataTable(ResidentialArea entity);
 
     int selectDataTableCount(ResidentialArea entity);
+
+    ResidentialArea findByName(String name);
 }

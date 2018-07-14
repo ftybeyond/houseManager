@@ -21,11 +21,12 @@
     <script src="<%=path%>/vendors/requireJS/require.js"></script>
     <script type="text/javascript" src="<%=path%>/vendors/requireJS/require-config.js"></script>
     <script type="text/javascript">
-        require(["common", "mySelect","jquery-ajaxForm"], function (main) {
+        require(["layer","jquery-ajaxForm"], function () {
+            layer.config({
+                path: '/vendors/layer/',
+                offset: "100px"
+            });
             $(function () {
-                main.loadDeps(["residential_area"], function (data) {
-                    $("#importResidentialArea").mySelect2({data:data["residential_area"]});
-                })
                 $("#importBtn").on("click",function () {
                     $("#importForm").ajaxForm({
                         dataType : 'json',
@@ -47,9 +48,6 @@
     <a href="<%=path%>/download/template.xls">模版下载</a>
     <h3>${message}</h3>
     <form id="importForm" action="/rest/upload/import.action" class="form-horizontal" method="post" enctype ="multipart/form-data">
-        <div class="form-group">
-            <select id="importResidentialArea" name="residentialArea"  class="form-control" style="width: 100%"></select>
-        </div>
         <div class="form-group">
             <input type="file" class="form-control" name="file"/>
         </div>
