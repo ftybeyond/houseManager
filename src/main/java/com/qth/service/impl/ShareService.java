@@ -93,10 +93,6 @@ public class ShareService implements IShareService{
     private List<House> houseShare(List<House> houses,Integer shareType,BigDecimal sumArea,Integer totalHouse,BigDecimal cost,String handler,Date stamp,Integer record,boolean insert){
         //每户花销
         BigDecimal houseCost;
-        //平米均摊价，按面积分摊时使用
-        BigDecimal everySquareCost = cost.divide(sumArea,2, BigDecimal.ROUND_HALF_EVEN);
-        //每户均摊价，按户分摊时使用
-        BigDecimal everyHouseCost = cost.divide(new BigDecimal(totalHouse),2, BigDecimal.ROUND_HALF_EVEN);
 
         BigDecimal totalCost = new BigDecimal(0f);
 
@@ -105,9 +101,13 @@ public class ShareService implements IShareService{
             House house = houses.get(i);
             if(shareType == 1){
                 //按面积分摊
+                //平米均摊价，按面积分摊时使用
+                BigDecimal everySquareCost = cost.divide(sumArea,2, BigDecimal.ROUND_HALF_EVEN);
                 houseCost = everySquareCost.multiply(house.getArea());
             }else if (shareType == 2){
                 //按户分摊
+                //每户均摊价，按户分摊时使用
+                BigDecimal everyHouseCost = cost.divide(new BigDecimal(totalHouse),2, BigDecimal.ROUND_HALF_EVEN);
                 houseCost = everyHouseCost;
             }else{
                 return unBalance;

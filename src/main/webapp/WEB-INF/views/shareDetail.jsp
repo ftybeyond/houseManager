@@ -54,8 +54,11 @@
                         info+= '<p>合计费用：${record.moneySum} 元</p>';
                         layer.confirm(info,{icon: 7, title:'分摊详情',btn:['入账','取消']}, function(index){
                             //do something
-                            if(data.attr.sumArea==0||data.attr.sumHouses==0){
-                                layer.alert("没有可分摊的房屋信息!");
+                            if(data.attr.sumArea==0&&${record.shareType}==1){
+                                layer.alert("没有可分摊的房屋面积!");
+                                return;
+                            }else if(data.attr.sumHouses==0&&${record.shareType}==2){
+                                layer.alert("没有可分摊的房屋!");
                                 return;
                             }else{
                                 var loadingMask = parent.layer.msg('拼命计算中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
@@ -79,7 +82,7 @@
                                             type:"POST",
                                             data:{paths:param,sumArea:data.attr.sumArea,totalHouse:data.attr.sumHouses,shareType:${record.shareType},cost:${record.moneySum},record:${record.id}}
                                         }).done(function (data) {
-                                            parent.layer.closeAll();
+                                            parent.layer.close(loadingMask);
                                             layer.alert(data.description,{clostBtn:0},function(index){
                                                 layer.close(index);
                                             });
@@ -91,7 +94,6 @@
                                     }});
                                 })
                             }
-                            layer.close(index);
                         });
                     }).fail(function(xhr){
                         layer.alert(xhr.statusText);

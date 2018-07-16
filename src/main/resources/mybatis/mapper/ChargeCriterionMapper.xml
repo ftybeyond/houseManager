@@ -15,16 +15,17 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.qth.model.ChargeCriterion">
-    insert into charge_criterion (id, term, house_type, 
+    insert into charge_criterion (id,company, term, house_type,
       charge_type, elevator_sign, price_ratio, 
       area_ratio)
-    values (#{id,jdbcType=INTEGER}, #{term,jdbcType=DATE}, #{houseType,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=INTEGER},#{company,jdbcType=INTEGER}, #{term,jdbcType=DATE}, #{houseType,jdbcType=INTEGER},
       #{chargeType,jdbcType=INTEGER}, #{elevatorSign,jdbcType=INTEGER}, #{priceRatio,jdbcType=INTEGER}, 
       #{areaRatio,jdbcType=INTEGER})
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.qth.model.ChargeCriterion">
     update charge_criterion
     set term = #{term,jdbcType=DATE},
+      company = #{company,jdbcType=INTEGER},
       house_type = #{houseType,jdbcType=INTEGER},
       charge_type = #{chargeType,jdbcType=INTEGER},
       elevator_sign = #{elevatorSign,jdbcType=INTEGER},

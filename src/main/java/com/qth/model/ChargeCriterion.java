@@ -14,6 +14,8 @@ public class ChargeCriterion extends DataTableReqWrapper {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date term;
 
+    private Integer company;
+
     private Integer houseType;
 
     private Integer chargeType;
@@ -78,5 +80,13 @@ public class ChargeCriterion extends DataTableReqWrapper {
 
     public void setAreaRatio(BigDecimal areaRatio) {
         this.areaRatio = areaRatio;
+    }
+
+    public Integer getCompany() {
+        return company;
+    }
+
+    public void setCompany(Integer company) {
+        this.company = company;
     }
 }
