@@ -73,6 +73,8 @@
   <select id="selectReportDetail" parameterType="com.qth.model.dto.ReportForm" resultMap="BaseResultMap">
     SELECT
         al.*, ra.`name` AS residentialAreaName,
+        h.code as joinHouseCode,
+        h.owner_name as joinHouseOwner,
         u.`name` AS unitName,
         b.`name` AS buildingName,
         h.`name` AS houseName,

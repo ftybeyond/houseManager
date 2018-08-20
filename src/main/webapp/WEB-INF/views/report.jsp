@@ -71,8 +71,8 @@
                             }
                         },
                         columns:[
-                            {data:"houseCode"},
-                            {data:"houseOwner"},
+                            {data:"joinHouseCode"},
+                            {data:"joinHouseOwner"},
                             {data:"residentialAreaName"},
                             {data:"buildingName"},
                             {data:"unitName"},

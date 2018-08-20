@@ -209,7 +209,7 @@ public class GlobalController extends BaseController {
      */
     @RequestMapping("/rest/selectFloorByUnit/{unit}")
     @ResponseBody
-    public List<Select2> getFloorDataByUnit(@PathVariable Integer unit) {
+    public List<Select2Var> getFloorDataByUnit(@PathVariable Integer unit) {
         return selectService.getFloorDataByUnit(unit);
     }
 

@@ -44,6 +44,10 @@ public class AccountLog extends DataTableReqWrapper implements AccountLogRateCha
 
     private String houseArea;
 
+    private String joinHouseCode;
+
+    private String joinHouseOwner;
+
     //汇总结果字段，可以是余额，交易额等等的汇总金额
     private BigDecimal sumResult;
 
@@ -186,5 +190,21 @@ public class AccountLog extends DataTableReqWrapper implements AccountLogRateCha
     @Override
     public Date compareDateElement() {
         return tradeTime;
+    }
+
+    public String getJoinHouseCode() {
+        return joinHouseCode;
+    }
+
+    public void setJoinHouseCode(String joinHouseCode) {
+        this.joinHouseCode = joinHouseCode;
+    }
+
+    public String getJoinHouseOwner() {
+        return joinHouseOwner;
+    }
+
+    public void setJoinHouseOwner(String joinHouseOwner) {
+        this.joinHouseOwner = joinHouseOwner;
     }
 }

@@ -28,6 +28,7 @@
             });
             $(function () {
                 $("#importBtn").on("click",function () {
+                    var loadingMask = layer.msg('拼命加载中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
                     $("#importForm").ajaxForm({
                         dataType : 'json',
                         success : function(data) {

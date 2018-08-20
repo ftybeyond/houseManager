@@ -168,33 +168,47 @@ public class ImportUtil {
 
             importLog.setCol(OWNER_NAME_COLUMN_INDEX);
             handlerCell = row.getCell(OWNER_NAME_COLUMN_INDEX);
-            handlerCell.setCellType(CellType.STRING);
-            importExcelRow.setOwnerName(handlerCell.getStringCellValue());
+            if(handlerCell!=null&&handlerCell.getStringCellValue().trim().length()>0) {
+                handlerCell.setCellType(CellType.STRING);
+                importExcelRow.setOwnerName(handlerCell.getStringCellValue());
+            }
 
             importLog.setCol(OWNER_TEL_COLUMN_INDEX);
             handlerCell = row.getCell(OWNER_TEL_COLUMN_INDEX);
-            handlerCell.setCellType(CellType.STRING);
-            importExcelRow.setOwnerTel(handlerCell.getStringCellValue());
+            if(handlerCell!=null&&handlerCell.getStringCellValue().trim().length()>0) {
+                handlerCell.setCellType(CellType.STRING);
+                importExcelRow.setOwnerTel(handlerCell.getStringCellValue());
+            }
 
             importLog.setCol(OWNER_LICENCE_COLUMN_INDEX);
             handlerCell = row.getCell(OWNER_LICENCE_COLUMN_INDEX);
-            handlerCell.setCellType(CellType.STRING);
-            importExcelRow.setOwnerLicense(handlerCell.getStringCellValue());
+            if(handlerCell!=null&&handlerCell.getStringCellValue().trim().length()>0) {
+                handlerCell.setCellType(CellType.STRING);
+                importExcelRow.setOwnerLicense(handlerCell.getStringCellValue());
+            }
 
             importLog.setCol(ACCOUNT_TIME_COLUMN_INDEX);
             handlerCell = row.getCell(ACCOUNT_TIME_COLUMN_INDEX);
-            handlerCell.setCellType(CellType.STRING);
-            importExcelRow.setAccountTime(DateUtils.parseDate(handlerCell.getStringCellValue(), "yyyy-MM-dd"));
+            if(handlerCell!=null&&handlerCell.getStringCellValue().trim().length()>0){
+                handlerCell.setCellType(CellType.STRING);
+                importExcelRow.setAccountTime(DateUtils.parseDate(handlerCell.getStringCellValue(), "yyyy-MM-dd"));
+            }
 
             importLog.setCol(ACCRUAL_TIME_COLUMN_INDEX);
             handlerCell = row.getCell(ACCRUAL_TIME_COLUMN_INDEX);
-            handlerCell.setCellType(CellType.STRING);
-            importExcelRow.setAccrualTime(DateUtils.parseDate(handlerCell.getStringCellValue(), "yyyy-MM-dd"));
+            if(handlerCell!=null&&handlerCell.getStringCellValue().trim().length()>0){
+                handlerCell.setCellType(CellType.STRING);
+                importExcelRow.setAccrualTime(DateUtils.parseDate(handlerCell.getStringCellValue(), "yyyy-MM-dd"));
+            }
 
             importLog.setCol(BALANCE_COLUMN_INDEX);
             handlerCell = row.getCell(BALANCE_COLUMN_INDEX);
-            handlerCell.setCellType(CellType.NUMERIC);
-            importExcelRow.setBalance(new BigDecimal(row.getCell(BALANCE_COLUMN_INDEX).getNumericCellValue()));
+            if(handlerCell!=null) {
+                handlerCell.setCellType(CellType.NUMERIC);
+                importExcelRow.setBalance(new BigDecimal(row.getCell(BALANCE_COLUMN_INDEX).getNumericCellValue()));
+            }else{
+                importExcelRow.setBalance(new BigDecimal(0f));
+            }
 
             importLog.setCol(INVOICE_COLUMN_INDEX);
             handlerCell = row.getCell(INVOICE_COLUMN_INDEX);

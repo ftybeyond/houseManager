@@ -3,6 +3,7 @@ package com.qth.service.impl;
 import com.qth.dao.BaseMapper;
 import com.qth.model.House;
 import com.qth.model.common.Select2;
+import com.qth.model.common.Select2Var;
 import com.qth.model.common.SelectIdstring;
 import com.qth.service.ISelectService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,9 +59,9 @@ public class SelectService implements ISelectService {
     }
 
     @Override
-    public List<Select2> getFloorDataByUnit(Integer unit) {
+    public List<Select2Var> getFloorDataByUnit(Integer unit) {
         if (unit == null || unit < 1) {
-            List<Select2> list = new ArrayList<>();
+            List<Select2Var> list = new ArrayList<>();
             return list;
         } else {
             return baseMapper.getFloorByUnit(unit);

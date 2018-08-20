@@ -295,7 +295,7 @@
         and h.owner_name is not null
       </if>
       <if test="hasOwner!=null and !hasOwner">
-        and h.owner_name is null
+        and (h.owner_name is null or h.owner_name='')
       </if>
     <if test="length>0">
       limit #{start} ,#{length}
@@ -338,7 +338,7 @@
       and h.owner_name is not null
     </if>
     <if test="hasOwner!=null and !hasOwner">
-      and h.owner_name is null
+      and (h.owner_name is null or h.owner_name='')
     </if>
   </select>
 

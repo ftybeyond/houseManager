@@ -108,12 +108,12 @@
     select id, name
     from unit WHERE building=#{id}
   </select>
-  <select id="getFloor" resultMap="Select2Map">
-    select DISTINCT floor as id, floor as name
+  <select id="getFloor" resultType="com.qth.model.common.Select2Var">
+    select DISTINCT floor as id, floor as text
     from house
   </select>
-  <select id="getFloorByUnit" resultMap="Select2Map" parameterType="int">
-    select DISTINCT floor as id, floor as name
+  <select id="getFloorByUnit" resultType="com.qth.model.common.Select2Var" parameterType="int">
+    select DISTINCT floor as id, floor as text
     from house WHERE unit=#{id}
   </select>
   <select id="getHouseName" resultType="com.qth.model.common.SelectIdstring">

@@ -2,10 +2,7 @@ package com.qth.dao;
 
 
 import com.qth.model.House;
-import com.qth.model.common.Select2;
-import com.qth.model.common.SelectDataTableMap;
-import com.qth.model.common.SelectIdstring;
-import com.qth.model.common.UpdateMap;
+import com.qth.model.common.*;
 import org.apache.ibatis.annotations.MapKey;
 
 import java.util.LinkedHashMap;
@@ -64,7 +61,7 @@ public interface BaseMapper {
 
     public List<Select2> getFloor();
 
-    public List<Select2> getFloorByUnit(Integer unit);
+    public List<Select2Var> getFloorByUnit(Integer unit);
 
     public List<SelectIdstring> getHouseName();
 

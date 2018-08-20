@@ -2,6 +2,7 @@ package com.qth.service;
 
 import com.qth.model.House;
 import com.qth.model.common.Select2;
+import com.qth.model.common.Select2Var;
 import com.qth.model.common.SelectIdstring;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -19,7 +20,7 @@ public interface ISelectService {
 
     public List<Select2> getUnitDataByBuilding(Integer building);
 
-    public List<Select2> getFloorDataByUnit(Integer unit);
+    public List<Select2Var> getFloorDataByUnit(Integer unit);
 
     public List<Select2> getConfigSelect(String type);
 

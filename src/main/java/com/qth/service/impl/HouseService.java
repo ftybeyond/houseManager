@@ -214,18 +214,6 @@ public class HouseService extends BaseService<House> implements IHouseService {
                     count ++;
 
                     houseMapper.insert(house);
-                    //账户变更记录
-                    AccountLog accountLog = new AccountLog();
-                    accountLog.setHouseCode(house.getCode());
-                    accountLog.setHouseOwner(house.getOwnerName());
-                    accountLog.setTradeMoney(house.getAccountBalance());
-                    accountLog.setTradeTime(currentNode.getImportExcelRow().getAccountTime());
-                    accountLog.setTradeType(0);
-                    accountLog.setRemark("excel导入");
-                    accountLog.setBalance(new BigDecimal(0f));
-                    accountLog.setHandler(handler);
-                    accountLog.setSeq(stamp.getTime());
-                    accountLogMapper.insert(accountLog);
 
                     if (currentNode.getImportExcelRow().getPatchCharge()==1) {
                         //收缴单记录
@@ -236,13 +224,26 @@ public class HouseService extends BaseService<House> implements IHouseService {
                         chargeBill.setInvoiceNum(invoiceNum);
                         chargeBill.setActualSum(house.getAccountBalance());
                         chargeBill.setFlowNum(String.valueOf(stamp.getTime()));
-                        chargeBill.setCreateTime(stamp);
+                        chargeBill.setCreateTime(currentNode.getImportExcelRow().getAccountTime());
                         chargeBill.setHouseArea(house.getArea());
                         chargeBill.setHouseCode(house.getCode());
                         chargeBill.setHouseUnitPrice(house.getUnitPrice());
                         chargeBill.setHouseOwner(house.getOwnerName());
                         chargeBill.setHouseTel(house.getOwnerTel());
                         chargeBillMapper.insert(chargeBill);
+
+                        //账户变更记录
+                        AccountLog accountLog = new AccountLog();
+                        accountLog.setHouseCode(house.getCode());
+                        accountLog.setHouseOwner(house.getOwnerName());
+                        accountLog.setTradeMoney(house.getAccountBalance());
+                        accountLog.setTradeTime(currentNode.getImportExcelRow().getAccountTime());
+                        accountLog.setTradeType(1);
+                        accountLog.setRemark("excel导入");
+                        accountLog.setBalance(new BigDecimal(0f));
+                        accountLog.setHandler(handler);
+                        accountLog.setSeq(stamp.getTime());
+                        accountLogMapper.insert(accountLog);
 
                         //开票记录
                         if(invoiceNum!=null&&invoiceNum.trim().length()>0){
@@ -251,7 +252,7 @@ public class HouseService extends BaseService<House> implements IHouseService {
                             invoiceLog.setBill(chargeBill.getId());
                             invoiceLog.setHandler(handler);
                             invoiceLog.setInvoiceNum(chargeBill.getInvoiceNum());
-                            invoiceLog.setStamp(stamp);
+                            invoiceLog.setStamp(currentNode.getImportExcelRow().getAccountTime());
                             invoiceLog.setPayor(chargeBill.getHouseOwner());
                             invoiceLog.setMoney(chargeBill.getActualSum());
                             invoiceLogMapper.insert(invoiceLog);

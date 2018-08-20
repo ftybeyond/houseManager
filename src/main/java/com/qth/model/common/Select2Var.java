@@ -1,16 +1,16 @@
 package com.qth.model.common;
 
-public class Select2 {
+public class Select2Var {
 
-    private Integer id;
+    private String id;
 
     private String text;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
