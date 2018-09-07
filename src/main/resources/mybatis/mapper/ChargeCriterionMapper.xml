@@ -44,13 +44,15 @@
   </select>
 
   <select id="selectByHouse" parameterType="map" resultMap="BaseResultMap">
-    SELECT
-      cc.*
-    FROM
-      charge_criterion cc
-    INNER JOIN USER u ON u.org = cc.company
-    INNER JOIN house h ON h.has_elevator = cc.elevator_sign
-    AND h.type = cc.house_type
-    where h.id = #{houseId} and u.id=#{userId}
+      SELECT
+          cc.*
+      FROM
+          charge_criterion cc
+      WHERE
+          cc.house_type = #{houseType}
+      AND cc.elevator_sign = #{elevator}
+      AND cc.company = #{org}
+      ORDER BY term DESC
+      LIMIT 0,1
   </select>
 </mapper>

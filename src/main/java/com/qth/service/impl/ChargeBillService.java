@@ -79,7 +79,7 @@ public class ChargeBillService extends BaseService<ChargeBill> implements ICharg
     @Transactional
     @Override
     public int updateState(ChargeBill chargeBill,Integer toState,String handler) {
-        if(chargeBill.getState() ==0 ||chargeBill.getState() ==2){
+        if((chargeBill.getState() ==0 ||chargeBill.getState() ==2)&& toState >0){
             //入账操作，记录余额变更，更新houseBalance
             House house = houseMapper.selectByCode(chargeBill.getHouseCode());
             AccountLog accountLog = new AccountLog();

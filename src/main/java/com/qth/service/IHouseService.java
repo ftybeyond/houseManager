@@ -37,7 +37,7 @@ public interface IHouseService extends IBaseService<House> {
 
     public int selectCountByTreeNode(HouseTreeModel model);
 
-    public ChargeCriterion getChargeCriterionByHouse(Integer house, Integer user);
+    public ChargeCriterion getChargeCriterionByHouse(Integer house, User user);
 
     public AlgorithmSwitch getChargeType();
 

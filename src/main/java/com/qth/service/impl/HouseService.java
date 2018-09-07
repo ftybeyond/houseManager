@@ -105,10 +105,12 @@ public class HouseService extends BaseService<House> implements IHouseService {
     }
 
     @Override
-    public ChargeCriterion getChargeCriterionByHouse(Integer house ,Integer user) {
+    public ChargeCriterion getChargeCriterionByHouse(Integer house ,User user) {
+        House houseModel = houseMapper.selectByPrimaryKey(house);
         Map map = new HashMap();
-        map.put("houseId",house);
-        map.put("userId",user);
+        map.put("elevator",houseModel.getHasElevator());
+        map.put("houseType",houseModel.getType());
+        map.put("org",user.getOrg());
         List<ChargeCriterion> list = chargeCriterionMapper.selectByHouse(map);
         if(list.size()>0){
             return list.get(0);
