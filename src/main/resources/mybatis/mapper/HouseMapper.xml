@@ -155,6 +155,10 @@
     UPDATE house set account_balance = #{accountBalance} where code = #{code}
   </update>
 
+  <update id="updateBalanceByLog" parameterType="com.qth.model.AccountLog">
+    UPDATE house set account_balance = account_balance +(#{tradeMoney}) where code = #{houseCode}
+  </update>
+
   <select id="selectBalanceByCode" parameterType="java.lang.String" resultType="java.math.BigDecimal">
     select account_balance from house where code = #{value}
   </select>
@@ -261,42 +265,22 @@
 
   <select id="selectByTreeNode" parameterType="com.qth.model.dto.HouseTreeModel" resultMap="BaseResultMap">
     SELECT
-    h.*
+    h.*,
+    b.name as buildingName,
+    ra.name as residentialAreaName,
+    u.name as unitName
     FROM
     house h
     LEFT JOIN unit u ON u.id = h.unit
     LEFT JOIN building b ON b.id = u.building
     LEFT JOIN residential_area ra ON ra.id = b.residential_area
-    where 1=1
-    <choose>
-      <when test="level == 0">
-        and ra.id = #{id}
-      </when>
-      <when test="level == 1">
-        and b.id = #{id}
-      </when>
-      <when test="level == 2">
-        and u.id = #{id}
-      </when>
-      <when test="level == 3">
-        and u.id = #{id} and h.floor = #{name}
-      </when>
-      <when test="level == 4">
-        and h.id = #{id}
-      </when>
-    </choose>
-      <if test="ownerName!=null and ownerName.length >0">
-        and h.owner_name = #{ownerName}
-      </if>
-      <if test="houseCode!=null and houseCode.length >0">
-        and h.code LIKE '%${houseCode}%'
-      </if>
-      <if test="hasOwner!=null and hasOwner">
-        and h.owner_name is not null
-      </if>
-      <if test="hasOwner!=null and !hasOwner">
-        and (h.owner_name is null or h.owner_name='')
-      </if>
+    <if test="(accountDateStart != null and accountDateStart.length > 0) or (accountDateEnd != null and accountDateEnd.length > 0)">
+    LEFT JOIN account_log al on al.house_code = h.`code` and al.trade_type = 1
+    </if>
+    <where>
+      <include refid="treeNodeConditions"/>
+    </where>
+    order by ra.name,b.name,u.name,h.floor,h.name
     <if test="length>0">
       limit #{start} ,#{length}
     </if>
@@ -310,36 +294,28 @@
     LEFT JOIN unit u ON u.id = h.unit
     LEFT JOIN building b ON b.id = u.building
     LEFT JOIN residential_area ra ON ra.id = b.residential_area
-    where 1=1
-    <choose>
-      <when test="level == 0">
-        and ra.id = #{id}
-      </when>
-      <when test="level == 1">
-        and b.id = #{id}
-      </when>
-      <when test="level == 2">
-        and u.id = #{id}
-      </when>
-      <when test="level == 3">
-        and u.id = #{id} and h.floor = #{name}
-      </when>
-      <when test="level == 4">
-        and h.id = #{id}
-      </when>
-    </choose>
-    <if test="ownerName!=null and ownerName.length >0">
-      and h.owner_name = #{ownerName}
+    <if test="(accountDateStart != null and accountDateStart.length > 0) or (accountDateEnd != null and accountDateEnd.length > 0)">
+      LEFT JOIN account_log al on al.house_code = h.`code` and al.trade_type = 1
     </if>
-    <if test="houseCode!=null and houseCode.length >0">
-      and h.code LIKE '%${houseCode}%'
+    <where>
+      <include refid="treeNodeConditions"/>
+    </where>
+  </select>
+
+  <select id="balanceSumByTreeNode" parameterType="com.qth.model.dto.HouseTreeModel" resultType="double">
+    SELECT
+    sum(h.account_balance)
+    FROM
+    house h
+    LEFT JOIN unit u ON u.id = h.unit
+    LEFT JOIN building b ON b.id = u.building
+    LEFT JOIN residential_area ra ON ra.id = b.residential_area
+    <if test="(accountDateStart != null and accountDateStart.length > 0) or (accountDateEnd != null and accountDateEnd.length > 0)">
+      LEFT JOIN account_log al on al.house_code = h.`code` and al.trade_type = 1
     </if>
-    <if test="hasOwner!=null and hasOwner">
-      and h.owner_name is not null
-    </if>
-    <if test="hasOwner!=null and !hasOwner">
-      and (h.owner_name is null or h.owner_name='')
-    </if>
+    <where>
+      <include refid="treeNodeConditions"/>
+    </where>
   </select>
 
   <update id="updateByAccrualInfo" parameterType="com.qth.model.dto.AccrualInfo">
@@ -380,4 +356,28 @@
     WHERE
         h. CODE = #{value}
   </select>
+
+  <sql id="treeNodeConditions">
+    <if test="sqlAppend != null">
+      and ${sqlAppend}
+    </if>
+    <if test="ownerName!=null and ownerName.length >0">
+      and h.owner_name LIKE '%${ownerName}%'
+    </if>
+    <if test="houseCode!=null and houseCode.length >0">
+      and h.code LIKE '%${houseCode}%'
+    </if>
+    <if test="accountDateStart != null and accountDateStart.length > 0">
+      and al.trade_time &gt; #{accountDateStart}
+    </if>
+    <if test="accountDateEnd != null and accountDateEnd.length > 0">
+      and al.trade_time &lt; #{accountDateEnd}
+    </if>
+    <if test="hasOwner!=null and hasOwner">
+      and h.owner_name is not null
+    </if>
+    <if test="hasOwner!=null and !hasOwner">
+      and (h.owner_name is null or h.owner_name='')
+    </if>
+  </sql>
 </mapper>

@@ -7,8 +7,9 @@
     <result column="company" jdbcType="INTEGER" property="company" />
     <result column="street" jdbcType="INTEGER" property="street" />
     <result column="address" jdbcType="VARCHAR" property="address" />
-    <result column="area_elevator" jdbcType="DOUBLE" property="areaElevator" />
-    <result column="area_noelevator" jdbcType="DOUBLE" property="areaNoelevator" />
+    <result column="area_business" jdbcType="DOUBLE" property="areaBusiness" />
+    <result column="area_residence" jdbcType="DOUBLE" property="areaResidence" />
+    <result column="area_garage" jdbcType="DOUBLE" property="areaGarage" />
     <result column="nature" jdbcType="INTEGER" property="nature" />
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
@@ -20,11 +21,11 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into residential_area (id, name, company, 
-      street, address, area_elevator, 
-      area_noelevator, nature)
+      street, address, area_business,
+    area_residence,area_garage, nature)
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{company,jdbcType=INTEGER}, 
-      #{street,jdbcType=INTEGER}, #{address,jdbcType=VARCHAR}, #{areaElevator,jdbcType=DOUBLE},
-      #{areaNoelevator,jdbcType=DOUBLE}, #{nature,jdbcType=INTEGER})
+      #{street,jdbcType=INTEGER}, #{address,jdbcType=VARCHAR}, #{areaBusiness,jdbcType=DOUBLE},
+      #{areaResidence,jdbcType=DOUBLE},#{areaGarage,jdbcType=DOUBLE}, #{nature,jdbcType=INTEGER})
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.qth.model.ResidentialArea">
     update residential_area
@@ -32,8 +33,9 @@
       company = #{company,jdbcType=INTEGER},
       street = #{street,jdbcType=INTEGER},
       address = #{address,jdbcType=VARCHAR},
-      area_elevator = #{areaElevator,jdbcType=DOUBLE},
-      area_noelevator = #{areaNoelevator,jdbcType=DOUBLE},
+      area_business = #{areaBusiness,jdbcType=DOUBLE},
+      area_residence = #{areaResidence,jdbcType=DOUBLE},
+      area_garage = #{areaGarage,jdbcType=DOUBLE},
       nature = #{nature,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -49,7 +51,7 @@
     ra.id = #{id,jdbcType=INTEGER}
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
-    select id, name, company, street, address, area_elevator, area_noelevator, nature
+    select id, name, company, street, address, area_business, area_residence,area_garage, nature
     from residential_area
   </select>
   <select id="selectDataTable" resultMap="BaseResultMap" parameterType="com.qth.model.ResidentialArea">

@@ -22,11 +22,14 @@
         li{
             font-size: 16px;
         }
+        .btn-dark{
+            float: right;
+        }
     </style>
     <script src="<%=path%>/vendors/requireJS/require.js"></script>
     <script type="text/javascript" src="<%=path%>/vendors/requireJS/require-config.js"></script>
     <script type="text/javascript">
-        require(["houseTree","dataTables-bs","layer","common"],function (tree,table,layer,common) {
+        require(["houseTree","dataTables-bs","layer","common","datatables-buttons","my97date"],function (tree,table,layer,common) {
             layer.config({
                 offset:"100px"
             })
@@ -35,15 +38,9 @@
                     var treeObj;
                     var tableObj;
                     treeObj = tree.genTree("selectTree",{
-                        check:{
-                            enable:false
-                        },
-                        callback:{
-                            onClick:function(event, treeId, treeNode){
-                                $("#searchForm input[name='id']").val(treeNode.id);
-                                $("#searchForm input[name='level']").val(treeNode.level);
-                                tableObj.ajax.reload()
-                            }
+                        onCheck:function () {
+                            $("#searchForm input[name='paths']").val(tree.getPathParam());
+                            tableObj.ajax.reload();
                         }
                     });
                     var table_config ={
@@ -54,19 +51,55 @@
                                 {name:"code",showable:true},
                                 {name:"ownerName",showable:true},
                                 {name:"ownerPsptid",showable:true},
-                                {name:"accountBalance",showable:true},
                                 {name:"type",showable:true,render:function(row){
                                     var dic = common.findArrayValue(row,data["HouseType.json"])
                                     return dic&&dic.text?dic.text:"";
-                                }}
+                                }},
+                                {name:"accountBalance",showable:true}
                             ]
                         },
                         editable:false,
                         deleteable:false,
+                        tableSettings:{
+                            "footerCallback": function ( row, data, start, end, display ) {
+                                var api = this.api();
+                                $.post("/rest/house/balanceSum.action",$("#searchForm").serializeJSON(),null,"json").done(function (resp) {
+                                    $( api.column( 4 ).footer() ).html(
+                                        resp.data
+                                    );
+                                })
+                            },
+                            dom: 'Blrtip',
+                            buttons: [
+                                {
+                                    text: '批量返还',// 显示文字
+                                    className:'btn btn-dark',
+                                    action:function(e, dt, node, config){
+                                        var namePaths = tree.getAllSelectPath();
+                                        if(!namePaths){
+                                            layer.alert("请选择要批量返还基金的范围!");
+                                           return;
+                                        }
+                                        if(($(dt.column( 4 ).footer()).html()<=0)){
+                                            layer.alert("范围内无基金可返还");
+                                            return;
+                                        }
+                                        layer.confirm('<p>批量返还（' + tree.getAllSelectPath() + '）余额？</p><p>合计：'+$(dt.column( 4 ).footer()).html()+'元</p><p>返还后，余额将被清零！</p>',{icon:3,yes:function(){
+                                            $.post("/rest/house/balanceBackBatch.action",$("#searchForm").serializeJSON(),null,"json").done(function (resp) {
+                                                $("#exportForm input[name='seq']").val(resp.data);
+                                                $("#exportForm input[name='supplement']").val($(dt.column( 4 ).footer()).html());
+                                                $("#exportForm").submit();
+                                            })
+                                            layer.closeAll();
+                                        }})
+                                    }
+                                }
+                            ]
+                        },
                         customBtns:[
                             {label:'基金返还',callback:function (index,item ){
                                 if(item.accountBalance<=0){
-                                    layer.alert("账户下无可返还基金!")
+                                    layer.alert("账户下无可返还基金!");
                                     return;
                                 }
                                 layer.confirm('<p>产业编码：'+item.code+'</p><p>返还金额：'+item.accountBalance+'</p>',{title:"返还确认",yes:function () {
@@ -78,7 +111,7 @@
                             }}
                         ]
                     }
-                    tableObj = common.init(table_config)
+                    tableObj = common.init(table_config);
                 })
             })
         })
@@ -101,8 +134,7 @@
         </div>
         <div class="col-md-9 column">
             <form id="searchForm" class="form-horizontal" role="form">
-                <input type="hidden" name="id"/>
-                <input type="hidden" name="level"/>
+                <input type="hidden" name="paths"/>
                 <div class="row clearfix" style="padding: 10px;">
                     <div class="col-xs-5 search-form-group">
                         <label class="control-label col-xs-3">业主姓名</label>
@@ -114,6 +146,20 @@
                         <label class="control-label col-xs-3">产业代码</label>
                         <div class="col-xs-9">
                             <input type="text" class="form-control" placeholder="要查询的房屋的产业代码" name="houseCode"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row clearfix" style="padding: 10px;">
+                    <div class="col-xs-5 search-form-group">
+                        <label class="control-label col-xs-3">起始登账时间</label>
+                        <div class="col-xs-9">
+                            <input type="text" id="accountDateStart" class="form-control" placeholder="要查询的房屋的起始登账时间" onClick="WdatePicker({maxDate:'#F{$dp.$D(\'accountDateEnd\',{d:-1})}'})" name="accountDateStart"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-5 search-form-group">
+                        <label class="control-label col-xs-3">截止登账时间</label>
+                        <div class="col-xs-9">
+                            <input type="text" id="accountDateEnd" class="form-control" placeholder="要查询的房屋的截止登账时间" onClick="WdatePicker({minDate:'#F{$dp.$D(\'accountDateStart\',{d:1})}'})" name="accountDateEnd"/>
                         </div>
                     </div>
                     <div class="col-xs-2 search-form-group" style="float: right">
@@ -130,16 +176,29 @@
                         <th>产业代码</th>
                         <th>业主姓名</th>
                         <th>业主证件</th>
-                        <th>账户余额(单位:元)</th>
                         <th>房屋类型</th>
+                        <th>账户余额(单位:元)</th>
                         <th>操作</th>
                     </tr>
                     </thead>
+                    <tfoot>
+                    <tr>
+                        <th colspan="4" style="text-align:right" rowspan="1">合计余额:</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>
     </div>
 </div>
-
+<
+<form id="exportForm" action="/export/balanceBack.action" method="post" style="display: none">
+    <input type="hidden" name="seq" />
+    <input type="hidden" name="supplement" />
+    <input type="hidden" name="start" value="0"/>
+    <input type="hidden" name="length" value="-1"/>
+</form>
 </body>
 </html>

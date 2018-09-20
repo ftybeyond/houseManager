@@ -18,6 +18,23 @@
         GROUP BY
         ra.id
     </select>
+    <select id="loadResidentialAreaNodesByName" parameterType="java.lang.String"
+            resultType="com.qth.model.common.ZTreeModel">
+        SELECT
+        ra.id,
+        ra.`name`,
+        count(b.id) as leaves
+        FROM
+        residential_area ra
+        LEFT JOIN building b ON ra.id = b.residential_area
+        <where>
+            <if test="value!=null">
+                ra.NAME like "%"#{value}"%"
+            </if>
+        </where>
+        GROUP BY
+        ra.id
+    </select>
     <select id="loadBuildingNodes" parameterType="java.lang.Integer" resultType="com.qth.model.common.ZTreeModel">
     SELECT
         count(u.id) as leaves,

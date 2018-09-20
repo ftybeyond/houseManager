@@ -1,4 +1,4 @@
-`<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%
     String path = request.getContextPath();
 %>
@@ -7,7 +7,7 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 
-    <title>维修资金登账回退</title>
+    <title>维修资金分摊登账</title>
 
     <link rel="stylesheet" type="text/css" href="<%=path%>/vendors/datatable/datatables-bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="<%=path%>/vendors/select2/select2.min.css"/>
@@ -15,14 +15,15 @@
     <script src="<%=path%>/vendors/requireJS/require.js"></script>
     <script type="text/javascript" src="<%=path%>/vendors/requireJS/require-config.js"></script>
     <script type="text/javascript">
-        require(["common", "mySelect"], function (main) {
-            layer.config({
-                offset:"100px"
-            })
+        require(["common", "mySelect","my97date"], function (main) {
             $(function () {
-                main.loadDeps(["residential_area", "ShareType.json"], function (data) {
+                main.loadDeps(["residential_area", "ShareType.json", "RepairState.json","TradeType.json"], function (data) {
                     $("select[name='residentialArea']").mySelect2({data: data["residential_area"]})
+                    $("select[name='state']").mySelect2({data: data["RepairState.json"]})
+                    $("#shareTypeSelect").mySelect2({data: data["ShareType.json"]})
                     var config = {
+                        popArea: ['720px', '550px'],
+                        scrollX:true,
                         domain: {
                             name: 'repairRecord',
                             props: [
@@ -54,32 +55,64 @@
                                 {name: 'stamp', type: 'string', showable: true}
                             ]
                         },
-                        editable:function(data, type, full, meta){
-                            return false;
-                        },
-                        deleteable:function(data, type, full, meta){
-                            return false;
-                        },
+                        editable:false,
+                        deleteable:false,
                         customBtns:[
-                            {label:'回退', callback:function(rowId,row){
-                                var loadingMask = layer.msg('拼命计算中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
-                                $.post("/rest/share/shareBackInfo.action",{seq:row.shareSeq},null,"json").done(function(data){
-//                                    console.log(data.data.cost)
-                                    content = '<p>回退费用：'+data.data.cost+'</p>';
-                                    content +=  '<p>回退户数：'+data.data.houseCount+'</p>';
-                                    layer.confirm(content, {icon: 3, title:'提示'}, function(index){
-                                        loadingMask = layer.msg('拼命计算中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
-                                        $.post("/rest/share/doShareBack.action",{record:row.id},null,"json").done(function(data){
-                                            layer.alert(data.description);
-                                            table.ajax.reload();
-                                        }).fail(function (xhr) {
-                                            layer.alert("服务器内部错误!"+xhr.statusText)
+                            {label:'登账', callback:function(rowId){
+                                layer.confirm("确认登帐此次分摊结果？登帐后将会扣除相应账户余额！",{icon:3,yes:function () {
+                                    var loadingMask = layer.msg('入账中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
+                                    $.post("/rest/share/doShareAccount.action",{record:rowId.toString()},null,"json").done(function(rsp){
+                                        console.log(rsp)
+                                        layer.close(loadingMask);
+                                        layer.alert(rsp.description);
+                                        table.ajax.reload();
+                                    }).fail(function (xhr) {
+                                        layer.close(loadingMask);
+                                        layer.alert(xhr.statusText);
+                                    })
+                                }})
+                            }},
+                            {label:'明细', callback:function(rowId){
+                                var detailTable = $("#accountDetail").table({
+                                    ajax:{
+                                        url:'/rest/share/shareAccountDetail.action',
+                                        data:function (a) {
+                                            delete  a.columns;
+                                            delete  a.order;
+                                            delete a.search;
+                                            a.remark=rowId;
+                                        }
+                                    },
+                                    columns:[
+                                        {data:"buildingName"},
+                                        {data:"unitName"},
+                                        {data:"houseFloor"},
+                                        {data:"houseName"},
+                                        {data:"houseArea"},
+                                        {data:"tradeTime"},
+                                        {data:"handler"},
+                                        {data:"tradeMoney"}
+                                    ],
+                                    "footerCallback": function ( row, data, start, end, display ) {
+                                        var api = this.api();
+                                        $.post("/rest/share/shareSumAccountDetail.action",{remark:rowId.toString()},null,"json").done(function (resp) {
+                                            $( api.column( 7 ).footer() ).html(
+                                                resp.data
+                                            );
                                         })
 
+                                    },
+                                });
+                                layer.open({
+                                    title:'账户分摊明细',
+                                    area: ['700px', '550px'],
+                                    offset: '20px',
+                                    type: 1,
+                                    content: $("#popWin"),
+                                    cancel:function(index, layero){
+                                        detailTable.destroy();
+                                    }
                                     });
-                                }).fail(function (xhr) {
-                                    layer.alert("服务器内部错误!"+xhr.statusText)
-                                })
                             }}
                         ]
                     }
@@ -162,13 +195,13 @@
 <!--查询表单-->
 <div class="container">
     <form id="searchForm" class="form-horizontal" role="form">
+        <input type="hidden" name="state" value="1"/>
         <div class="col-xs-5 form-group">
-            <label class="control-label col-xs-3">所属小区</label>
+            <label class="control-label col-xs-3">项目名称</label>
             <div class="col-xs-9">
                 <select name="residentialArea" class="form-control" style="width:100%;"></select>
             </div>
         </div>
-        <input type="hidden" name="state" value="2"/>
         <div class="col-xs-2 form-group">
             <div class="col-xs-6">
                 <button id="searchBtn" class="btn btn-primary" type="button">查询</button>
@@ -179,7 +212,7 @@
 <div class="ln_solid"></div>
 <!-- 数据表格 -->
 <div class="container">
-    <table id="datatable" class="table table-striped table-bordered" style="width:100%;">
+    <table id="datatable" class="table table-striped table-bordered" style="width:1200px;">
         <thead>
         <tr>
             <th></th>
@@ -196,5 +229,31 @@
     </table>
 </div>
 
+<div id="popWin" style="display: none;">
+    <div class="x_panel">
+        <div class="x_content" style="padding-left: 15px;">
+            <table id="accountDetail" class="table table-striped table-bordered" style="width:100%">
+                <thead>
+                <tr>
+                    <th>楼栋</th>
+                    <th>单元</th>
+                    <th>层号</th>
+                    <th>房号</th>
+                    <th>面积</th>
+                    <th>交易时间</th>
+                    <th>处理人</th>
+                    <th>交易金额(元)</th>
+                </tr>
+                </thead>
+                <tfoot>
+                <tr>
+                    <th colspan="7" style="text-align:right" rowspan="1">合计金额:</th>
+                    <th></th>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
 </body>
 </html>

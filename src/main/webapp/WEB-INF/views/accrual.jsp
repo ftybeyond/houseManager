@@ -78,6 +78,9 @@
                 <div class="x_content">
                     <div id="selectTree" class="ztree"></div>
                 </div>
+                <div class="x_content">
+                    <button id="selectAllBtn" class="btn-primary btn-xs" style="float: right">全选/反选</button>
+                </div>
             </div>
         </div>
         <div class="col-md-8 column">

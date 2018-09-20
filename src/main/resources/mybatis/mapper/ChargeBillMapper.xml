@@ -260,16 +260,16 @@
     <where>
       (cb.state = 1 or cb.state = 3)
       <if test="ownerName!=null">
-        and h.owner_name = #{ownerName}
+        and h.owner_name LIKE '%${ownerName}%'
       </if>
       <if test="ownerTel!=null">
-        and h.owner_tel = #{ownerTel}
+        and h.owner_tel  LIKE '%${ownerTel}%'
       </if>
       <if test="residentialArea!=null">
         and ra.id = #{residentialArea}
       </if>
       <if test="invoiceNum!=null">
-        and il.invoice_num = #{invoiceNum}
+        and il.invoice_num LIKE '%${invoiceNum}%'
       </if>
     </where>
     GROUP BY cb.id

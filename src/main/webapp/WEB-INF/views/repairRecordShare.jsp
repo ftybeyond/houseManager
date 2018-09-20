@@ -44,7 +44,10 @@
                                         return dic && dic.text ? dic.text : "";
                                     }
                                 },
-                                {name: 'developer', type: 'string', showable: true},
+                                {name: 'owners', type: 'string', showable: true},
+                                {name: 'ownersTel', type: 'string', showable: true},
+                                {name: 'workTime', type: 'string', showable: true},
+                                {name: 'moneySum', type: 'string', showable: true},
                                 {name: 'shareType', type: 'string', showable: true,render: function(row){
                                     var dic = main.findArrayValue(row, data["ShareType.json"])
                                     return dic && dic.text ? dic.text : "";
@@ -97,12 +100,32 @@
                                     })
                                     var showInfo =  '<table class="table inner">'+
                                         '<tr>'+
-                                        '<td width="80px">开发企业:</td>'+
-                                        '<td>'+rowData.developer+'</td>'+
+                                        '<td width="80px">项目地址:</td>'+
+                                        '<td>'+(rowData.address?rowData.address:'')+'</td>'+
                                         '</tr>'+
                                         '<tr>'+
-                                        '<td>地址:</td>'+
-                                        '<td>'+rowData.address+'</td>'+
+                                        '<td>申请单位1:</td>'+
+                                        '<td>'+(rowData.org1?rowData.org1:'')+'</td>'+
+                                        '</tr>'+
+                                        '<tr>'+
+                                        '<td>申请单位1电话:</td>'+
+                                        '<td>'+(rowData.tel1?rowData.tel1:'')+'</td>'+
+                                        '</tr>'+
+                                        '<tr>'+
+                                        '<td>申请单位2:</td>'+
+                                        '<td>'+(rowData.org2?rowData.org2:'')+'</td>'+
+                                        '</tr>'+
+                                        '<tr>'+
+                                        '<td>申请单位2电话:</td>'+
+                                        '<td>'+(rowData.tel2?rowData.tel2:'')+'</td>'+
+                                        '</tr>'+
+                                        '<tr>'+
+                                        '<td>施工单位:</td>'+
+                                        '<td>'+(rowData.worker?rowData.worker:'')+'</td>'+
+                                        '</tr>'+
+                                        '<tr>'+
+                                        '<td>施工单位电话:</td>'+
+                                        '<td>'+(rowData.workerTel?rowData.workerTel:'')+'</td>'+
                                         '</tr>'+
                                         '<tr>'+
                                         '<td colspan="2">维修项目(合计费用:'+rowData.moneySum+')</td>'+
@@ -150,7 +173,10 @@
         <tr>
             <th></th>
             <th>项目名称</th>
-            <th>开发企业</th>
+            <th>业主委员会</th>
+            <th>业主委员会电话</th>
+            <th>申请施工时间</th>
+            <th>合计金额</th>
             <th>分摊方式</th>
             <th>登记日期</th>
             <th>操作</th>

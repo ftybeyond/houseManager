@@ -10,6 +10,11 @@ require.config({
         'datatable':'datatable/dataTables.min',
         'dataTables-bs':'datatable/dataTables.bootstrap.min',
         'datatables-buttons':'datatable/dataTables.buttons.min',
+        'datatables-jszip':'datatable/jszip.min',
+        'datatables-pdfmake':'datatable/pdfmake.min',
+        'datatables-vfs_fonts':'datatable/vfs_fonts',
+        'datatables-buttons-flash':'datatable/buttons.flash.min',
+        'datatables-buttons-html5':'datatable/buttons.html5.min',
         'datatables-print':'datatable/buttons.print.min',
         'jquery-serializejson':'jquery/jquery.serializejson',
         'jquery-ajaxForm':'jquery/jquery.form.min',
@@ -42,5 +47,6 @@ require.config({
         'dataTables-bs':['bootstrap','datatable','layer','jquery-serializejson'],
         'zTree':['jquery'],
         'houseTree':['zTree']
+        // 'datatables-print':['datatables-buttons','datatables-jszip','datatables-vfs_fonts','datatables-buttons-flash','datatables-buttons-html5']
     }
 });

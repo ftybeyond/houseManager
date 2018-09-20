@@ -41,7 +41,11 @@ public interface IHouseService extends IBaseService<House> {
 
     public AlgorithmSwitch getChargeType();
 
+    public double balanceSum(HouseTreeModel model);
+
     public int backBalance(Integer house, String handler);
+
+    public int backBalanceBatch(HouseTreeModel model,String handler,Date stamp);
 
     public int importByExcel(Map<String, ImportCacheNode> node, String handler, Date stamp) throws Exception;
 

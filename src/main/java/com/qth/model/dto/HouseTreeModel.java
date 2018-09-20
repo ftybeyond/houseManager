@@ -16,11 +16,19 @@ public class HouseTreeModel extends ZTreeNodeReq{
 
     private Boolean hasOwner;
 
+    private String sqlAppend;
+
+    private String accountDateStart;
+
+    private String accountDateEnd;
+
     /**
      * 1：收缴回退
      * 2：收缴登帐
      */
     private int sign;
+
+    private String paths;
 
     public Integer getStart() {
         return start;
@@ -70,11 +78,43 @@ public class HouseTreeModel extends ZTreeNodeReq{
         this.hasOwner = hasOwner;
     }
 
+    public String getAccountDateStart() {
+        return accountDateStart;
+    }
+
+    public void setAccountDateStart(String accountDateStart) {
+        this.accountDateStart = accountDateStart;
+    }
+
+    public String getAccountDateEnd() {
+        return accountDateEnd;
+    }
+
+    public void setAccountDateEnd(String accountDateEnd) {
+        this.accountDateEnd = accountDateEnd;
+    }
+
+    public String getSqlAppend() {
+        return sqlAppend;
+    }
+
+    public void setSqlAppend(String sqlAppend) {
+        this.sqlAppend = sqlAppend;
+    }
+
     public int getSign() {
         return sign;
     }
 
     public void setSign(int sign) {
         this.sign = sign;
+    }
+
+    public String getPaths() {
+        return paths;
+    }
+
+    public void setPaths(String paths) {
+        this.paths = paths;
     }
 }

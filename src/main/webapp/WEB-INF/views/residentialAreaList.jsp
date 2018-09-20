@@ -44,8 +44,9 @@
                                 {name:'street',type:'string',showable:false},
                                 {name:'streetName',type:'string',showable:true},
                                 {name:'address',type:'string',showable:true},
-                                {name:'areaElevator',type:'string',showable:true},
-                                {name:'areaNoelevator',type:'string',showable:true},
+                                {name:'areaResidence',type:'string',showable:true},
+                                {name:'areaBusiness',type:'string',showable:true},
+                                {name:'areaGarage',type:'string',showable:true},
                                 {name:'nature',type:'string',showable:true,render:function (row, type, full, meta) {
                                     var dic = main.findArrayValue(row,d["ResidentialAreaNature.json"])
                                     return dic&&dic.text?dic.text:"";
@@ -97,8 +98,9 @@
             <th>所属区域</th>
             <th>所属街道</th>
             <th>地址</th>
-            <th>有电梯面积</th>
-            <th>无电梯面积</th>
+            <th>住宅面积</th>
+            <th>商服面积</th>
+            <th>车库面积</th>
             <th>房屋性质</th>
             <th>操作</th>
         </tr>
@@ -141,15 +143,21 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">有电梯面积</label>
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">住宅面积</label>
                     <div class="col-md-9 col-sm-9 col-xs-9">
-                        <input type="text" class="form-control" name="areaElevator" placeholder="请输入小区面积......">
+                        <input type="text" class="form-control" name="areaResidence" placeholder="请输入住宅面积......">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">无电梯面积</label>
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">商服面积</label>
                     <div class="col-md-9 col-sm-9 col-xs-9">
-                        <input type="text" class="form-control" name="areaNoelevator" placeholder="请输入小区面积......">
+                        <input type="text" class="form-control" name="areaBusiness" placeholder="请输入商服面积......">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">车库面积</label>
+                    <div class="col-md-9 col-sm-9 col-xs-9">
+                        <input type="text" class="form-control" name="areaGarage" placeholder="请输入车库面积......">
                     </div>
                 </div>
                 <div class="form-group">

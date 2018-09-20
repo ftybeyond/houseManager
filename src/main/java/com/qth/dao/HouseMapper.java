@@ -1,5 +1,6 @@
 package com.qth.dao;
 
+import com.qth.model.AccountLog;
 import com.qth.model.House;
 import com.qth.model.Unit;
 import com.qth.model.common.ImportCacheNode;
@@ -34,6 +35,8 @@ public interface HouseMapper {
 
     int updateBalanceByCode(House house);
 
+    int updateBalanceByLog(AccountLog accountLog);
+
     int updateOwnerInfo(House house);
 
     BigDecimal selectBalanceByCode(String code);
@@ -55,6 +58,8 @@ public interface HouseMapper {
     List<House> allHousesInFloor(House house);
 
     List<House> selectByTreeNode(HouseTreeModel model);
+
+    double balanceSumByTreeNode(HouseTreeModel model);
 
     int selectCountByTreeNode(HouseTreeModel model);
 

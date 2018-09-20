@@ -12,7 +12,8 @@ define(["zTree"],function(){
         callback: {
 
         },
-        showSelectedDiv:'selectedNodes'
+        showSelectedDiv:'selectedNodes',
+        searchInput:true
     };
 
     var genTree = function(container,setting){
@@ -25,7 +26,27 @@ define(["zTree"],function(){
         } else {
             base.callback.onCheck = showOnDiv
         }
+        var searchBox = $('<div class="input-group">\n' +
+            '                        <input type="text" class="form-control">\n' +
+            '                            <span class="input-group-btn">\n' +
+            '                              <button type="button" class="btn btn-primary">搜索</button>\n' +
+            '                            </span>\n' +
+            '                    </div>');
+        if(base.searchInput){
+            $("#" +container).before(searchBox);
+        }
         houseTree = $.fn.zTree.init($("#" + container), base);
+        searchBox.find("button").on("click",function () {
+            var nameLike = $(searchBox).find("input").val();
+            houseTree.setting.async.otherParam={nameSearch:nameLike};
+            houseTree.reAsyncChildNodes(null, "refresh");
+        })
+        $("#selectAllBtn").on("click",function(){
+            var nodes = treeObj.getNodes();
+            $.each(nodes,function (index,item) {
+                houseTree.checkNode(item, null, true,true);
+            })
+        });
         return houseTree;
     }
 
@@ -53,7 +74,7 @@ define(["zTree"],function(){
     }
 
     var loadAllChecksNodes = function (){
-        var checkedNodes = treeObj.getNodesByParam("checked",true);//获取所有已选中的节点
+        var checkedNodes = houseTree.getNodesByParam("checked",true);//获取所有已选中的节点
         var result = new Object()//结果对象
         $.each(checkedNodes,function(index,item){
             if(item.check_Child_State == 2 || item.check_Child_State == -1){

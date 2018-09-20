@@ -252,7 +252,7 @@
             </div>
         </div>
         <div class="col-md-9 column">
-            <form id="searchForm" class="form-horizontal" role="form">
+            <form id="searchForm" class="form-horizontal" role="form" style="display: none">
                 <input type="hidden" name="id"/>
                 <input type="hidden" name="level"/>
                 <input type="hidden" name="hasOwner" value="false">

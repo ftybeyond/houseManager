@@ -18,6 +18,6 @@ public interface IBaseService<T> {
 
     public DataTableRspWrapper<T> selectDataTable2Rsp(T entity,Map<String,String> orders);
 
-    public DataTableRspWrapper<T> selectDataTable2Rsp(T entity, Map<String,String> orders, Map<String,String> conditions);
+    public DataTableRspWrapper<T> selectDataTable2Rsp(T entity, Map<String,String> orders, Map<String,Object> conditions);
 
 }

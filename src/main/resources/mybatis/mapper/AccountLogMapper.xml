@@ -17,6 +17,12 @@
     delete from account_log
     where id = #{id,jdbcType=INTEGER}
   </delete>
+
+  <delete id="deleteTempByRecord" parameterType="java.lang.Integer">
+    delete from account_log_temp
+    where remark = #{value}
+  </delete>
+
   <insert id="insert" parameterType="com.qth.model.AccountLog">
     insert into account_log (id, house_code, house_owner, 
       balance, trade_money, trade_time, 
@@ -25,6 +31,16 @@
       #{balance,jdbcType=DECIMAL}, #{tradeMoney,jdbcType=DECIMAL}, #{tradeTime,jdbcType=TIMESTAMP}, 
       #{tradeType,jdbcType=INTEGER}, #{handler,jdbcType=VARCHAR},#{seq,jdbcType=BIGINT},#{remark,jdbcType=VARCHAR})
   </insert>
+
+  <insert id="insertTemp" parameterType="com.qth.model.AccountLog">
+    insert into account_log_temp (id, house_code, house_owner,
+    balance, trade_money, trade_time,
+    trade_type, handler,seq,remark)
+    values (#{id,jdbcType=INTEGER}, #{houseCode,jdbcType=VARCHAR}, #{houseOwner,jdbcType=VARCHAR},
+    #{balance,jdbcType=DECIMAL}, #{tradeMoney,jdbcType=DECIMAL}, #{tradeTime,jdbcType=TIMESTAMP},
+    #{tradeType,jdbcType=INTEGER}, #{handler,jdbcType=VARCHAR},#{seq,jdbcType=BIGINT},#{remark,jdbcType=VARCHAR})
+  </insert>
+
   <update id="updateByPrimaryKey" parameterType="com.qth.model.AccountLog">
     update account_log
     set house_code = #{houseCode,jdbcType=VARCHAR},
@@ -55,6 +71,14 @@
     from account_log
     where seq = #{shareSeq}
   </select>
+
+  <select id="selectTempByRecord" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, house_code, house_owner, balance, trade_money, trade_time, trade_type,
+    handler,seq,remark
+    from account_log_temp
+    where remark = #{value}
+  </select>
+
   <select id="selectHouseChangeWithDateRange" parameterType="java.util.Map" resultMap="BaseResultMap">
     select *
     from account_log
@@ -108,6 +132,20 @@
     </where>
   </select>
 
+  <select id="reportSum" parameterType="com.qth.model.dto.ReportForm" resultType="double">
+    SELECT
+    sum(al.trade_money)
+    FROM
+    account_log al
+    RIGHT JOIN house h ON h.`code` = al.house_code
+    INNER JOIN unit u ON u.id = h.unit
+    INNER JOIN building b ON b.id = u.building
+    INNER JOIN residential_area ra ON ra.id = b.residential_area
+    <where>
+      <include refid="reportConditions"/>
+    </where>
+  </select>
+
   <select id="selectReportSummary" parameterType="com.qth.model.dto.ReportForm" resultMap="BaseResultMap">
     SELECT
         al.*, ra.`name` AS residentialAreaName,
@@ -134,19 +172,69 @@
     <if test="fromDate != null">
       and al.trade_time &gt;= #{fromDate}
     </if>
-    <if test="fromDate != null">
+    <if test="endDate != null">
       and al.trade_time &lt;= #{endDate}
+    </if>
+    <if test="seq != null and seq &gt;0">
+      and al.seq = #{seq}
     </if>
     <!-- 未缴 -->
     <if test="summaryType !=null and summaryType==-1">
       and al.id is null
     </if>
     <if test="summaryType !=null and summaryType &gt;0 and summaryType &lt;4">
-      and al.trade_type = #{summaryType}
+      and (al.trade_type = #{summaryType})
     </if>
     <!-- 分摊，包含回滚 -->
     <if test="summaryType !=null and summaryType == 4">
       and (al.trade_type = 4 or al.trade_type = 5)
     </if>
   </sql>
+
+
+  <select id="shareAccountDetail" parameterType="com.qth.model.AccountLog" resultMap="BaseResultMap">
+    SELECT
+    al.*, ra.`name` AS residentialAreaName,
+    u.`name` AS unitName,
+    b.`name` AS buildingName,
+    h.`name` AS houseName,
+    h.area as houseArea,
+    h.floor as houseFloor
+    FROM
+    account_log_temp al
+    LEFT JOIN house h ON h.`code` = al.house_code
+    INNER JOIN unit u ON u.id = h.unit
+    INNER JOIN building b ON b.id = u.building
+    INNER JOIN residential_area ra ON ra.id = b.residential_area
+    <where>
+      al.remark = #{remark}
+    </where>
+    <if test="length>0">
+      limit #{start} ,#{length}
+    </if>
+  </select>
+
+  <select id="shareCountAccountDetail" parameterType="com.qth.model.AccountLog" resultType="int">
+    SELECT
+    count(al.id)
+    FROM
+    account_log_temp al
+    LEFT JOIN house h ON h.`code` = al.house_code
+    INNER JOIN unit u ON u.id = h.unit
+    INNER JOIN building b ON b.id = u.building
+    INNER JOIN residential_area ra ON ra.id = b.residential_area
+    WHERE   al.remark = #{remark}
+  </select>
+
+  <select id="shareSumAccountDetail" parameterType="com.qth.model.AccountLog" resultType="double">
+    SELECT
+    sum(al.trade_money)
+    FROM
+    account_log_temp al
+    LEFT JOIN house h ON h.`code` = al.house_code
+    INNER JOIN unit u ON u.id = h.unit
+    INNER JOIN building b ON b.id = u.building
+    INNER JOIN residential_area ra ON ra.id = b.residential_area
+    WHERE  al.remark = #{remark}
+  </select>
 </mapper>

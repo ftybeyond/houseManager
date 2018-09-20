@@ -96,12 +96,20 @@ public class HouseService extends BaseService<House> implements IHouseService {
         return houseMapper.deleteByPrimaryKey(id);
     }
 
+    @Override
     public List<House> selectByTreeNode(HouseTreeModel model){
+        model.setSqlAppend(sqlAppend(model.getPaths()));
         return houseMapper.selectByTreeNode(model);
     }
 
+    @Override
     public int selectCountByTreeNode(HouseTreeModel model){
         return houseMapper.selectCountByTreeNode(model);
+    }
+
+    public double balanceSum(HouseTreeModel model){
+        model.setSqlAppend(sqlAppend(model.getPaths()));
+        return houseMapper.balanceSumByTreeNode(model);
     }
 
     @Override
@@ -139,6 +147,27 @@ public class HouseService extends BaseService<House> implements IHouseService {
         accountLogMapper.insert(accountLog);
         house1.setAccountBalance(new BigDecimal(0f));
         return houseMapper.updateBalanceByCode(house1);
+    }
+
+    @Override
+    @Transactional
+    public int backBalanceBatch(HouseTreeModel model, String handler,Date stamp) {
+        List<House> houseList = selectByTreeNode(model);
+        for(House house:houseList){
+            AccountLog accountLog = new AccountLog();
+            accountLog.setBalance(house.getAccountBalance());
+            accountLog.setHouseCode(house.getCode());
+            accountLog.setRemark("批量基金返还");
+            accountLog.setTradeTime(stamp);
+            accountLog.setTradeType(2);
+            accountLog.setTradeMoney(house.getAccountBalance().negate());
+            accountLog.setHandler(handler);
+            accountLog.setHouseOwner(house.getOwnerName());
+            accountLog.setSeq(stamp.getTime());
+            accountLogMapper.insert(accountLog);
+            house.setAccountBalance(new BigDecimal(0f));
+        }
+        return houseList.size();
     }
 
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
@@ -349,4 +378,49 @@ public class HouseService extends BaseService<House> implements IHouseService {
     public InvoiceInfo invoiceInfoByCode(String code){
         return houseMapper.invoiceInfoByCode(code);
     }
+
+
+    public static String sqlAppend(String paths){
+        if (paths!=null && paths.trim().length()>0) {
+            //解析第一层路径，每个元素都是一个小区-房屋的层级关系
+            String[] pathsArr = paths.split(",");
+            StringBuilder sqlOr = new StringBuilder("(");
+            for (int i = 0; i < pathsArr.length; i++) {
+                //解析第二层路径，每一个元素代表具体的小区、楼栋、单元等
+                String[] ids = pathsArr[i].split("-");
+                if(i>0){
+                    sqlOr.append(" or ");
+                }
+                switch (ids.length - 1) {
+                    case HouseTree.RESIDENTIALAREA_LEVEL:
+                        //指定小区下所有房屋信息
+                        sqlOr.append(" ra.id = ").append(ids[HouseTree.RESIDENTIALAREA_LEVEL]);
+                        break;
+                    case HouseTree.BUILDING_LEVEL:
+                        sqlOr.append(" b.id = ").append(ids[HouseTree.BUILDING_LEVEL]);
+                        break;
+                    case HouseTree.UNIT_LEVEL:
+                        sqlOr.append(" u.id = ").append(ids[HouseTree.UNIT_LEVEL]);
+                        break;
+                    case HouseTree.FLOOR_LEVEL:
+                        House house = new House();
+                        house.setUnit(Integer.parseInt(ids[HouseTree.UNIT_LEVEL]));
+                        house.setFloor(ids[HouseTree.FLOOR_LEVEL]);
+                        sqlOr.append(" (u.id = ").append(ids[HouseTree.UNIT_LEVEL]).append(" and h.floor = ").append(ids[HouseTree.FLOOR_LEVEL]).append(")");
+                        break;
+                    case HouseTree.HOUSE_LEVEL:
+                        sqlOr.append(" h.id = ").append(ids[HouseTree.HOUSE_LEVEL]);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            sqlOr.append(")");
+            if (sqlOr.length()>2) {
+                return sqlOr.toString();
+            }
+        }
+        return null;
+    }
+
 }

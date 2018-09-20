@@ -8,8 +8,10 @@ import com.qth.model.AccountLog;
 import com.qth.model.HouseTree;
 import com.qth.model.RepairRecord;
 import com.qth.model.House;
+import com.qth.model.common.DataTableRspWrapper;
 import com.qth.model.common.ZTreeModel;
 import com.qth.model.common.ZTreeNodeReq;
+import com.qth.model.dto.ReportForm;
 import com.qth.service.IHouseService;
 import com.qth.service.IShareService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +48,9 @@ public class ShareService implements IShareService{
         if(req.getLevel() == null){
             if (req.getParam()!=null) {
                 return shareMapper.loadResidentialAreaNodes(Integer.parseInt(req.getParam()));
-            } else {
+            }else if(req.getNameSearch()!=null&&req.getNameSearch().trim().length()>0){
+                return shareMapper.loadResidentialAreaNodesByName(req.getNameSearch());
+            } else{
                 return shareMapper.loadResidentialAreaNodes(null);
             }
         }
@@ -82,12 +86,62 @@ public class ShareService implements IShareService{
         List<House> list = houseService.selectByTreePath(paths);
         houseShare(list,shareType,sumArea,totalHouse,cost,handler,stamp,record,true);
 
-        RepairRecord repairRecord = recordMapper.selectByPrimaryKey(record);
+        RepairRecord repairRecord = new RepairRecord();
+        repairRecord.setId(record);
         repairRecord.setStamp(stamp);
         repairRecord.setState(1);
         repairRecord.setShareSeq(stamp.getTime());
         recordMapper.stateChange(repairRecord);
         return list.size();
+    }
+
+    @Override
+    @Transactional
+    public int shareBack(Integer record, String handler) {
+        int sum=0;
+        //删除account_log_temp数据
+        sum+=accountLogMapper.deleteTempByRecord(record);
+
+        //更新record状态
+        RepairRecord repairRecord = new RepairRecord();
+        repairRecord.setShareSeq(null);
+        repairRecord.setState(0);
+        repairRecord.setStamp(new Date());
+        sum+=recordMapper.stateChange(repairRecord);
+
+        return sum;
+    }
+
+    @Override
+    @Transactional
+    public int shareAccount(Integer record, String handler) {
+        int sum=0;
+        //查找account_log_temp表数据
+        List<AccountLog> accountLogs = accountLogMapper.selectTempByRecord(record);
+        Date date = new Date();
+        //复制一份到account_log
+        for(AccountLog accountLog:accountLogs){
+            accountLog.setHandler(handler);
+            accountLog.setTradeTime(date);
+            accountLog.setSeq(date.getTime());
+            accountLog.setId(null);
+            accountLogMapper.insert(accountLog);
+            //更新house余额
+            houseMapper.updateBalanceByLog(accountLog);
+            sum++;
+        }
+
+        //删除临时表
+        accountLogMapper.deleteTempByRecord(record);
+        //更新record状态
+        RepairRecord repairRecord = new RepairRecord();
+        repairRecord.setId(record);
+        repairRecord.setShareSeq(date.getTime());
+        repairRecord.setState(2);
+        repairRecord.setStamp(new Date());
+        recordMapper.stateChange(repairRecord);
+
+        return sum;
     }
 
     private List<House> houseShare(List<House> houses,Integer shareType,BigDecimal sumArea,Integer totalHouse,BigDecimal cost,String handler,Date stamp,Integer record,boolean insert){
@@ -129,6 +183,9 @@ public class ShareService implements IShareService{
         return unBalance;
     }
 
+    /**
+     * 写入临时表，不变更余额
+     */
     public void insertShareAccountLog(House house,String handler,BigDecimal houseCost,Date stamp,Integer record,BigDecimal newBalance){
         //余额变更记录
         AccountLog accountLog = new AccountLog();
@@ -141,15 +198,15 @@ public class ShareService implements IShareService{
         accountLog.setTradeTime(stamp);
         accountLog.setSeq(stamp.getTime());
         accountLog.setRemark(record.toString());
-        //余额变更
-        house.setAccountBalance(newBalance);
-        houseMapper.updateBalanceByCode(house);
-        accountLogMapper.insert(accountLog);
+//        //余额变更
+//        house.setAccountBalance(newBalance);
+//        houseMapper.updateBalanceByCode(house);
+        accountLogMapper.insertTemp(accountLog);
     }
 
     @Override
     @Transactional
-    public int shareBack(Integer record,String handler) {
+    public int shareBackAccount(Integer record, String handler) {
         int sum =0;
         Date stamp = new Date();
         RepairRecord repairRecord = recordMapper.selectByPrimaryKey(record);
@@ -183,6 +240,7 @@ public class ShareService implements IShareService{
         }
 
         //重置record状态
+        repairRecord.setId(record);
         repairRecord.setShareSeq(null);
         repairRecord.setState(0);
         repairRecord.setStamp(stamp);
@@ -268,4 +326,17 @@ public class ShareService implements IShareService{
         return shareMapper.shareBackInfo(seq);
     }
 
+    @Override
+    public DataTableRspWrapper<AccountLog> shareAccountDetail(AccountLog record) {
+        DataTableRspWrapper<AccountLog> rspWrapper = new DataTableRspWrapper<>();
+        rspWrapper.setData(accountLogMapper.shareAccountDetail(record));
+        rspWrapper.setRecordsTotal(accountLogMapper.shareCountAccountDetail(record));
+        return rspWrapper;
+    }
+
+
+    @Override
+    public double shareSumAccountDetail(AccountLog record){
+        return accountLogMapper.shareSumAccountDetail(record);
+    }
 }

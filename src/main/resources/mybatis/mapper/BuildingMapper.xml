@@ -63,6 +63,7 @@
         and b.name LIKE '%${name}%'
       </if>
     </where>
+    order by ra.`name`,b.`name`
     <if test="length>0">
       limit #{start} ,#{length}
     </if>

@@ -86,6 +86,11 @@ public class HouseController extends BaseController {
         return rspWrapper;
     }
 
+    @RequestMapping(value = "balanceSum")
+    public CommonRsp balanceSum(HouseTreeModel model) {
+        return data2Rsp(houseService.balanceSum(model));
+    }
+
     @RequestMapping(value = "updateOwnerInfo")
     public CommonRsp updateOwnerInfo(House house){
         int effect = houseService.updateOwnerInfo(house);
@@ -136,6 +141,7 @@ public class HouseController extends BaseController {
         return rsp;
     }
 
+
     @RequestMapping(value = "chargeBillPatch")
     public CommonRsp chargeBillPatch(ChargeBill chargeBill,HttpSession session){
         Date stamp = new Date();
@@ -157,4 +163,12 @@ public class HouseController extends BaseController {
         return dbEffect2Rsp(effect);
     }
 
+    @RequestMapping(value = "balanceBackBatch")
+    public CommonRsp balanceBackBatch(HouseTreeModel model,HttpSession session){
+        Date date = new Date();
+        int effect = houseService.backBalanceBatch(model,getHandler(session),date);
+        CommonRsp rsp = dbEffect2Rsp(effect);
+        rsp.setData(date.getTime());
+        return rsp;
+    }
 }

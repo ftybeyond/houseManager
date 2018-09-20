@@ -25,6 +25,12 @@ public class ResidentialArea extends DataTableReqWrapper {
 
     private BigDecimal areaNoelevator;
 
+    private BigDecimal areaBusiness;
+
+    private BigDecimal areaResidence;
+
+    private BigDecimal areaGarage;
+
     private Integer nature;
 
     public Integer getId() {
@@ -105,6 +111,30 @@ public class ResidentialArea extends DataTableReqWrapper {
 
     public void setAreaNoelevator(BigDecimal areaNoelevator) {
         this.areaNoelevator = areaNoelevator;
+    }
+
+    public BigDecimal getAreaBusiness() {
+        return areaBusiness;
+    }
+
+    public void setAreaBusiness(BigDecimal areaBusiness) {
+        this.areaBusiness = areaBusiness;
+    }
+
+    public BigDecimal getAreaResidence() {
+        return areaResidence;
+    }
+
+    public void setAreaResidence(BigDecimal areaResidence) {
+        this.areaResidence = areaResidence;
+    }
+
+    public BigDecimal getAreaGarage() {
+        return areaGarage;
+    }
+
+    public void setAreaGarage(BigDecimal areaGarage) {
+        this.areaGarage = areaGarage;
     }
 
     public Integer getNature() {

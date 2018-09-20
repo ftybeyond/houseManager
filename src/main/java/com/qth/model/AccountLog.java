@@ -6,8 +6,20 @@ import com.qth.util.AccountLogRateChangeComparatorHelper;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AccountLog extends DataTableReqWrapper implements AccountLogRateChangeComparatorHelper{
+
+    public static Map<Integer,String> TRADE_TYPE = new HashMap<>();
+
+    static {
+        TRADE_TYPE.put(1,"收缴");
+        TRADE_TYPE.put(2,"返还");
+        TRADE_TYPE.put(3,"计息");
+        TRADE_TYPE.put(4,"分摊");
+        TRADE_TYPE.put(4,"分摊回滚");
+    }
 
     private Integer id;
 
@@ -180,7 +192,7 @@ public class AccountLog extends DataTableReqWrapper implements AccountLogRateCha
     }
 
     public BigDecimal getSumResult() {
-        return sumResult;
+        return sumResult==null?new BigDecimal(0f):sumResult;
     }
 
     public void setSumResult(BigDecimal sumResult) {

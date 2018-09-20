@@ -132,7 +132,7 @@ public class BeanUtil{
             return null;
         }
         try {
-            Map<String, String> map = new HashMap<>();
+            Map<String, Object> map = new HashMap<>();
             List<Field> list = new ArrayList<>();
             getAllField(entity.getClass(),list);
             for (Field field : list) {
@@ -144,7 +144,7 @@ public class BeanUtil{
                         }
                         if(resultMapping.getProperty().equals(field.getName())){
                             //成员匹配数据库字段
-                            map.put(resultMapping.getColumn(),field.get(entity).toString());
+                            map.put(resultMapping.getColumn(),field.get(entity));
                         }
                     }
                 }

@@ -1,5 +1,6 @@
 package com.qth.dao;
 
+import com.qth.model.AccountLog;
 import com.qth.model.common.ZTreeModel;
 import com.qth.model.House;
 import com.qth.model.common.ZTreeNodeReq;
@@ -15,6 +16,8 @@ import java.util.Map;
 public interface ShareMapper {
 
     List<ZTreeModel> loadResidentialAreaNodes(Integer residentialArea);
+
+    List<ZTreeModel> loadResidentialAreaNodesByName(String nameLike);
 
     List<ZTreeModel> loadBuildingNodes(Integer residentialArea);
 

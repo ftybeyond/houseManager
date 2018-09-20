@@ -81,4 +81,10 @@ public class AccountLogController extends BaseController {
         return accountLogService.reportSummary(reportForm);
     }
 
+    @RequestMapping(value = "reportSum")
+    public CommonRsp reportSum(ReportForm reportForm){
+        double result = accountLogService.reportSum(reportForm);
+        return data2Rsp(result);
+    }
+
 }

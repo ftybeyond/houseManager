@@ -37,6 +37,8 @@ public class ReportForm extends DataTableReqWrapper{
     //查询类型：全部，使用、计息、收缴、未缴、返还
     private Integer summaryType;
 
+    private Long seq;
+
     //根据paths生成的or条件参数集合
     private String sqlAppend;
 
@@ -92,5 +94,13 @@ public class ReportForm extends DataTableReqWrapper{
 
     public void setSqlAppend(String sqlAppend) {
         this.sqlAppend = sqlAppend;
+    }
+
+    public Long getSeq() {
+        return seq;
+    }
+
+    public void setSeq(Long seq) {
+        this.seq = seq;
     }
 }

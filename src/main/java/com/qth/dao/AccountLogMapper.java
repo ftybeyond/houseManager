@@ -10,7 +10,11 @@ import java.util.Map;
 public interface AccountLogMapper {
     int deleteByPrimaryKey(Integer id);
 
+    int deleteTempByRecord(Integer record);
+
     int insert(AccountLog record);
+
+    int insertTemp(AccountLog accountLog);
 
     AccountLog selectByPrimaryKey(Integer id);
 
@@ -19,6 +23,8 @@ public interface AccountLogMapper {
     int updateByPrimaryKey(AccountLog record);
 
     List<AccountLog> selectByRecord(RepairRecord record);
+
+    List<AccountLog> selectTempByRecord(Integer record);
 
     List<AccountLog> selectHouseChangeWithDateRange(Map map);
 
@@ -29,5 +35,13 @@ public interface AccountLogMapper {
     int selectReportDetailCount(ReportForm reportForm);
 
     List<AccountLog> selectReportSummary(ReportForm reportForm);
+
+    double reportSum(ReportForm reportForm);
+
+    List<AccountLog> shareAccountDetail(AccountLog log);
+
+    double shareSumAccountDetail(AccountLog log);
+
+    int shareCountAccountDetail(AccountLog log);
 
 }

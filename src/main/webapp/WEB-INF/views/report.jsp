@@ -30,6 +30,9 @@
             clear:both;
             float:right;
         }
+        .btn-dark{
+            float: right;
+        }
     </style>
     <script src="<%=path%>/vendors/requireJS/require.js"></script>
     <script type="text/javascript" src="<%=path%>/vendors/requireJS/require-config.js"></script>
@@ -87,12 +90,25 @@
                             {data:"handler"},
                             {data:"tradeMoney"}
                         ],
+                        "footerCallback": function ( row, data, start, end, display ) {
+                            var api = this.api();
+                            $.post("/rest/accountLog/reportSum.action",$("#searchForm").serializeJSON(),null,"json").done(function (resp) {
+                                $( api.column( 11 ).footer() ).html(
+                                    resp.data
+                                );
+                            })
+
+                        },
                         dom: 'Blrtip',
                         buttons: [
                             {
                                 extend: 'print',
                                 className:'btn btn-dark',
                                 text: '打印'
+                            },
+                            {
+                                text: '导出',// 显示文字
+                                className:'btn btn-dark'
                             }
                         ]
                     })
@@ -192,40 +208,48 @@
             <div class="row clearfix" style="padding: 10px;">
                 <form id="searchForm" class="form-horizontal" role="form">
                     <div class="row clearfix">
-                        <div class="col-xs-5 search-form-group">
+                        <div class="col-xs-3 search-form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-3">查询类型</label>
                             <div class="col-md-9 col-sm-9 col-xs-9">
                                 <select id="summaryTypeSelect" name="summaryType" class="form-control"
                                         style="width:100%;"></select>
                             </div>
                         </div>
-                        <div class="col-xs-5 search-form-group">
+                        <div class="col-xs-3 search-form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-3">分组范围</label>
                             <div class="col-md-9 col-sm-9 col-xs-9">
                                 <select id="summaryGroupSelect" name="summaryGroup" class="form-control"
                                         style="width:100%;"></select>
                             </div>
                         </div>
-                        <div class="col-xs-2 search-form-group">
+                        <div class="col-xs-3 search-form-group">
+                        </div>
+                        <div class="col-xs-3 search-form-group">
                             <div class="col-xs-12">
                                 <button id="summaryBtn" class="btn btn-primary" type="button">汇总</button>
                             </div>
                         </div>
                     </div>
                     <div class="row clearfix">
-                        <div class="col-xs-5 search-form-group">
+                        <div class="col-xs-3 search-form-group">
                             <label class="control-label col-xs-3">起始日期</label>
                             <div class="col-md-9 col-sm-9 col-xs-9">
                                 <input type="text" id="startDate" class="form-control" placeholder="要查询交易起始日期" onClick="WdatePicker({maxDate:'#F{$dp.$D(\'endDate\',{d:-1})}'})" name="fromDate"/>
                             </div>
                         </div>
-                        <div class="col-xs-5 search-form-group">
+                        <div class="col-xs-3 search-form-group">
                             <label class="control-label col-xs-3">截至日期</label>
                             <div class="col-xs-9">
                                 <input type="text" id="endDate" class="form-control" placeholder="要查询交易截至日期" onClick="WdatePicker({minDate:'#F{$dp.$D(\'startDate\',{d:1})}'})" name="endDate"/>
                             </div>
                         </div>
-                        <div class="col-xs-2 search-form-group">
+                        <div class="col-xs-3 search-form-group">
+                            <label class="control-label col-xs-3">批量流水</label>
+                            <div class="col-xs-9">
+                                <input type="text" id="seq" class="form-control" placeholder="要查询的批次号" name="seq"/>
+                            </div>
+                        </div>
+                        <div class="col-xs-3 search-form-group">
                             <div class="col-xs-12">
                                 <button id="searchBtn" class="btn btn-primary" type="button">查询</button>
                             </div>
@@ -251,6 +275,12 @@
                         <th>交易金额(元)</th>
                     </tr>
                     </thead>
+                    <tfoot>
+                    <tr>
+                        <th colspan="11" style="text-align:right" rowspan="1">合计金额:</th>
+                        <th></th>
+                    </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>

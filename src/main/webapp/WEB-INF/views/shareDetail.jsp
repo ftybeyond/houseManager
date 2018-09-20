@@ -31,7 +31,8 @@
                 var setting = {
                     async:{
                         otherParam:{"param":${record.residentialArea}},
-                    }
+                    },
+                    searchInput:false
                 };
 
                 treeObj = tree.genTree("selectTree", setting);
@@ -52,7 +53,7 @@
                         info+= '<p>合计面积：'+data.attr.sumArea+' ㎡</p>';
                         info+= '<p>合计户数：'+data.attr.sumHouses+' 户</p>';
                         info+= '<p>合计费用：${record.moneySum} 元</p>';
-                        layer.confirm(info,{icon: 7, title:'分摊详情',btn:['入账','取消']}, function(index){
+                        layer.confirm(info,{icon: 7, title:'分摊详情',btn:['确定','取消']}, function(index){
                             //do something
                             if(data.attr.sumArea==0&&${record.shareType}==1){
                                 layer.alert("没有可分摊的房屋面积!");
@@ -66,32 +67,34 @@
                                 //检测余额不足账户
                                 $.post("/rest/share/shareCheck.action",{paths:param,sumArea:data.attr.sumArea,totalHouse:data.attr.sumHouses,shareType:${record.shareType},cost:${record.moneySum},record:${record.id}},null,"json").done(function(checkData){
                                     parent.layer.close(loadingMask)
-                                    var warn = "<p>确认入账分摊信息？</p>";
+                                    var warn = "<p>确认分摊信息？</p>";
                                     if(checkData.data&&checkData.data.length > 0){
-                                        warn += "<p>以下账户余额已不足</p>";
+                                        warn = "<p>以下账户余额已不足</p>";
                                         $.each(checkData.data,function(index,item){
                                             warn += '<p>产业代码：' + item.code + '，业主：'+item.ownerName+'，余额：' +item.accountBalance.toFixed(2)+ '</p>';
                                         });
-                                    }
-                                    layer.confirm( warn,{yes:function(){
-                                        var loadingMask = parent.layer.msg('拼命计算中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
-                                        //分摊入账
-                                        $.ajax({
-                                            url:'/rest/share/doShare.action',
-                                            dataType:'json',
-                                            type:"POST",
-                                            data:{paths:param,sumArea:data.attr.sumArea,totalHouse:data.attr.sumHouses,shareType:${record.shareType},cost:${record.moneySum},record:${record.id}}
-                                        }).done(function (data) {
-                                            parent.layer.close(loadingMask);
-                                            layer.alert(data.description,{clostBtn:0},function(index){
-                                                layer.close(index);
-                                            });
-                                            parent.table.ajax.reload();
+                                        layer.alert(warn);
+                                    }else{
+                                        layer.confirm( warn,{yes:function(){
+                                            var loadingMask = parent.layer.msg('拼命计算中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
+                                            //分摊入账
+                                            $.ajax({
+                                                url:'/rest/share/doShare.action',
+                                                dataType:'json',
+                                                type:"POST",
+                                                data:{paths:param,sumArea:data.attr.sumArea,totalHouse:data.attr.sumHouses,shareType:${record.shareType},cost:${record.moneySum},record:${record.id}}
+                                            }).done(function (data) {
+                                                parent.layer.close(loadingMask);
+                                                layer.alert(data.description,{clostBtn:0},function(index){
+                                                    layer.close(index);
+                                                });
+                                                parent.table.ajax.reload();
 
-                                        }).fail(function (xhr) {
-                                            layer.alert(xhr.statusText);
-                                        })
-                                    }});
+                                            }).fail(function (xhr) {
+                                                layer.alert(xhr.statusText);
+                                            })
+                                        }});
+                                    }
                                 })
                             }
                         });

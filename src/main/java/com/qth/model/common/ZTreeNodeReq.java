@@ -17,6 +17,8 @@ public class ZTreeNodeReq {
 
     private String param;
 
+    private String nameSearch;
+
     public Integer getId() {
         return id;
     }
@@ -63,5 +65,13 @@ public class ZTreeNodeReq {
 
     public void setParam(String param) {
         this.param = param;
+    }
+
+    public String getNameSearch() {
+        return nameSearch;
+    }
+
+    public void setNameSearch(String nameSearch) {
+        this.nameSearch = nameSearch;
     }
 }

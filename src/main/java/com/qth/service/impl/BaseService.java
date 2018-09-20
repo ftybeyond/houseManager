@@ -46,7 +46,7 @@ public class BaseService<T extends DataTableReqWrapper> implements IBaseService<
     }
 
     @Override
-    public DataTableRspWrapper<T> selectDataTable2Rsp(T entity,Map<String,String> orders,Map<String,String> conditions) {
+    public DataTableRspWrapper<T> selectDataTable2Rsp(T entity,Map<String,String> orders,Map<String,Object> conditions) {
         DataTableRspWrapper rspWrapper = new DataTableRspWrapper();
         List<ResultMapping> resultMappings = sqlSessionFactory.getConfiguration().getResultMap("com.qth.dao." +clazz.getSimpleName()+"Mapper.BaseResultMap" ).getResultMappings();
         SelectDataTableMap map = BeanUtil.searchBean2Map(entity,resultMappings);

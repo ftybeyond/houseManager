@@ -35,15 +35,9 @@
                     var treeObj;
                     var tableObj;
                     treeObj = tree.genTree("selectTree",{
-                        check:{
-                            enable:false
-                        },
-                        callback:{
-                            onClick:function(event, treeId, treeNode){
-                                $("#searchForm input[name='id']").val(treeNode.id);
-                                $("#searchForm input[name='level']").val(treeNode.level);
-                                tableObj.ajax.reload()
-                            }
+                        onCheck:function () {
+                            $("#searchForm input[name='paths']").val(tree.getPathParam());
+                            tableObj.ajax.reload();
                         }
                     });
                     var table_config ={
@@ -56,19 +50,34 @@
                                     showable: true,
                                     defaultContent: ''
                                 },
-                                {name:"code",showable:true},
+                                {name:"residentialAreaName",showable:true},
+                                {name:"buildingName",showable:true},
+                                {name:"unitName",showable:true},
+                                {name:"floor",showable:true},
+                                {name:"name",showable:true},
                                 {name:"ownerName",showable:true},
                                 {name:"ownerPsptid",showable:true},
                                 {name:"ownerTel",showable:true},
-                                {name:"accountBalance",showable:true},
                                 {name:"type",showable:true,render:function(row){
                                     var dic = common.findArrayValue(row,data["HouseType.json"])
                                     return dic&&dic.text?dic.text:"";
-                                }}
+                                }},
+                                {name:"accountBalance",showable:true}
                             ]
                         },
                         editable:false,
-                        deleteable:false
+                        deleteable:false,
+                        tableSettings:{
+                            "footerCallback": function ( row, data, start, end, display ) {
+                                var api = this.api();
+                                $.post("/rest/house/balanceSum.action",$("#searchForm").serializeJSON(),null,"json").done(function (resp) {
+                                    $( api.column( 10 ).footer() ).html(
+                                        resp.data
+                                    );
+                                })
+
+                            }
+                        }
                     }
                     tableObj = common.init(table_config);
                     tableObj.on('click', 'td.details-control', function () {
@@ -145,8 +154,7 @@
         </div>
         <div class="col-md-9 column">
             <form id="searchForm" class="form-horizontal" role="form">
-                <input type="hidden" name="id"/>
-                <input type="hidden" name="level"/>
+                <input type="hidden" name="paths"/>
                 <div class="row clearfix" style="padding: 10px;">
                     <div class="col-xs-5 search-form-group">
                         <label class="control-label col-xs-3">业主姓名</label>
@@ -172,14 +180,24 @@
                     <thead>
                     <tr>
                         <th>明细</th>
-                        <th>产业代码</th>
+                        <th>小区</th>
+                        <th>楼栋</th>
+                        <th>单元</th>
+                        <th>楼层</th>
+                        <th>房号</th>
                         <th>业主姓名</th>
                         <th>业主证件</th>
                         <th>业主电话</th>
-                        <th>账户余额(单位:元)</th>
                         <th>房屋类型</th>
+                        <th>账户余额(单位:元)</th>
                     </tr>
                     </thead>
+                    <tfoot>
+                    <tr>
+                        <th colspan="10" style="text-align:right" rowspan="1">合计余额:</th>
+                        <th></th>
+                    </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>

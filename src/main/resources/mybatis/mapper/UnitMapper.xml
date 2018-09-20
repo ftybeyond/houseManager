@@ -94,6 +94,7 @@
     <if test="building!=null">
       and rb.building=#{building}
     </if>
+    order by rb.residentialAreaName,rb.buildingName,u.name
     <if test="length>0">
       limit #{start} ,#{length}
     </if>

@@ -1,7 +1,9 @@
 package com.qth.service;
 
+import com.qth.model.AccountLog;
 import com.qth.model.House;
 import com.qth.model.RepairRecord;
+import com.qth.model.common.DataTableRspWrapper;
 import com.qth.model.common.ZTreeModel;
 import com.qth.model.common.ZTreeNodeReq;
 
@@ -31,6 +33,10 @@ public interface IShareService {
 
     public int shareBack(Integer record,String handler);
 
+    public int shareAccount(Integer record,String handler);
+
+    public int shareBackAccount(Integer record, String handler);
+
     public BigDecimal getRecordCost(Integer id);
 
     public int sumShareHouses(String paths);
@@ -38,4 +44,8 @@ public interface IShareService {
     public BigDecimal sumShareArea(String paths);
 
     public Map<String,BigDecimal> shareBackInfo(Long seq);
+
+    public DataTableRspWrapper<AccountLog> shareAccountDetail(AccountLog record);
+
+    public double shareSumAccountDetail(AccountLog record);
 }

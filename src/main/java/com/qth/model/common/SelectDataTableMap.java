@@ -15,19 +15,19 @@ public class SelectDataTableMap extends DataTableReqWrapper{
     private String[] cols;
 
     //要查询的条件映射,null时为无条件查询
-    private Map<String,String> conditions;
+    private Map<String,Object> conditions;
 
     //排序
     private Map<String,String> orders;
 
 
-    public SelectDataTableMap(String tableName, String[] cols, Map<String, String> conditions) {
+    public SelectDataTableMap(String tableName, String[] cols, Map<String, Object> conditions) {
         this.tableName = tableName;
         this.cols = cols;
         this.conditions = conditions;
     }
 
-    public SelectDataTableMap(String tableName, Map<String, String> conditions) {
+    public SelectDataTableMap(String tableName, Map<String, Object> conditions) {
         this.tableName = tableName;
         this.cols = null;
         this.conditions = conditions;
@@ -55,11 +55,11 @@ public class SelectDataTableMap extends DataTableReqWrapper{
         this.cols = cols;
     }
 
-    public Map<String, String> getConditions() {
+    public Map<String, Object> getConditions() {
         return conditions;
     }
 
-    public void setConditions(Map<String, String> conditions) {
+    public void setConditions(Map<String, Object> conditions) {
         this.conditions = conditions;
     }
 

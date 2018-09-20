@@ -1,8 +1,11 @@
 package com.qth.action;
 
+import com.qth.model.AccountLog;
 import com.qth.model.RepairItem;
 import com.qth.model.House;
 import com.qth.model.common.CommonRsp;
+import com.qth.model.common.DataTableRspWrapper;
+import com.qth.service.IAccountLogService;
 import com.qth.service.IRepairItemService;
 import com.qth.service.IRepairRecordService;
 import com.qth.service.IShareService;
@@ -29,6 +32,9 @@ public class ShareController extends BaseController{
 
     @Autowired
     IRepairItemService repairItemService;
+
+    @Autowired
+    IAccountLogService accountLogService;
 
     @RequestMapping(value = "/page/shareDetail")
     public ModelAndView shareDetail(Integer record){
@@ -70,7 +76,9 @@ public class ShareController extends BaseController{
             if(unBalance.size()>0){
                 rsp.setData(unBalance);
             }else{
-
+                rsp.setSuccess(false);
+                rsp.setResultCode("1001");
+                rsp.setDescription("无效参数");
             }
         } else {
             rsp.setSuccess(false);
@@ -87,7 +95,7 @@ public class ShareController extends BaseController{
         if (paths!=null&&paths.length()>0) {
             int result = shareService.share(paths,shareType,sumArea,totalHouse,cost,record,getHandler(session));
             rsp.setSuccess(true);
-            rsp.setDescription("分摊入账" +result + "户");
+            rsp.setDescription("分摊" +result + "户");
             rsp.setResultCode("0000");
         } else {
             rsp.setSuccess(false);
@@ -97,10 +105,18 @@ public class ShareController extends BaseController{
         return rsp;
     }
 
+    @RequestMapping(value = "/rest/share/doShareAccount")
+    @ResponseBody
+    public CommonRsp doShareAccount(Integer record, HttpSession session){
+        CommonRsp rsp = new CommonRsp();
+        int effect = shareService.shareAccount(record,getHandler(session));
+        return dbEffect2Rsp(effect);
+    }
+
     @RequestMapping(value = "/rest/share/doShareBack")
     @ResponseBody
     public CommonRsp doShareBack(Integer record,HttpSession session){
-        int effect = shareService.shareBack(record,getHandler(session));
+        int effect = shareService.shareBackAccount(record,getHandler(session));
         return dbEffect2Rsp(effect);
     }
 
@@ -111,4 +127,18 @@ public class ShareController extends BaseController{
         return data2Rsp(result);
     }
 
+    @RequestMapping(value = "/rest/share/shareSumAccountDetail")
+    @ResponseBody
+    public CommonRsp shareSumAccountDetail(AccountLog record){
+        double result = shareService.shareSumAccountDetail(record);
+        return data2Rsp(result);
+    }
+
+    @RequestMapping(value = "/rest/share/shareAccountDetail")
+    @ResponseBody
+    public DataTableRspWrapper<AccountLog> shareAccountDetail(AccountLog record){
+        DataTableRspWrapper<AccountLog> rspWrapper = shareService.shareAccountDetail(record);
+        rspWrapper.setDraw(1);
+        return shareService.shareAccountDetail(record);
+    }
 }

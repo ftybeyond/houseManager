@@ -14,11 +14,30 @@ public class RepairRecord extends DataTableReqWrapper {
 
     private String address;
 
+    @Deprecated
     private String developer;
 
+    @Deprecated
     private String propertyCompany;
 
+    @Deprecated
     private String propertyCompanyTel;
+
+    private String org1;
+
+    private String tel1;
+
+    private String org2;
+
+    private String tel2;
+
+    private String worker;
+
+    private String workerTel;
+
+    @JSONField(format = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date workTime;
 
     private String owners;
 
@@ -148,5 +167,61 @@ public class RepairRecord extends DataTableReqWrapper {
 
     public void setShareSeq(Long shareSeq) {
         this.shareSeq = shareSeq;
+    }
+
+    public String getOrg1() {
+        return org1;
+    }
+
+    public void setOrg1(String org1) {
+        this.org1 = org1;
+    }
+
+    public String getTel1() {
+        return tel1;
+    }
+
+    public void setTel1(String tel1) {
+        this.tel1 = tel1;
+    }
+
+    public String getOrg2() {
+        return org2;
+    }
+
+    public void setOrg2(String org2) {
+        this.org2 = org2;
+    }
+
+    public String getTel2() {
+        return tel2;
+    }
+
+    public void setTel2(String tel2) {
+        this.tel2 = tel2;
+    }
+
+    public String getWorker() {
+        return worker;
+    }
+
+    public void setWorker(String worker) {
+        this.worker = worker;
+    }
+
+    public String getWorkerTel() {
+        return workerTel;
+    }
+
+    public void setWorkerTel(String workerTel) {
+        this.workerTel = workerTel;
+    }
+
+    public Date getWorkTime() {
+        return workTime;
+    }
+
+    public void setWorkTime(Date workTime) {
+        this.workTime = workTime;
     }
 }
