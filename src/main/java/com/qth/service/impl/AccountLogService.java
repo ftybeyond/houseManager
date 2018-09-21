@@ -125,13 +125,21 @@ public class AccountLogService extends BaseService<AccountLog> implements IAccou
             cell.setCellValue(AccountLog.TRADE_TYPE.get(accountLog.getTradeType()));
 
             cell = row.createCell(9,CellType.STRING);//交易时间
-            cell.setCellValue(new SimpleDateFormat("yyyy-MM-dd").format(accountLog.getTradeTime()));
+            if (accountLog.getTradeTime()!=null) {
+                cell.setCellValue(new SimpleDateFormat("yyyy-MM-dd").format(accountLog.getTradeTime()));
+            }else{
+                cell.setCellValue("");
+            }
 
             cell = row.createCell(10,CellType.STRING);//操作员
             cell.setCellValue(accountLog.getHandler());
 
             cell = row.createCell(11,CellType.NUMERIC);//交易金额
-            cell.setCellValue(accountLog.getTradeMoney().doubleValue());
+            if (accountLog.getTradeMoney()!=null) {
+                cell.setCellValue(accountLog.getTradeMoney().doubleValue());
+            }else{
+                cell.setCellValue("");
+            }
         }
 
         HSSFRow footer = sheet.createRow(list.size()+1);

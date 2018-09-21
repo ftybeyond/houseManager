@@ -108,7 +108,18 @@
                             },
                             {
                                 text: '导出',// 显示文字
-                                className:'btn btn-dark'
+                                className:'btn btn-dark',
+                                action:function(e, dt, node, config){
+                                    $("#exportForm").empty();
+                                    var formData = $("#searchForm").serializeJSON();
+                                    for(var key in formData){
+                                        $("#exportForm").append('<input type="hidden" name="'+key+'" value="'+formData[key]+'"/>')
+                                    }
+                                    $("#exportForm").append('<input type="hidden" name="supplement" value="'+$(dt.column( 11 ).footer()).html()+'"/>');
+                                    $("#exportForm").append('<input type="hidden" name="length" value="-1"/>');
+                                    $("#exportForm").append('<input type="hidden" name="paths" value="'+tree.getPathParam()+'"/>')
+                                    $("#exportForm").submit();
+                                }
                             }
                         ]
                     })
@@ -301,5 +312,8 @@
         </table>
     </div>
 </div>
+
+<form id="exportForm" action="/export/balanceBack.action" method="post" style="display: none">
+</form>
 </body>
 </html>

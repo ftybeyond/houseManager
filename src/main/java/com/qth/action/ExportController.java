@@ -2,8 +2,6 @@ package com.qth.action;
 
 import com.qth.model.dto.ReportForm;
 import com.qth.service.IAccountLogService;
-import com.sun.deploy.net.HttpResponse;
-import com.sun.deploy.net.URLEncoder;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 @Controller
 public class ExportController {
@@ -21,8 +20,18 @@ public class ExportController {
 
     @RequestMapping(value = "/export/balanceBack")
     public void balanceBackDetail(ReportForm model, HttpServletResponse response, HttpServletRequest request){
+        String filename = "基金返还明细信息.xls";
+        export(filename,model,response,request);
+    }
+
+    @RequestMapping(value = "/export/report")
+    public void report(ReportForm model, HttpServletResponse response, HttpServletRequest request){
+        String filename = "统计报表.xls";
+        export(filename,model,response,request);
+    }
+
+    private void export(String filename, ReportForm model, HttpServletResponse response, HttpServletRequest request){
         try {
-            String filename = "基金返还明细信息.xls";
             final String userAgent = request.getHeader("USER-AGENT");
             if(StringUtils.contains(userAgent, "MSIE")){//IE浏览器
                 filename = URLEncoder.encode(filename,"UTF-8");
