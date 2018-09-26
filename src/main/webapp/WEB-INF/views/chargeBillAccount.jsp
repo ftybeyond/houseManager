@@ -43,6 +43,7 @@
                             onClick:function(event, treeId, treeNode){
                                 $("#searchForm input[name='id']").val(treeNode.id);
                                 $("#searchForm input[name='level']").val(treeNode.level);
+                                $("#searchForm input[name='name']").val(treeNode.name);
                                 tableObj.ajax.reload()
                             }
                         }
@@ -153,6 +154,7 @@
             <form id="searchForm" class="form-horizontal" role="form">
                 <input type="hidden" name="id"/>
                 <input type="hidden" name="level"/>
+                <input type="hidden" name="name"/>
                 <div class="row clearfix" style="padding: 10px;">
                     <div class="col-xs-5 search-form-group">
                         <label class="control-label col-xs-3">业主姓名</label>

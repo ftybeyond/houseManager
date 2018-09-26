@@ -98,7 +98,7 @@ public class HouseService extends BaseService<House> implements IHouseService {
 
     @Override
     public List<House> selectByTreeNode(HouseTreeModel model){
-        model.setSqlAppend(sqlAppend(model.getPaths()));
+        model.setSqlAppend(sqlAppend(model));
         return houseMapper.selectByTreeNode(model);
     }
 
@@ -108,7 +108,7 @@ public class HouseService extends BaseService<House> implements IHouseService {
     }
 
     public double balanceSum(HouseTreeModel model){
-        model.setSqlAppend(sqlAppend(model.getPaths()));
+        model.setSqlAppend(sqlAppend(model));
         return houseMapper.balanceSumByTreeNode(model);
     }
 
@@ -379,6 +379,36 @@ public class HouseService extends BaseService<House> implements IHouseService {
         return houseMapper.invoiceInfoByCode(code);
     }
 
+
+    public static String sqlAppend(HouseTreeModel model){
+        if(model.getId()!=null){
+            StringBuffer buffer = new StringBuffer("(");
+            switch (model.getLevel()) {
+                case HouseTree.RESIDENTIALAREA_LEVEL:
+                    //指定小区下所有房屋信息
+                    buffer.append(" ra.id = ").append(model.getId());
+                    break;
+                case HouseTree.BUILDING_LEVEL:
+                    buffer.append(" b.id = ").append(model.getId());
+                    break;
+                case HouseTree.UNIT_LEVEL:
+                    buffer.append(" u.id = ").append(model.getId());
+                    break;
+                case HouseTree.FLOOR_LEVEL:
+                    buffer.append(" (u.id = ").append(model.getId()).append(" and h.floor = ").append(model.getName()).append(")");
+                    break;
+                case HouseTree.HOUSE_LEVEL:
+                    buffer.append(" h.id = ").append(model.getId());
+                    break;
+                default:
+                    break;
+            }
+            buffer.append(")");
+            return buffer.toString();
+        }else{
+            return sqlAppend(model.getPaths());
+        }
+    }
 
     public static String sqlAppend(String paths){
         if (paths!=null && paths.trim().length()>0) {
