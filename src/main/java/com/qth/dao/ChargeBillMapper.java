@@ -42,4 +42,6 @@ public interface ChargeBillMapper {
     int abolishInvoiceNum(ChargeBill chargeBill);
 
     int selectCountByInvoiceNum(String invoiceNum);
+
+    Double selectSumByForm(ChargeBillForm chargeBillForm);
 }

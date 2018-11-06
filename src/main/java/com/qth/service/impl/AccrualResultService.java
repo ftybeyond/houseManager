@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -44,6 +46,39 @@ public class AccrualResultService extends BaseService<AccrualResult> implements 
     @Override
     public int deleteAccrualResultById(int id) {
         return accrualResultMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public DataTableRspWrapper<AccrualResult> selectByTree(AccrualResult accrualResult) {
+        String sqlAppend = HouseService.sqlAppend(accrualResult.getPaths());
+        Map map = new HashMap<>();
+        map.put("state",accrualResult.getState());
+        map.put("sqlAppend",sqlAppend);
+        map.put("start",accrualResult.getStart());
+        map.put("length",accrualResult.getLength());
+        List<AccrualResult> list =  accrualResultMapper.selectResultByTree(map);
+        DataTableRspWrapper rspWrapper = new DataTableRspWrapper();
+        rspWrapper.setData(list);
+        rspWrapper.setRecordsTotal(accrualResultMapper.selectResultCountByTree(map));
+        return rspWrapper;
+    }
+
+    @Override
+    public Double sumByTree(AccrualResult accrualResult) {
+        String sqlAppend = HouseService.sqlAppend(accrualResult.getPaths());
+        Map map = new HashMap<>();
+        map.put("state",accrualResult.getState());
+        map.put("sqlAppend",sqlAppend);
+        return accrualResultMapper.sumResultByTree(map);
+    }
+
+    @Override
+    public List<AccrualInfo> summaryResult(AccrualResult accrualResult) {
+        String sqlAppend = HouseService.sqlAppend(accrualResult.getPaths());
+        Map map = new HashMap<>();
+        map.put("state",accrualResult.getState());
+        map.put("sqlAppend",sqlAppend);
+        return accrualResultMapper.summaryResultByTree(map);
     }
 
     @Override

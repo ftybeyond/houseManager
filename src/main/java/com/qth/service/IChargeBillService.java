@@ -39,4 +39,6 @@ public interface IChargeBillService extends IBaseService<ChargeBill>
 
     public int selectCountByInvoiceNum(String invoiceNum);
 
+    public Double selectSumByForm(ChargeBillForm chargeBillForm);
+
 }

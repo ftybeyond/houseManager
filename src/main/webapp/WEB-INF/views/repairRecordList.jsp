@@ -257,14 +257,14 @@
 <div class="ln_solid"></div>
 <!-- 数据表格 -->
 <div class="container">
-    <table id="datatable" class="table table-striped table-bordered" style="width:1200px;">
+    <table id="datatable" class="table table-striped table-bordered" style="width:100%;">
         <thead>
         <tr>
             <th></th>
             <th>项目名称</th>
             <th>业主委员会</th>
             <th>业主委员会电话</th>
-            <th>申请施工时间</th>
+            <th>申请时间</th>
             <th>合计金额</th>
             <th>分摊方式</th>
             <th>登记日期</th>
@@ -357,9 +357,9 @@
 
                 <div class="row clearfix">
                     <div class="col-xs-6 form-group">
-                        <label class="control-label col-xs-4">申请施工日期</label>
+                        <label class="control-label col-xs-4">申请日期</label>
                         <div class="col-xs-8">
-                            <input type="text" class="form-control" placeholder="申请施工日期" onClick="WdatePicker()" name="workTime"/>
+                            <input type="text" class="form-control" placeholder="申请日期" onClick="WdatePicker()" name="workTime"/>
                         </div>
                     </div>
                     <div class="col-xs-6 form-group">

@@ -24,7 +24,10 @@
             font-size: 16px;
         }
         .toolbar{
-            float:right;
+            float:left;
+        }
+        .toolbar h5{
+            float:left;
         }
         h5{
             clear:both;
@@ -74,27 +77,44 @@
                             }
                         },
                         columns:[
-                            {data:"joinHouseCode"},
-                            {data:"joinHouseOwner"},
+//                            {data:"joinHouseCode"},
                             {data:"residentialAreaName"},
                             {data:"buildingName"},
                             {data:"unitName"},
                             {data:"houseFloor"},
                             {data:"houseName"},
+                            {data:"joinHouseOwner"},
                             {data:"houseArea"},
                             {data:"tradeType",render:function (row) {
                                 var dic = common.findArrayValue(row,data["TradeType.json"])
                                 return dic&&dic.text?dic.text:"";
                             }},
-                            {data:"tradeTime"},
+                            {data:"tradeTime",render:function (row,d,full) {
+                                if(full.tradeType == 3){
+                                    var remark = full.remark;
+                                    if(remark&&remark.indexOf('至')>0){
+                                        var end = remark.substring(remark.indexOf("至")+1)
+                                        return end;
+                                    }else{
+                                        return ''
+                                    }
+                                }else{
+                                    return row;
+                                }
+                            }},
                             {data:"handler"},
-                            {data:"tradeMoney"}
+                            {data:"tradeMoney"},
+                            {data:"afterTrade"}
                         ],
                         "footerCallback": function ( row, data, start, end, display ) {
                             var api = this.api();
-                            $.post("/rest/accountLog/reportSum.action",$("#searchForm").serializeJSON(),null,"json").done(function (resp) {
+                            var param = $.extend({paths:tree.getPathParam()},$("#searchForm").serializeJSON())
+                            $.post("/rest/accountLog/reportSum.action",param,null,"json").done(function (resp) {
+                                $( api.column( 10 ).footer() ).html(
+                                    resp.data[1]
+                                );
                                 $( api.column( 11 ).footer() ).html(
-                                    resp.data
+                                    resp.data[0]
                                 );
                             })
 
@@ -104,21 +124,33 @@
                             {
                                 extend: 'print',
                                 className:'btn btn-dark',
-                                text: '打印'
+                                text: '打印',
+                                footer:true,
+                                exportOptions:{
+                                    format: {
+                                        footer: function ( data, columnIdx ) {
+                                            if(columnIdx>=9){
+                                                return data;
+                                            }else{
+                                                return '';
+                                            }
+                                        }
+                                    }
+                                }
                             },
                             {
                                 text: '导出',// 显示文字
                                 className:'btn btn-dark',
                                 action:function(e, dt, node, config){
-                                    $("#exportForm").empty();
+                                    $("#exportTableForm").empty();
                                     var formData = $("#searchForm").serializeJSON();
                                     for(var key in formData){
-                                        $("#exportForm").append('<input type="hidden" name="'+key+'" value="'+formData[key]+'"/>')
+                                        $("#exportTableForm").append('<input type="hidden" name="'+key+'" value="'+formData[key]+'"/>')
                                     }
-                                    $("#exportForm").append('<input type="hidden" name="supplement" value="'+$(dt.column( 11 ).footer()).html()+'"/>');
-                                    $("#exportForm").append('<input type="hidden" name="length" value="-1"/>');
-                                    $("#exportForm").append('<input type="hidden" name="paths" value="'+tree.getPathParam()+'"/>')
-                                    $("#exportForm").submit();
+                                    $("#exportTableForm").append('<input type="hidden" name="supplement" value="'+$(dt.column( 11 ).footer()).html()+'"/>');
+                                    $("#exportTableForm").append('<input type="hidden" name="length" value="-1"/>');
+                                    $("#exportTableForm").append('<input type="hidden" name="paths" value="'+tree.getPathParam()+'"/>')
+                                    $("#exportTableForm").submit();
                                 }
                             }
                         ]
@@ -150,9 +182,42 @@
                                     {data:"buildingName"},
                                     {data:"unitName"},
                                     {data:"houseCode"},
+                                    {data:"tradeTime",render:function (row,d,full) {
+                                        if(full.tradeType == 3){
+                                            var remark = full.remark;
+                                            if(remark&&remark.indexOf('至')>0){
+                                                var end = remark.substring(remark.indexOf("至")+1)
+                                                return end;
+                                            }else{
+                                                return ''
+                                            }
+                                        }else{
+                                            return row;
+                                        }
+                                    }},
                                     {data:"sumResult"}
                                 ],
                                 dom: 'B<"toolbar">lrtip',
+                                "footerCallback": function ( row, data, start, end, display ) {
+                                    var api = this.api(), data;
+                                    // Remove the formatting to get integer data for summation
+                                    var intVal = function ( i ) {
+                                        return typeof i === 'string' ?
+                                            i.replace(/[\$,]/g, '')*1 :
+                                            typeof i === 'number' ?
+                                                i : 0;
+                                    };
+                                    // Total over all pages
+                                    var total = api
+                                        .column( 5 )
+                                        .data()
+                                        .reduce( function (a, b) {
+                                            return intVal(a) + intVal(b);
+                                        }, 0 ).toFixed(2);
+                                    $( api.column(5).footer() ).html(
+                                        total
+                                    );
+                                },
                                 buttons: [
                                     {
                                         extend: 'print',
@@ -163,13 +228,48 @@
                                         messageBottom:function () {
                                             return '<div style="float: right;">打印时间:'+new Date().format("yyyy-MM-dd")+'</div>'
                                         },
-                                        text: '打印'
+                                        text: '打印',
+                                        footer:true,
+                                        exportOptions:{
+                                            columns: ':visible',
+                                            format: {
+                                                footer: function ( data, columnIdx ) {
+                                                    var columns = summaryTable.columns(":visible").data().length;
+                                                    if(columnIdx>=columns-2){
+                                                        return data;
+                                                    }else{
+                                                        return '';
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    {
+                                        text: '导出',// 显示文字
+                                        className:'btn btn-dark',
+                                        action:function(e, dt, node, config){
+                                            $("#exportSummaryForm").empty();
+                                            var formData = $("#searchForm").serializeJSON();
+                                            for(var key in formData){
+                                                $("#exportSummaryForm").append('<input type="hidden" name="'+key+'" value="'+formData[key]+'"/>')
+                                            }
+                                            $("#exportSummaryForm").append('<input type="hidden" name="length" value="-1"/>');
+                                            $("#exportSummaryForm").append('<input type="hidden" name="summaryMsg" value="'+summaryMsg().replace(/<h5>/g,"").replace(new RegExp("</h5>",'g'),"-")+'"/>');
+                                            $("#exportSummaryForm").append('<input type="hidden" name="paths" value="'+tree.getPathParam()+'"/>')
+                                            $("#exportSummaryForm").submit();
+                                        }
                                     }
                                 ]
                             })
                         };
                         summaryTable.columns( [0,1,2,3]).visible( true );
                         var summaryGroup = $("#summaryGroupSelect").val();
+                        var summaryType = $("#summaryTypeSelect").val();
+                        if(summaryType == 3){
+                            summaryTable.columns( [4] ).visible( true );
+                        }else{
+                            summaryTable.columns( [4] ).visible( false );
+                        }
                         if(summaryGroup == 1){
                             //小区
                             summaryTable.columns( [1, 2, 3] ).visible( false );
@@ -245,18 +345,18 @@
                         <div class="col-xs-3 search-form-group">
                             <label class="control-label col-xs-3">起始日期</label>
                             <div class="col-md-9 col-sm-9 col-xs-9">
-                                <input type="text" id="startDate" class="form-control" placeholder="要查询交易起始日期" onClick="WdatePicker({maxDate:'#F{$dp.$D(\'endDate\',{d:-1})}'})" name="fromDate"/>
+                                <input type="text" id="startDate" class="form-control" placeholder="要查询交易起始日期" onClick="WdatePicker({maxDate:'#F{$dp.$D(\'endDate\',{d:0})}'})" name="fromDate"/>
                             </div>
                         </div>
                         <div class="col-xs-3 search-form-group">
                             <label class="control-label col-xs-3">截至日期</label>
                             <div class="col-xs-9">
-                                <input type="text" id="endDate" class="form-control" placeholder="要查询交易截至日期" onClick="WdatePicker({minDate:'#F{$dp.$D(\'startDate\',{d:1})}'})" name="endDate"/>
+                                <input type="text" id="endDate" class="form-control" placeholder="要查询交易截至日期" onClick="WdatePicker({minDate:'#F{$dp.$D(\'startDate\',{d:0})}'})" name="endDate"/>
                             </div>
                         </div>
                         <div class="col-xs-3 search-form-group">
-                            <label class="control-label col-xs-3">批量流水</label>
-                            <div class="col-xs-9">
+                            <label class="control-label col-xs-5">批次/拨款单号</label>
+                            <div class="col-xs-7">
                                 <input type="text" id="seq" class="form-control" placeholder="要查询的批次号" name="seq"/>
                             </div>
                         </div>
@@ -272,23 +372,24 @@
                 <table id="datatable" class="table table-striped table-bordered" style="width:100%">
                     <thead>
                     <tr>
-                        <th>产业代码</th>
-                        <th>业主姓名</th>
                         <th>所属小区</th>
                         <th>楼栋</th>
                         <th>单元</th>
                         <th>层号</th>
                         <th>房号</th>
+                        <th>业主姓名</th>
                         <th>面积</th>
                         <th>交易类型</th>
                         <th>交易时间</th>
                         <th>处理人</th>
                         <th>交易金额(元)</th>
+                        <th>余额(元)</th>
                     </tr>
                     </thead>
                     <tfoot>
                     <tr>
-                        <th colspan="11" style="text-align:right" rowspan="1">合计金额:</th>
+                        <th colspan="10" style="text-align:right" rowspan="1">合计:</th>
+                        <th></th>
                         <th></th>
                     </tr>
                     </tfoot>
@@ -306,14 +407,24 @@
                 <th>楼栋</th>
                 <th>单元</th>
                 <th>产业代码</th>
+                <th>计息时间</th>
                 <th>合计金额(元)</th>
             </tr>
             </thead>
+            <tfoot>
+            <tr>
+                <th colspan="5" style="text-align:right" rowspan="1">合计:</th>
+                <th></th>
+            </tr>
+            </tfoot>
         </table>
     </div>
 </div>
 
-<form id="exportForm" action="/export/balanceBack.action" method="post" style="display: none">
+<form id="exportTableForm" action="/export/report.action" method="post" style="display: none">
+</form>
+
+<form id="exportSummaryForm" action="/export/summary.action" method="post" style="display: none">
 </form>
 </body>
 </html>

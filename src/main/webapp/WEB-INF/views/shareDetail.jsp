@@ -63,26 +63,27 @@
                                 return;
                             }else{
                                 var loadingMask = parent.layer.msg('拼命计算中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
-
+                                var reqParam = {paths:param,sumArea:data.attr.sumArea,totalHouse:data.attr.sumHouses,shareType:${record.shareType},cost:${record.moneySum},record:${record.id}}
                                 //检测余额不足账户
-                                $.post("/rest/share/shareCheck.action",{paths:param,sumArea:data.attr.sumArea,totalHouse:data.attr.sumHouses,shareType:${record.shareType},cost:${record.moneySum},record:${record.id}},null,"json").done(function(checkData){
+                                $.post("/rest/share/shareCheck.action",reqParam,null,"json").done(function(checkData){
                                     parent.layer.close(loadingMask)
-                                    var warn = "<p>确认分摊信息？</p>";
+                                    var warn = "<p>确认入账分摊信息？</p>";
                                     if(checkData.data&&checkData.data.length > 0){
-                                        warn = "<p>以下账户余额已不足</p>";
+                                        warn += "<p>以下账户余额已不足</p>";
                                         $.each(checkData.data,function(index,item){
                                             warn += '<p>产业代码：' + item.code + '，业主：'+item.ownerName+'，余额：' +item.accountBalance.toFixed(2)+ '</p>';
                                         });
-                                        layer.alert(warn);
-                                    }else{
-                                        layer.confirm( warn,{yes:function(){
+                                    }
+                                    layer.confirm( warn,{btn:["确认分摊","导出明细","取消"],yes:function(){
+                                        layer.confirm('<p>请填写拨款单号：</p><p><input onkeyup="this.value=this.value.replace(/\\D/g,\'\')"\n' +
+                                            'onafterpaste="this.value=this.value.replace(/\\D/g,\'\')" style="width: 100%"/></p>',{title:"拨款单号",area:["400px"],btn:["保存","取消"]},function (index,layObj) {
+                                            var value = layObj.find("input").val();
                                             var loadingMask = parent.layer.msg('拼命计算中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
-                                            //分摊入账
                                             $.ajax({
                                                 url:'/rest/share/doShare.action',
                                                 dataType:'json',
                                                 type:"POST",
-                                                data:{paths:param,sumArea:data.attr.sumArea,totalHouse:data.attr.sumHouses,shareType:${record.shareType},cost:${record.moneySum},record:${record.id}}
+                                                data:{paths:param,sumArea:data.attr.sumArea,flowNum:value,totalHouse:data.attr.sumHouses,shareType:${record.shareType},cost:${record.moneySum},record:${record.id}}
                                             }).done(function (data) {
                                                 parent.layer.close(loadingMask);
                                                 layer.alert(data.description,{clostBtn:0},function(index){
@@ -93,8 +94,17 @@
                                             }).fail(function (xhr) {
                                                 layer.alert(xhr.statusText);
                                             })
-                                        }});
-                                    }
+                                        })
+
+                                    },btn2:function () {
+                                        $("#exportForm").empty();
+                                        for(var key in reqParam){
+                                            $("#exportForm").append('<input type="hidden" name="'+key+'" value="'+reqParam[key]+'"/>')
+                                        }
+                                        $("#exportForm").append('<input type="hidden" name="names" value="'+tree.getPathNames()+'"/>')
+                                        $("#exportForm").submit();
+                                        return false;
+                                    }});
                                 })
                             }
                         });
@@ -148,6 +158,7 @@
         <button id="calculateBtn" style="float:right" class="btn btn-primary" type="button">计算分摊结果</button>
     </div>
 </div>
-
+<form id="exportForm" action="/export/shareCheck.action" method="post" style="display: none">
+</form>
 </body>
 </html>

@@ -5,6 +5,8 @@ import java.util.Date;
 
 public class AccrualInfo {
 
+    private String residentialAreaName;
+
     private BigDecimal accrualSum;
 
     private Date endTime;
@@ -16,6 +18,14 @@ public class AccrualInfo {
     private BigDecimal accountBalance;
 
     private BigDecimal newBalance;
+
+    public String getResidentialAreaName() {
+        return residentialAreaName;
+    }
+
+    public void setResidentialAreaName(String residentialAreaName) {
+        this.residentialAreaName = residentialAreaName;
+    }
 
     public BigDecimal getAccrualSum() {
         return accrualSum;
@@ -50,7 +60,10 @@ public class AccrualInfo {
     }
 
     public BigDecimal getNewBalance() {
-        return accountBalance.add(accrualSum);
+        if(accountBalance!=null){
+            return accountBalance.add(accrualSum);
+        }
+        return new BigDecimal(0f);
     }
 
     public void setNewBalance(BigDecimal newBalance) {

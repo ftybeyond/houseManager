@@ -40,6 +40,8 @@ public class House extends DataTableReqWrapper {
 
     private BigDecimal unitPrice;
 
+    private BigDecimal totalPrice;
+
     private String ownerName;
 
     private String ownerTel;
@@ -53,6 +55,8 @@ public class House extends DataTableReqWrapper {
     private Date accrualTime;
 
     private BigDecimal accrualBalance;
+
+    private BigDecimal shareMoney;
 
     public Integer getId() {
         return id;
@@ -182,6 +186,14 @@ public class House extends DataTableReqWrapper {
         this.unitPrice = unitPrice;
     }
 
+    public BigDecimal getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(BigDecimal totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
     public String getOwnerName() {
         return ownerName;
     }
@@ -228,5 +240,13 @@ public class House extends DataTableReqWrapper {
 
     public void setOwnerTel(String ownerTel) {
         this.ownerTel = ownerTel;
+    }
+
+    public BigDecimal getShareMoney() {
+        return shareMoney;
+    }
+
+    public void setShareMoney(BigDecimal shareMoney) {
+        this.shareMoney = shareMoney;
     }
 }

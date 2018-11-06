@@ -129,6 +129,11 @@ public class ChargeBillService extends BaseService<ChargeBill> implements ICharg
     }
 
     @Override
+    public Double selectSumByForm(ChargeBillForm chargeBillForm) {
+        return chargeBillMapper.selectSumByForm(chargeBillForm);
+    }
+
+    @Override
     public DataTableRspWrapper<ChargeBill> selectInvoiceByForm(InvoiceForm invoiceForm) {
         DataTableRspWrapper<ChargeBill> rspWrapper = new DataTableRspWrapper<>();
         rspWrapper.setData(chargeBillMapper.selectInvoiceByForm(invoiceForm));

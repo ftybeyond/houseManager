@@ -11,6 +11,6 @@ public interface IAccrualService {
 
     int accrualBack(AccrualResult model);
 
-    public int billBatch(AccrualResult model,String handler);
+    public int billBatch(AccrualResult model,String accountDate,String handler);
 
 }

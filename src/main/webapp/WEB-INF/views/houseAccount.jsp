@@ -7,10 +7,11 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 
-    <title>个人账户查询</title>
+    <title>账户查询</title>
 
     <link rel="stylesheet" type="text/css" href="<%=path%>/vendors/datatable/datatables-bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="<%=path%>/vendors/zTree/css/metroStyle/metroStyle.css"/>
+    <link rel="stylesheet" type="text/css" href="<%=path%>/vendors/select2/select2.min.css"/>
     <link rel="stylesheet" type="text/css" href="<%=path%>/vendors/gentelella/css/custom.min.css"/>
     <link rel="stylesheet" type="text/css" href="<%=path%>/vendors/layer/theme/default/layer.css"/>
 
@@ -22,16 +23,20 @@
         li{
             font-size: 16px;
         }
+        .dt-button{
+            float: right;
+        }
     </style>
     <script src="<%=path%>/vendors/requireJS/require.js"></script>
     <script type="text/javascript" src="<%=path%>/vendors/requireJS/require-config.js"></script>
     <script type="text/javascript">
-        require(["houseTree","dataTables-bs","layer","common"],function (tree,table,layer,common) {
+        require(["houseTree","dataTables-bs","layer","common","mySelect","datatables-print"],function (tree,table,layer,common) {
             layer.config({
                 offset:"100px"
             })
             $(function () {
-                common.loadDeps(["HouseType.json","TradeType.json"],function (data) {
+                common.loadDeps(["HouseType.json","ShareType.json","TradeType.json"],function (data) {
+                    $("#shareTypeSelect").mySelect2({data: data["ShareType.json"]})
                     var treeObj;
                     var tableObj;
                     treeObj = tree.genTree("selectTree",{
@@ -76,7 +81,79 @@
                                     );
                                 })
 
-                            }
+                            },
+                            dom: 'Blrtip',
+                            buttons: [
+                                {
+                                    className: 'btn btn-primary',
+                                    text: '支出查询预警',
+                                    action: function (e, dt, node, config) {
+                                        var paths = tree.getPathParam();
+                                        if(paths.length<1){
+                                            layer.alert("请选择一个明确的支出单位!");
+                                            return;
+                                        }
+                                        $("#payDomain").html(tree.getPathNames());
+                                        var loadingMask = layer.msg('拼命计算中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
+                                        $.ajax({
+                                            url:'/rest/share/calculateResult.action',
+                                            dataType:'json',
+                                            type:"POST",
+                                            data:{paths:paths}
+                                        }).done(function(d){
+                                            layer.close(loadingMask)
+                                            $("#sumArea").html(d.attr.sumArea);
+                                            $("#sumHouses").html(d.attr.sumHouses);
+                                            layer.open({
+                                                type: 1,
+                                                title: "支出预警",
+                                                offset: '20px',
+                                                content: $('#popWin'),
+                                                area: ["600px","400px"],
+                                                btn: ['分摊'],
+                                                btn1:function(index,layObj){
+                                                    if(d.attr.sumArea==0&&$("#shareTypeSelect").val()==1){
+                                                        layer.alert("没有可分摊的房屋面积!");
+                                                        return;
+                                                    }else if(d.attr.sumHouses==0&&$("#shareTypeSelect").val()==2){
+                                                        layer.alert("没有可分摊的房屋!");
+                                                        return;
+                                                    }else if(!($("#shareTypeSelect").val()&&$("#shareTypeSelect").val().length>0&&$("#totalCost").val()&&$("#totalCost").val().length>0)){
+                                                        layer.alert("请输入分摊金额和分摊类型!");
+                                                        return;
+                                                    }else{
+                                                        var loadingMask = layer.msg('拼命计算中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
+                                                        var reqParam = {paths:paths,sumArea:d.attr.sumArea,totalHouse:d.attr.sumHouses,shareType:$("#shareTypeSelect").val(),cost:$("#totalCost").val()}
+                                                        //检测余额不足账户
+                                                        $.post("/rest/share/shareCheck.action",reqParam,null,"json").done(function(checkData){
+                                                            layer.close(loadingMask)
+                                                            var warn = "<p>账户余额充足!</p>";
+                                                            if(checkData.data&&checkData.data.length > 0){
+                                                                warn = "<p>以下账户余额已不足</p>";
+                                                                $.each(checkData.data,function(index,item){
+                                                                    warn += '<p>产业代码：' + item.code + '，业主：'+item.ownerName+'，余额：' +item.accountBalance.toFixed(2)+ '</p>';
+                                                                });
+                                                            }
+                                                            layer.confirm( warn,{btn:["确认","导出明细"],yes:function(){
+                                                                layer.closeAll();
+                                                            },btn2:function () {
+                                                                $("#exportForm").empty();
+                                                                for(var key in reqParam){
+                                                                    $("#exportForm").append('<input type="hidden" name="'+key+'" value="'+reqParam[key]+'"/>')
+                                                                }
+                                                                $("#exportForm").append('<input type="hidden" name="names" value="'+tree.getPathNames()+'"/>')
+                                                                $("#exportForm").submit();
+                                                            }});
+                                                        })
+                                                    }
+                                                }
+                                            })
+                                        }).fail(function(xhr){
+                                            layer.alert(xhr.statusText);
+                                        })
+                                    }
+                                }
+                            ]
                         }
                     }
                     tableObj = common.init(table_config);
@@ -107,7 +184,7 @@
                                             '<td>'+(tradeType?tradeType.text:'')+'</td>' +
                                             '<td>'+item.tradeTime+'</td>' +
                                             '<td>'+item.tradeMoney+'</td>' +
-                                            '<td>'+item.balance+'</td>' +
+                                            '<td>'+eval(item.balance+item.tradeMoney)+'</td>' +
                                             '<td>'+(item.houseOwner?item.houseOwner:'')+'</td>' +
                                             '<td>'+item.handler+'</td>' +
                                             '</tr>'
@@ -117,7 +194,7 @@
                                         '<th>交易类型</th>'+
                                         '<th>交易时间</th>'+
                                         '<th>交易金额(元)</th>'+
-                                        '<th>交易前余额</th>'+
+                                        '<th>交易后余额</th>'+
                                         '<th>业主姓名</th>'+
                                         '<th>操作员</th>'+
                                         '</tr>'+
@@ -203,6 +280,45 @@
         </div>
     </div>
 </div>
+<div id="popWin" style="display: none;">
+    <div class="x_panel">
+        <div class="x_content">
+            <form id="infoForm" class="form-horizontal form-label-left input_mask">
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">支出范围</label>
+                    <div id="payDomain" class="col-md-9 col-sm-9 col-xs-9" style="padding-top: 8px">
 
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">合计面积</label>
+                    <div id="sumArea" class="col-md-9 col-sm-9 col-xs-9" style="padding-top: 8px">
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">合计户数</label>
+                    <div id="sumHouses" class="col-md-9 col-sm-9 col-xs-9" style="padding-top: 8px">
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">支出费用</label>
+                    <div class="col-md-9 col-sm-9 col-xs-9">
+                        <input type="text" class="form-control" id="totalCost" placeholder="请输入支出费用......" onkeyup="this.value=this.value.replace(/[^\0-9\.]/g,'');">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">分摊类型</label>
+                    <div class="col-md-9 col-sm-9 col-xs-9">
+                        <select id="shareTypeSelect" class="form-control" style="width:100%;"></select>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<form id="exportForm" action="/export/shareCheck.action" method="post" style="display: none">
+</form>
 </body>
 </html>

@@ -13,6 +13,7 @@
     <result column="type" jdbcType="INTEGER" property="type" />
     <result column="building_rise" jdbcType="INTEGER" property="buildingRise" />
     <result column="unit_price" jdbcType="DECIMAL" property="unitPrice" />
+    <result column="total_price" jdbcType="DECIMAL" property="totalPrice" />
     <result column="owner_name" jdbcType="VARCHAR" property="ownerName" />
     <result column="owner_tel" jdbcType="VARCHAR" property="ownerTel" />
     <result column="owner_psptid" jdbcType="VARCHAR" property="ownerPsptid" />
@@ -28,12 +29,12 @@
     insert into house (id, name, unit, 
       floor, code, area, 
       has_elevator, nature, type,
-      building_rise, unit_price, owner_name,owner_tel,
+      building_rise, unit_price,total_price, owner_name,owner_tel,
       owner_psptid, account_balance,accrual_time,accrual_balance)
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{unit,jdbcType=INTEGER},
       #{floor,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, #{area,jdbcType=DECIMAL},
       #{hasElevator,jdbcType=INTEGER}, #{nature,jdbcType=INTEGER}, #{type,jdbcType=INTEGER},
-      #{buildingRise,jdbcType=INTEGER}, #{unitPrice,jdbcType=DECIMAL}, #{ownerName,jdbcType=INTEGER},#{ownerTel,jdbcType=INTEGER},
+      #{buildingRise,jdbcType=INTEGER}, #{unitPrice,jdbcType=DECIMAL},#{totalPrice,jdbcType=DECIMAL}, #{ownerName,jdbcType=INTEGER},#{ownerTel,jdbcType=INTEGER},
       #{ownerPsptid,jdbcType=INTEGER}, #{accountBalance,jdbcType=DECIMAL},#{accrualTime,jdbcType=TIMESTAMP},#{accrualBalance,jdbcType=DECIMAL})
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.qth.model.House">
@@ -48,6 +49,7 @@
       type = #{type,jdbcType=INTEGER},
       building_rise = #{buildingRise,jdbcType=INTEGER},
       unit_price = #{unitPrice,jdbcType=DECIMAL},
+      total_price = #{totalPrice,jdbcType=DECIMAL},
       owner_name = #{ownerName,jdbcType=VARCHAR},
       owner_tel = #{ownerTel,jdbcType=VARCHAR},
       owner_psptid = #{ownerPsptid,jdbcType=VARCHAR},
@@ -60,7 +62,10 @@
     set
       owner_name = #{ownerName,jdbcType=VARCHAR},
       owner_tel = #{ownerTel,jdbcType=VARCHAR},
-      owner_psptid = #{ownerPsptid,jdbcType=VARCHAR}
+      owner_psptid = #{ownerPsptid,jdbcType=VARCHAR},
+      unit_price = #{unitPrice,jdbcType=DECIMAL},
+      total_price = #{totalPrice,jdbcType=DECIMAL},
+      area = #{area,jdbcType=DECIMAL}
      where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -78,7 +83,7 @@
 
   <select id="selectAll" resultMap="BaseResultMap">
     select id, name, unit, floor, code, area, has_elevator, nature, type, building_rise,
-    unit_price, owner_name, owner_psptid, account_balance
+    unit_price,total_price, owner_name, owner_psptid, account_balance
     from house
   </select>
   <select id="selectDataTable" resultMap="BaseResultMap" parameterType="com.qth.model.House">
@@ -368,10 +373,10 @@
       and h.code LIKE '%${houseCode}%'
     </if>
     <if test="accountDateStart != null and accountDateStart.length > 0">
-      and al.trade_time &gt; #{accountDateStart}
+      and DATE_FORMAT(al.trade_time, '%Y-%m-%d') &gt;= DATE_FORMAT(#{accountDateStart}, '%Y-%m-%d')
     </if>
     <if test="accountDateEnd != null and accountDateEnd.length > 0">
-      and al.trade_time &lt; #{accountDateEnd}
+      and DATE_FORMAT(al.trade_time, '%Y-%m-%d') &lt;= DATE_FORMAT(#{accountDateEnd}, '%Y-%m-%d')
     </if>
     <if test="hasOwner!=null and hasOwner">
       and h.owner_name is not null

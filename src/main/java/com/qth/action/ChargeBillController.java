@@ -86,6 +86,12 @@ public class ChargeBillController extends BaseController {
         return rspWrapper;
     }
 
+    @RequestMapping(value = "sumByForm")
+    public CommonRsp selectSumByForm(ChargeBillForm billForm){
+        Double result = chargeBillService.selectSumByForm(billForm);
+        return data2Rsp(result);
+    }
+
     @RequestMapping(path = "updateInvoiceNum")
     public CommonRsp updateInvoiceNum(ChargeBill chargeBill,HttpSession session){
         int count = chargeBillService.selectCountByInvoiceNum(chargeBill.getInvoiceNum());

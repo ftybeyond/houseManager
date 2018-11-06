@@ -29,6 +29,8 @@ public interface IAccountLogService extends IBaseService<AccountLog>
 
     public DataTableRspWrapper<AccountLog> reportSummary(ReportForm reportForm);
 
-    public double reportSum(ReportForm reportForm);
+    public List<AccountLog> reportSummaryList(ReportForm reportForm);
+
+    public Double[] reportSum(ReportForm reportForm);
 
 }

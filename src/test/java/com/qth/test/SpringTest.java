@@ -3,10 +3,14 @@ package com.qth.test;
 
 import com.qth.dao.CompanyMapper;
 import com.qth.model.Company;
+import com.qth.model.House;
 import com.qth.model.common.DataTableRspWrapper;
 import com.qth.model.common.SelectDataTableMap;
+import com.qth.model.dto.HouseTreeModel;
 import com.qth.service.ICompanyService;
+import com.qth.service.IHouseService;
 import com.qth.service.IShareService;
+import com.qth.service.impl.HouseService;
 import com.qth.util.BeanUtil;
 import org.apache.ibatis.mapping.ResultMapping;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -38,6 +42,9 @@ public class SpringTest {
     @Autowired
     IShareService shareService;
 
+    @Autowired
+    IHouseService houseService;
+
     @Test
     @Transactional
     public void commonDao() {
@@ -61,10 +68,17 @@ public class SpringTest {
 //        company.setName("联通");
 //        DataTableRspWrapper<Company> companies =  companyService.selectDataTable2Rsp(company);
 //        System.out.println(companies);
-        Map<String,BigDecimal> map = shareService.shareBackInfo(1525252590147l);
-        for (String key:map.keySet()){
-            System.out.println(key + ":" + map.get(key));
-        }
+//        Map<String,BigDecimal> map = shareService.shareBackInfo(1525252590147l);
+//        for (String key:map.keySet()){
+//            System.out.println(key + ":" + map.get(key));
+//        }
 
+        String paths = "1003-1008,1003-1009,1003-1010";
+        List<House> h1 = houseService.selectByTreePath(paths);
+        HouseTreeModel houseTreeModel = new HouseTreeModel();
+        houseTreeModel.setPaths(paths);
+        HouseService.sqlAppend(houseTreeModel);
+        List<House> h2 = houseService.selectByTreeNode(houseTreeModel);
+        System.out.println();
     }
 }

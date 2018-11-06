@@ -47,13 +47,18 @@
                         }
                         layer.confirm('<p>'+data.description+'</p><p>请选择计息截至日期：</p><p><input onClick="WdatePicker({maxDate:\'%y-%M-%d\'})" style="width: 100%"/></p>',{title:"结息状态",area:["400px"],btn:["开始计息","取消"]},function (index,layObj) {
                             var toDate = layObj.find("input").val();
+                            var loadingMask = layer.msg('拼命计算中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
                             if(!toDate){
+                                console.log(loadingMask)
+                                layer.close(loadingMask);
                                 layer.alert("请选择计息结束时间!");
                                 return
                             }
                             $.post("/rest/accrual/accrualCalculate.action",{paths:param,toDate:toDate},null,"json").done(function(data){
+                                layer.close(loadingMask);
                                 layer.alert(data.description);
                             }).fail(function(xhr){
+                                layer.close(loadingMask);
                                 layer.alert(xhr.statusText)
                             });
                         })
@@ -84,6 +89,9 @@
             </div>
         </div>
         <div class="col-md-8 column">
+            <div class="row clearfix" style="padding: 10px;">
+                <button id="calculateBtn" style="float:right" class="btn btn-primary" type="button">开始计息</button>
+            </div>
             <div class="row" style="margin-left: 20px;">
                 <h3 >
                     已选计息单位
@@ -93,9 +101,6 @@
                 </ul>
             </div>
         </div>
-    </div>
-    <div class="row clearfix" style="padding: 10px;">
-        <button id="calculateBtn" style="float:right" class="btn btn-primary" type="button">开始计息</button>
     </div>
 </div>
 

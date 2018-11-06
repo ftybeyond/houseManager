@@ -24,6 +24,8 @@ public interface AccountLogMapper {
 
     List<AccountLog> selectByRecord(RepairRecord record);
 
+    int backByRecord(RepairRecord record);
+
     List<AccountLog> selectTempByRecord(Integer record);
 
     List<AccountLog> selectHouseChangeWithDateRange(Map map);
@@ -36,7 +38,9 @@ public interface AccountLogMapper {
 
     List<AccountLog> selectReportSummary(ReportForm reportForm);
 
-    double reportSum(ReportForm reportForm);
+    Double reportSum(ReportForm reportForm);
+
+    Double reportTradeSum(ReportForm reportForm);
 
     List<AccountLog> shareAccountDetail(AccountLog log);
 

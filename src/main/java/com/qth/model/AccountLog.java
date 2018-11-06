@@ -18,7 +18,7 @@ public class AccountLog extends DataTableReqWrapper implements AccountLogRateCha
         TRADE_TYPE.put(2,"返还");
         TRADE_TYPE.put(3,"计息");
         TRADE_TYPE.put(4,"分摊");
-        TRADE_TYPE.put(4,"分摊回滚");
+        TRADE_TYPE.put(5,"分摊回滚");
     }
 
     private Integer id;
@@ -59,6 +59,8 @@ public class AccountLog extends DataTableReqWrapper implements AccountLogRateCha
     private String joinHouseCode;
 
     private String joinHouseOwner;
+
+    private BigDecimal afterTrade;
 
     //汇总结果字段，可以是余额，交易额等等的汇总金额
     private BigDecimal sumResult;
@@ -218,5 +220,13 @@ public class AccountLog extends DataTableReqWrapper implements AccountLogRateCha
 
     public void setJoinHouseOwner(String joinHouseOwner) {
         this.joinHouseOwner = joinHouseOwner;
+    }
+
+    public BigDecimal getAfterTrade() {
+        return afterTrade;
+    }
+
+    public void setAfterTrade(BigDecimal afterTrade) {
+        this.afterTrade = afterTrade;
     }
 }

@@ -34,7 +34,7 @@ public class ReportForm extends DataTableReqWrapper{
     //分组区域 小区，楼栋，单元，楼层，房号
     private Integer summaryGroup;
 
-    //查询类型：全部，使用、计息、收缴、未缴、返还
+    //查询类型：全部(余额)，使用、计息、收缴、未缴、返还
     private Integer summaryType;
 
     private Long seq;
@@ -43,6 +43,16 @@ public class ReportForm extends DataTableReqWrapper{
     private String sqlAppend;
 
     private String groupByColumn;
+
+    private String summaryMsg;
+
+    public String getSummaryMsg() {
+        return summaryMsg;
+    }
+
+    public void setSummaryMsg(String summaryMsg) {
+        this.summaryMsg = summaryMsg;
+    }
 
     public String getGroupByColumn() {
         return GROUP.get(this.summaryGroup);

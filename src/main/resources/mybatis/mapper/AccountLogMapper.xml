@@ -69,8 +69,15 @@
     select id, house_code, house_owner, balance, trade_money, trade_time, trade_type,
     handler,seq,remark
     from account_log
-    where seq = #{shareSeq}
+    where seq = #{shareSeq} and remark = #{id}
   </select>
+
+
+  <update id="backByRecord" parameterType="com.qth.model.RepairRecord" >
+    update account_log
+    set trade_type = 5 , seq=UNIX_TIMESTAMP(now())
+    where seq = #{shareSeq} and remark = #{id}
+  </update>
 
   <select id="selectTempByRecord" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select id, house_code, house_owner, balance, trade_money, trade_time, trade_type,
@@ -97,6 +104,7 @@
   <select id="selectReportDetail" parameterType="com.qth.model.dto.ReportForm" resultMap="BaseResultMap">
     SELECT
         al.*, ra.`name` AS residentialAreaName,
+        (al.balance+trade_money) as afterTrade,
         h.code as joinHouseCode,
         h.owner_name as joinHouseOwner,
         u.`name` AS unitName,
@@ -132,7 +140,26 @@
     </where>
   </select>
 
-  <select id="reportSum" parameterType="com.qth.model.dto.ReportForm" resultType="double">
+  <select id="reportSum" parameterType="com.qth.model.dto.ReportForm" resultType="java.lang.Double">
+    select sum(t.result) from (
+    SELECT
+    h.account_balance as result
+    FROM
+    account_log al
+    RIGHT JOIN house h ON h.`code` = al.house_code
+    INNER JOIN unit u ON u.id = h.unit
+    INNER JOIN building b ON b.id = u.building
+    INNER JOIN residential_area ra ON ra.id = b.residential_area
+    <where>
+      <include refid="reportConditions"/>
+    </where>
+    GROUP BY h.id
+    HAVING
+    max(trade_time)
+    ) t
+  </select>
+
+  <select id="reportTradeSum" parameterType="com.qth.model.dto.ReportForm" resultType="java.lang.Double">
     SELECT
     sum(al.trade_money)
     FROM
@@ -170,10 +197,38 @@
       and ${sqlAppend}
     </if>
     <if test="fromDate != null">
-      and al.trade_time &gt;= #{fromDate}
+      <choose>
+        <when test="summaryType==3">
+          and
+          DATE_FORMAT(
+          SUBSTR(
+          al.remark,
+          (LOCATE('至', al.remark) + 1)
+          ),
+          '%Y-%m-%d'
+          ) >= DATE_FORMAT(#{fromDate}, '%Y-%m-%d')
+        </when>
+        <otherwise>
+          and DATE_FORMAT(al.trade_time, '%Y-%m-%d') &gt;= DATE_FORMAT(#{fromDate},'%Y-%m-%d')
+        </otherwise>
+      </choose>
     </if>
     <if test="endDate != null">
-      and al.trade_time &lt;= #{endDate}
+      <choose>
+        <when test="summaryType==3">
+          and
+          DATE_FORMAT(
+          SUBSTR(
+          al.remark,
+          (LOCATE('至', al.remark) + 1)
+          ),
+          '%Y-%m-%d'
+          ) &lt;= DATE_FORMAT(#{endDate},'%Y-%m-%d')
+        </when>
+        <otherwise>
+          and DATE_FORMAT(al.trade_time, '%Y-%m-%d') &lt;= DATE_FORMAT(#{endDate},'%Y-%m-%d')
+        </otherwise>
+      </choose>
     </if>
     <if test="seq != null and seq &gt;0">
       and al.seq = #{seq}
@@ -187,7 +242,7 @@
     </if>
     <!-- 分摊，包含回滚 -->
     <if test="summaryType !=null and summaryType == 4">
-      and (al.trade_type = 4 or al.trade_type = 5)
+      and al.trade_type = 4
     </if>
   </sql>
 
@@ -226,7 +281,7 @@
     WHERE   al.remark = #{remark}
   </select>
 
-  <select id="shareSumAccountDetail" parameterType="com.qth.model.AccountLog" resultType="double">
+  <select id="shareSumAccountDetail" parameterType="com.qth.model.AccountLog" resultType="java.lang.Double">
     SELECT
     sum(al.trade_money)
     FROM

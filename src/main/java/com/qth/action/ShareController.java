@@ -17,6 +17,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,7 +75,7 @@ public class ShareController extends BaseController{
     public CommonRsp shareCheck(String paths, Integer shareType, BigDecimal sumArea, Integer totalHouse, BigDecimal cost,Integer record, HttpSession session){
         CommonRsp rsp = new CommonRsp();
         if (paths!=null&&paths.length()>0) {
-            List<House> unBalance = shareService.checkShare(paths,shareType,sumArea,totalHouse,cost,record);
+            List<House> unBalance = shareService.checkShare(paths, shareType, sumArea, totalHouse, cost, record, null);
             if(unBalance.size()>0){
                 rsp.setData(unBalance);
             }else{
@@ -90,10 +93,10 @@ public class ShareController extends BaseController{
 
     @RequestMapping(value = "/rest/share/doShare")
     @ResponseBody
-    public CommonRsp doShare(String paths, Integer shareType, BigDecimal sumArea, Integer totalHouse, BigDecimal cost,Integer record, HttpSession session){
+    public CommonRsp doShare(String paths, Integer shareType, BigDecimal sumArea,Long flowNum, Integer totalHouse, BigDecimal cost,Integer record, HttpSession session){
         CommonRsp rsp = new CommonRsp();
         if (paths!=null&&paths.length()>0) {
-            int result = shareService.share(paths,shareType,sumArea,totalHouse,cost,record,getHandler(session));
+            int result = shareService.share(paths,shareType,sumArea,totalHouse,cost,record,flowNum,getHandler(session));
             rsp.setSuccess(true);
             rsp.setDescription("分摊" +result + "户");
             rsp.setResultCode("0000");
@@ -107,9 +110,10 @@ public class ShareController extends BaseController{
 
     @RequestMapping(value = "/rest/share/doShareAccount")
     @ResponseBody
-    public CommonRsp doShareAccount(Integer record, HttpSession session){
+    public CommonRsp doShareAccount(Integer record, String accountDate, HttpSession session) throws ParseException {
         CommonRsp rsp = new CommonRsp();
-        int effect = shareService.shareAccount(record,getHandler(session));
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        int effect = shareService.shareAccount(record,dateFormat.parse(accountDate),getHandler(session));
         return dbEffect2Rsp(effect);
     }
 

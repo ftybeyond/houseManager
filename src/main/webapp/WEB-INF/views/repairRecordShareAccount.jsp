@@ -11,6 +11,12 @@
 
     <link rel="stylesheet" type="text/css" href="<%=path%>/vendors/datatable/datatables-bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="<%=path%>/vendors/select2/select2.min.css"/>
+    <style type="text/css">
+        #popWin .row{
+            margin-right:0px;
+            margin-left:0px;
+        }
+    </style>
     <!--[if lt IE 8 ]><script src="<%=path%>/vendors/json2.min.js"></script><![endif]-->
     <script src="<%=path%>/vendors/requireJS/require.js"></script>
     <script type="text/javascript" src="<%=path%>/vendors/requireJS/require-config.js"></script>
@@ -60,15 +66,21 @@
                         customBtns:[
                             {label:'登账', callback:function(rowId){
                                 layer.confirm("确认登帐此次分摊结果？登帐后将会扣除相应账户余额！",{icon:3,yes:function () {
-                                    var loadingMask = layer.msg('入账中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
-                                    $.post("/rest/share/doShareAccount.action",{record:rowId.toString()},null,"json").done(function(rsp){
-                                        console.log(rsp)
-                                        layer.close(loadingMask);
-                                        layer.alert(rsp.description);
-                                        table.ajax.reload();
-                                    }).fail(function (xhr) {
-                                        layer.close(loadingMask);
-                                        layer.alert(xhr.statusText);
+                                    layer.confirm('<p>请选择登帐日期：</p><p><input onClick="WdatePicker({maxDate:\'%y-%M-%d\'})" style="width: 100%"/></p>',{title:"登帐日期",area:["400px"],btn:["登帐","取消"]},function (index,layObj) {
+                                        var toDate = layObj.find("input").val();
+                                        if(!toDate){
+                                            layer.alert("请选择登帐时间!");
+                                            return
+                                        }
+                                        var loadingMask = layer.msg('入账中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
+                                        $.post("/rest/share/doShareAccount.action",{record:rowId.toString(),accountDate:toDate},null,"json").done(function(rsp){
+                                            layer.close(loadingMask);
+                                            layer.alert(rsp.description);
+                                            table.ajax.reload();
+                                        }).fail(function (xhr) {
+                                            layer.close(loadingMask);
+                                            layer.alert(xhr.statusText);
+                                        })
                                     })
                                 }})
                             }},
@@ -108,6 +120,7 @@
                                     area: ['700px', '550px'],
                                     offset: '20px',
                                     type: 1,
+                                    maxmin: true,
                                     content: $("#popWin"),
                                     cancel:function(index, layero){
                                         detailTable.destroy();
@@ -212,14 +225,14 @@
 <div class="ln_solid"></div>
 <!-- 数据表格 -->
 <div class="container">
-    <table id="datatable" class="table table-striped table-bordered" style="width:1200px;">
+    <table id="datatable" class="table table-striped table-bordered" style="width:100%;">
         <thead>
         <tr>
             <th></th>
             <th>项目名称</th>
             <th>业主委员会</th>
             <th>业主委员会电话</th>
-            <th>申请施工时间</th>
+            <th>申请时间</th>
             <th>合计金额</th>
             <th>分摊方式</th>
             <th>登记日期</th>
@@ -231,7 +244,7 @@
 
 <div id="popWin" style="display: none;">
     <div class="x_panel">
-        <div class="x_content" style="padding-left: 15px;">
+        <div class="x_content" style="">
             <table id="accountDetail" class="table table-striped table-bordered" style="width:100%">
                 <thead>
                 <tr>

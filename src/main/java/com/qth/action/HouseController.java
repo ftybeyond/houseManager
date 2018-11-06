@@ -108,9 +108,9 @@ public class HouseController extends BaseController {
             Map map = new HashMap();
             map.put("algorithmSwitch",algorithmSwitch);
             map.put("chargeCriterion",chargeCriterion);
-            if(patch){
+//            if(patch){
                 map.put("chargeBillCount",chargeBillService.countByHouse(house));
-            }
+//            }
             rsp.setAttr(map);
             return rsp;
         }else if(algorithmSwitch==null){

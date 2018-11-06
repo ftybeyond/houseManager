@@ -20,6 +20,8 @@ public class ChargeBill extends DataTableReqWrapper {
 
     private BigDecimal houseUnitPrice;
 
+    private BigDecimal houseTotalPrice;
+
     private String houseOwner;
 
     private String houseTel;
@@ -88,6 +90,14 @@ public class ChargeBill extends DataTableReqWrapper {
 
     public void setHouseUnitPrice(BigDecimal houseUnitPrice) {
         this.houseUnitPrice = houseUnitPrice;
+    }
+
+    public BigDecimal getHouseTotalPrice() {
+        return houseTotalPrice;
+    }
+
+    public void setHouseTotalPrice(BigDecimal houseTotalPrice) {
+        this.houseTotalPrice = houseTotalPrice;
     }
 
     public String getHouseOwner() {

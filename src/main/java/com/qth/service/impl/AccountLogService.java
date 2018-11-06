@@ -56,12 +56,18 @@ public class AccountLogService extends BaseService<AccountLog> implements IAccou
     }
 
     @Override
-    public DataTableRspWrapper<AccountLog> reportSummary(ReportForm reportForm) {
+    public DataTableRspWrapper<AccountLog>  reportSummary(ReportForm reportForm) {
         DataTableRspWrapper<AccountLog> rspWrapper = new DataTableRspWrapper<>();
         rspWrapper.setDraw(reportForm.getDraw());
         reportForm.setSqlAppend(HouseService.sqlAppend(reportForm.getPaths()));
         rspWrapper.setData(accountLogMapper.selectReportSummary(reportForm));
         return rspWrapper;
+    }
+
+    @Override
+    public List<AccountLog> reportSummaryList(ReportForm reportForm){
+        reportForm.setSqlAppend(HouseService.sqlAppend(reportForm.getPaths()));
+        return accountLogMapper.selectReportSummary(reportForm);
     }
 
     @Override
@@ -76,7 +82,7 @@ public class AccountLogService extends BaseService<AccountLog> implements IAccou
 
     @Override
     public void exportExcel(ReportForm reportForm, HttpServletResponse response, String title) {
-
+        reportForm.setSqlAppend(HouseService.sqlAppend(reportForm.getPaths()));
         List<AccountLog> list = accountLogMapper.selectReportDetail(reportForm);
 
 
@@ -192,8 +198,12 @@ public class AccountLogService extends BaseService<AccountLog> implements IAccou
     }
 
     @Override
-    public double reportSum(ReportForm reportForm){
-        return accountLogMapper.reportSum(reportForm);
+    public Double[] reportSum(ReportForm reportForm){
+        reportForm.setSqlAppend(HouseService.sqlAppend(reportForm.getPaths()));
+        Double[] result = new Double[2];
+        result[0] = accountLogMapper.reportSum(reportForm);
+        result[1] = accountLogMapper.reportTradeSum(reportForm);
+        return result;
     }
 
 }

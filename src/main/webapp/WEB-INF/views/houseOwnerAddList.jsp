@@ -74,7 +74,25 @@
                         },
                         ownerPsptid:{
                             isIdCardNo:true
-                        }
+                        },
+                        area: {
+                            number: true,
+                            required: true
+                        },
+                        unitPrice: {
+                            number: true
+                        },
+                        totalPrice: {
+                            number: true,
+                            required: true
+                        },
+                    }
+                });
+                $("#infoForm input[name='unitPrice'],#infoForm input[name='area']").on("keyup",function(){
+                    var unitPrice = $("#infoForm input[name='unitPrice']").val();
+                    var area = $("#infoForm input[name='area']").val();
+                    if(!isNaN(unitPrice)&&!isNaN(area)){
+                        $("#infoForm input[name='totalPrice']").val((unitPrice*area).toFixed(2));
                     }
                 })
                 common.loadDeps(["HouseType.json","HasOrNot.json","AlgorithmSwitch.json"],function (baseData) {
@@ -114,6 +132,12 @@
                         customBtns:[
                             {label:'添加业主',callback:function (index,item ){
                                 $("#infoForm")[0].reset();
+                                $("#infoForm input[name='unitPrice']").val(item.unitPrice);
+                                $("#infoForm input[name='area']").val(item.area);
+                                $("#infoForm input[name='totalPrice']").val(item.totalPrice);
+                                $("#infoForm input[name='ownerName']").val(item.ownerName?item.ownerName:'');
+                                $("#infoForm input[name='ownerPsptid']").val(item.ownerPsptid?item.ownerPsptid:'');
+                                $("#infoForm input[name='ownerTel']").val(item.ownerTel?item.ownerTel:'');
                                 validator.resetForm();
                                 var win = layer.open({
                                     type: 1,
@@ -132,11 +156,18 @@
                                         $.post("/rest/house/updateOwnerInfo.action",formdata,null,"json").done(function (data) {
                                             layer.close(loadMask)
                                             if(data.success){
+                                                item.unitPrice=$("#infoForm input[name='unitPrice']").val();
+                                                item.area=$("#infoForm input[name='area']").val();
+                                                item.totalPrice = $("#infoForm input[name='totalPrice']").val();
                                                 var chargeAlert = layer.alert(data.description,{btn:["缴费"],closeBtn:0,btn1:function () {
                                                     var loadMask = layer.msg('拼命加载中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
                                                     $.post("/rest/house/chargeInfo.action",{house:item.id},null,"json").done(function (rsp) {
                                                         layer.close(loadMask)
                                                         if(rsp.success){
+                                                            if(rsp.attr.chargeBillCount>0){
+                                                                layer.alert("已存在缴费信息,补缴请使用补缴功能!",{icon:0});
+                                                                return;
+                                                            }
                                                             var houseType = common.findArrayValue(item.type,baseData["HouseType.json"]);
                                                             var hasElevator = common.findArrayValue(item.hasElevator,baseData["HasOrNot.json"]);
                                                             var algorithmType = common.findArrayValue(rsp.attr.algorithmSwitch.chargeSwitch,baseData["AlgorithmSwitch.json"]);
@@ -157,7 +188,7 @@
                                                                 var chargeMoneyDiv = $("#chargeMoney").parents(".form-group");
                                                                 $("#chargeRatio").html(rsp.attr.chargeCriterion.priceRatio);
                                                                 chargeMoneyDiv.before(divUnitPrice);
-                                                                chargeMoney = (item.unitPrice*item.area*rsp.attr.chargeCriterion.priceRatio).toFixed(2);
+                                                                chargeMoney = (item.totalPrice*rsp.attr.chargeCriterion.priceRatio).toFixed(2);
                                                                 param.ratio = rsp.attr.chargeCriterion.priceRatio;
                                                                 param.chargeType = 0;
                                                             }else if(rsp.attr.algorithmSwitch.chargeSwitch == 1){
@@ -184,6 +215,7 @@
                                                                     param.houseUnitPrice = item.unitPrice;
                                                                     param.houseOwner = $("#infoForm input[name='ownerName']").val();
                                                                     param.houseTel = $("#infoForm input[name='ownerTel']").val();
+                                                                    param.houseTotalPrice = $("#infoForm input[name='totalPrice']").val();
                                                                     param.actualSum = chargeMoney;
                                                                     layer.msg('拼命加载中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
                                                                     $.post("/rest/house/genChargeBill.action",param,null,"json").done(function(data){
@@ -257,7 +289,7 @@
                 <input type="hidden" name="id"/>
                 <input type="hidden" name="level"/>
                 <input type="hidden" name="name"/>
-                <input type="hidden" name="hasOwner" value="false">
+                <%--<input type="hidden" name="hasOwner" value="false">--%>
                 <div class="row clearfix" style="padding: 10px;">
                     <div class="col-xs-5 search-form-group">
                         <label class="control-label col-xs-3">业主姓名</label>
@@ -300,6 +332,27 @@
     <div class="x_panel">
         <div class="x_content">
             <form id="infoForm" class="form-horizontal form-label-left input_mask">
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">房屋面积</label>
+                    <div class="col-md-9 col-sm-9 col-xs-9">
+                        <input type="text" class="form-control" name="area" placeholder="请输入房屋面积......">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">房屋单价</label>
+                    <div class="col-md-9 col-sm-9 col-xs-9">
+                        <input type="text" class="form-control" name="unitPrice" placeholder="请输入房屋单价......">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">房屋总价</label>
+                    <div class="col-md-9 col-sm-9 col-xs-9">
+                        <input type="text" class="form-control" name="totalPrice" placeholder="请输入房屋总价......">
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <label class="control-label col-md-3 col-sm-3 col-xs-3">业主姓名</label>
                     <div class="col-md-9 col-sm-9 col-xs-9">

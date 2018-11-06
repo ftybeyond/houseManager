@@ -70,6 +70,92 @@
 
   <!--paths search-->
 
+  <select id="selectResultByTree" parameterType="java.util.Map" resultMap="BaseResultMap">
+    SELECT
+        ar.*
+    FROM
+        accrual_result ar
+    LEFT JOIN house h ON h.`code` = ar.house_code
+    LEFT JOIN unit u ON u.id = h.unit
+    LEFT JOIN building b ON b.id = u.building
+    LEFT JOIN residential_area ra ON ra.id = b.residential_area
+    <where>
+      <if test="state != null">
+        and ar.state = #{state}
+      </if>
+      <if test="sqlAppend != null">
+        and ${sqlAppend}
+      </if>
+    </where>
+    <if test="length>0">
+      limit #{start} ,#{length}
+    </if>
+  </select>
+
+  <select id="selectResultCountByTree" parameterType="java.util.Map" resultType="int">
+    SELECT
+    count(*)
+    FROM
+    accrual_result ar
+    LEFT JOIN house h ON h.`code` = ar.house_code
+    LEFT JOIN unit u ON u.id = h.unit
+    LEFT JOIN building b ON b.id = u.building
+    LEFT JOIN residential_area ra ON ra.id = b.residential_area
+    <where>
+      <if test="state != null">
+        and ar.state = #{state}
+      </if>
+      <if test="sqlAppend != null">
+        and ${sqlAppend}
+      </if>
+    </where>
+    <if test="length>0">
+      limit #{start} ,#{length}
+    </if>
+  </select>
+
+  <select id="sumResultByTree" parameterType="java.util.Map" resultType="java.lang.Double">
+    SELECT
+    sum(round(ar.accrual,2)) as accrualSum
+    FROM
+    accrual_result ar
+    LEFT JOIN house h ON h.`code` = ar.house_code
+    LEFT JOIN unit u ON u.id = h.unit
+    LEFT JOIN building b ON b.id = u.building
+    LEFT JOIN residential_area ra ON ra.id = b.residential_area
+    <where>
+      <if test="state != null">
+        and ar.state = #{state}
+      </if>
+      <if test="sqlAppend != null">
+        and ${sqlAppend}
+      </if>
+    </where>
+  </select>
+
+
+  <select id="summaryResultByTree" parameterType="java.util.Map" resultType="com.qth.model.dto.AccrualInfo">
+    SELECT
+    ra.name as residentialAreaName,
+    sum(round(ar.accrual,2)) as accrualSum,
+    max(ar.end_time) as endTime
+    FROM
+    accrual_result ar
+    LEFT JOIN house h ON h.`code` = ar.house_code
+    LEFT JOIN unit u ON u.id = h.unit
+    LEFT JOIN building b ON b.id = u.building
+    LEFT JOIN residential_area ra ON ra.id = b.residential_area
+    <where>
+      <if test="state != null">
+        and ar.state = #{state}
+      </if>
+      <if test="sqlAppend != null">
+        and ${sqlAppend}
+      </if>
+    </where>
+    GROUP BY ra.id
+  </select>
+
   <select id="allResultInResidentialArea" parameterType="com.qth.model.AccrualResult" resultMap="BaseResultMap">
     SELECT
         ar.*
@@ -234,6 +320,32 @@
   </select>
 
   <!--paths search info-->
+
+  <select id="selectAccrualInfoByTree" parameterType="com.qth.model.AccrualResult" resultType="com.qth.model.dto.AccrualInfo">
+    SELECT
+    sum(ROUND(ar.accrual,2)) as accrualSum,
+    max(ar.end_time) as endTime,
+    ar.house_code as houseCode,
+    h.account_balance as accountBalance,
+    h.owner_name as ownerName
+    FROM
+    accrual_result ar
+    INNER JOIN house h ON ar.house_code = h.`code`
+    INNER JOIN unit u ON u.id = h.unit
+    INNER JOIN building b ON b.id = u.building
+    INNER JOIN residential_area ra ON ra.id = b.residential_area
+    <where>
+      <if test="state != null">
+        and ar.state = #{state}
+      </if>
+      <if test="sqlAppend != null">
+        and ${sqlAppend}
+      </if>
+    </where>
+    GROUP BY
+    ar.house_code
+  </select>
+
   <select id="allAccrualInfoInResidentialArea" parameterType="com.qth.model.AccrualResult" resultType="com.qth.model.dto.AccrualInfo">
     SELECT
       sum(ar.accrual) as accrualSum,

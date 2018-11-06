@@ -73,11 +73,17 @@ public class HouseService extends BaseService<House> implements IHouseService {
         house.setAccountBalance(new BigDecimal(0f));
         house.setAccrualBalance(new BigDecimal(0f));
         house.setAccrualTime(new Date());
+        if(house.getUnitPrice()!=null&&house.getArea()!=null){
+            house.setTotalPrice(house.getUnitPrice().multiply(house.getArea()).setScale(2));
+        }
         return houseMapper.insert(house);
     }
 
     @Override
     public int updateHouse(House house) {
+        if(house.getUnitPrice()!=null&&house.getArea()!=null){
+            house.setTotalPrice(house.getUnitPrice().multiply(house.getArea()).setScale(2));
+        }
         return houseMapper.updateByPrimaryKey(house);
     }
 
@@ -166,6 +172,7 @@ public class HouseService extends BaseService<House> implements IHouseService {
             accountLog.setSeq(stamp.getTime());
             accountLogMapper.insert(accountLog);
             house.setAccountBalance(new BigDecimal(0f));
+            houseMapper.updateBalanceByCode(house);
         }
         return houseList.size();
     }

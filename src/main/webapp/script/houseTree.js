@@ -41,10 +41,24 @@ define(["zTree"],function(){
             houseTree.setting.async.otherParam={nameSearch:nameLike};
             houseTree.reAsyncChildNodes(null, "refresh");
         })
+        searchBox.find("input").on("keydown",function (e) {
+            var evt = window.event || e;
+               if (evt.keyCode == 13){
+                   //回车事件
+                   var nameLike = $(searchBox).find("input").val();
+                   houseTree.setting.async.otherParam={nameSearch:nameLike};
+                   houseTree.reAsyncChildNodes(null, "refresh");
+               }
+        })
         $("#selectAllBtn").on("click",function(){
             var nodes = treeObj.getNodes();
             $.each(nodes,function (index,item) {
-                houseTree.checkNode(item, null, true,true);
+                if(index==nodes.length-1){
+                    houseTree.checkNode(item, null, true,true);
+                }else{
+                    houseTree.checkNode(item, null, true,false);
+                }
+
             })
         });
         return houseTree;
@@ -57,6 +71,19 @@ define(["zTree"],function(){
         for(key in allCheckedNodes){
             $("#"+base.showSelectedDiv).append('<li>'+getNamePath(allCheckedNodes[key])+'</li>')
         }
+    }
+
+    var getPathNames = function(){
+        var result = "";
+        var allCheckedNodes = loadAllChecksNodes();
+        for(key in allCheckedNodes){
+            result += getNamePath(allCheckedNodes[key]);
+            result +=","
+        }
+        if(result.length >0){
+            result = result.substr(0,result.length-1);
+        }
+        return result;
     }
 
     var getAllSelectPath = function(){
@@ -142,7 +169,7 @@ define(["zTree"],function(){
             param += ","
         }
         if (param.length == 0) {
-            return null;
+            return '';
         }
         param = param.substring(0, param.lastIndexOf(","));
         return param;
@@ -154,6 +181,7 @@ define(["zTree"],function(){
         getIdPath:getIdPath,
         getNamePath:getNamePath,
         loadAllChecksNodes:loadAllChecksNodes,
-        getAllSelectPath:getAllSelectPath
+        getAllSelectPath:getAllSelectPath,
+        getPathNames:getPathNames
     }
 })

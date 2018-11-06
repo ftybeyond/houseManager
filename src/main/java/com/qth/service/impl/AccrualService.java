@@ -20,6 +20,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -164,40 +166,54 @@ public class AccrualService implements IAccrualService {
     }
 
     @Override
-    public int accrualBack(AccrualResult model) {
-        List<AccrualResult> list = accrualResultService.selectByModel(model);
+    public int accrualBack(AccrualResult accrualResult) {
+        String sqlAppend = HouseService.sqlAppend(accrualResult.getPaths());
+        Map map = new HashMap<>();
+        map.put("state",accrualResult.getState());
+        map.put("sqlAppend",sqlAppend);
+        List<AccrualResult> list = accrualResultMapper.selectResultByTree(map);
         return accrualResultService.delectBatch(list);
     }
 
     @Override
     @Transactional
-    public int billBatch(AccrualResult model,String handler){
+    public int billBatch(AccrualResult accrualResult,String accountDate,String handler){
         //更新状态
-        Map map = new HashMap();
-        List<AccrualInfo> list = accrualResultService.selectAccrualInfoByModel(model);
-        Date stamp = new Date();
-        map.put("list",list);
-        map.put("handler",handler);
-        map.put("updateTime",stamp);
-        accrualResultMapper.billBatch(map);
+        try {
+            String sqlAppend = HouseService.sqlAppend(accrualResult.getPaths());
+            Map map = new HashMap<>();
+            map.put("state",accrualResult.getState());
+            map.put("sqlAppend",sqlAppend);
+            List<AccrualInfo> list = accrualResultMapper.selectAccrualInfoByTree(map);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date stamp = sdf.parse(accountDate);
+            Map map1 = new HashMap<>();
+            map1.put("list",list);
+            map1.put("handler",handler);
+            map1.put("updateTime",stamp);
+            accrualResultMapper.billBatch(map1);
 
-        for(AccrualInfo accrualInfo:list){
-            //账户余额、更新最后计息时间
-            houseMapper.updateByAccrualInfo(accrualInfo);
-            //插入accountlog
-            AccountLog accountLog = new AccountLog();
-            accountLog.setBalance(accrualInfo.getAccountBalance());
-            accountLog.setSeq(stamp.getTime());
-            accountLog.setRemark("计息收入(" + accrualInfo.getAccrualSum() + ")至" + accrualInfo.getEndTime());
-            accountLog.setHandler(handler);
-            accountLog.setTradeTime(stamp);
-            accountLog.setTradeMoney(accrualInfo.getAccrualSum());
-            accountLog.setTradeType(3);
-            accountLog.setHouseCode(accrualInfo.getHouseCode());
-            accountLog.setHouseOwner(accrualInfo.getHouseOwner());
-            accountLogMapper.insert(accountLog);
+            for(AccrualInfo accrualInfo:list){
+                //账户余额、更新最后计息时间
+                houseMapper.updateByAccrualInfo(accrualInfo);
+                //插入accountlog
+                AccountLog accountLog = new AccountLog();
+                accountLog.setBalance(accrualInfo.getAccountBalance());
+                accountLog.setSeq(stamp.getTime());
+                accountLog.setRemark("计息收入(" + accrualInfo.getAccrualSum() + ")至" + sdf.format(accrualInfo.getEndTime()));
+                accountLog.setHandler(handler);
+                accountLog.setTradeTime(stamp);
+                accountLog.setTradeMoney(accrualInfo.getAccrualSum());
+                accountLog.setTradeType(3);
+                accountLog.setHouseCode(accrualInfo.getHouseCode());
+                accountLog.setHouseOwner(accrualInfo.getHouseOwner());
+                accountLogMapper.insert(accountLog);
+            }
+            return 1;
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
-        return 1;
+        return 0;
     }
 
     /**

@@ -11,6 +11,7 @@ import com.qth.model.House;
 import com.qth.model.common.DataTableRspWrapper;
 import com.qth.model.common.ZTreeModel;
 import com.qth.model.common.ZTreeNodeReq;
+import com.qth.model.dto.HouseTreeModel;
 import com.qth.model.dto.ReportForm;
 import com.qth.service.IHouseService;
 import com.qth.service.IShareService;
@@ -73,18 +74,24 @@ public class ShareService implements IShareService{
         }
     }
 
-    public List<House> checkShare(String paths,Integer shareType,BigDecimal sumArea,Integer totalHouse,BigDecimal cost ,Integer record){
-        List<House> list = houseService.selectByTreePath(paths);
-        return houseShare(list,shareType,sumArea,totalHouse,cost,null,null,record,false);
+    public List<House> checkShare(String paths,Integer shareType,BigDecimal sumArea,Integer totalHouse,BigDecimal cost ,Integer record,List<House> detail){
+        HouseTreeModel houseTreeModel = new HouseTreeModel();
+        houseTreeModel.setPaths(paths);
+        HouseService.sqlAppend(houseTreeModel);
+        List<House> list = houseService.selectByTreeNode(houseTreeModel);
+        return houseShare(list,shareType,sumArea,totalHouse,cost,null,null,record,null,false,detail);
     }
 
     @Override
     @Transactional
-    public int share(String paths,Integer shareType,BigDecimal sumArea,Integer totalHouse,BigDecimal cost ,Integer record,String handler) {
+    public int share(String paths,Integer shareType,BigDecimal sumArea,Integer totalHouse,BigDecimal cost ,Integer record,Long flowNum,String handler) {
 
         Date stamp = new Date();
-        List<House> list = houseService.selectByTreePath(paths);
-        houseShare(list,shareType,sumArea,totalHouse,cost,handler,stamp,record,true);
+        HouseTreeModel houseTreeModel = new HouseTreeModel();
+        houseTreeModel.setPaths(paths);
+        HouseService.sqlAppend(houseTreeModel);
+        List<House> list = houseService.selectByTreeNode(houseTreeModel);
+        List<House> houseList = houseShare(list, shareType, sumArea, totalHouse, cost, handler, stamp, record, flowNum, true, null);
 
         RepairRecord repairRecord = new RepairRecord();
         repairRecord.setId(record);
@@ -114,16 +121,14 @@ public class ShareService implements IShareService{
 
     @Override
     @Transactional
-    public int shareAccount(Integer record, String handler) {
+    public int shareAccount(Integer record,Date accountDate, String handler) {
         int sum=0;
         //查找account_log_temp表数据
         List<AccountLog> accountLogs = accountLogMapper.selectTempByRecord(record);
-        Date date = new Date();
         //复制一份到account_log
         for(AccountLog accountLog:accountLogs){
             accountLog.setHandler(handler);
-            accountLog.setTradeTime(date);
-            accountLog.setSeq(date.getTime());
+            accountLog.setTradeTime(accountDate);
             accountLog.setId(null);
             accountLogMapper.insert(accountLog);
             //更新house余额
@@ -136,7 +141,7 @@ public class ShareService implements IShareService{
         //更新record状态
         RepairRecord repairRecord = new RepairRecord();
         repairRecord.setId(record);
-        repairRecord.setShareSeq(date.getTime());
+        repairRecord.setShareSeq(accountLogs.get(0).getSeq());
         repairRecord.setState(2);
         repairRecord.setStamp(new Date());
         recordMapper.stateChange(repairRecord);
@@ -144,7 +149,7 @@ public class ShareService implements IShareService{
         return sum;
     }
 
-    private List<House> houseShare(List<House> houses,Integer shareType,BigDecimal sumArea,Integer totalHouse,BigDecimal cost,String handler,Date stamp,Integer record,boolean insert){
+    private List<House> houseShare(List<House> houses,Integer shareType,BigDecimal sumArea,Integer totalHouse,BigDecimal cost,String handler,Date stamp,Integer record,Long flowNum,boolean insert,List<House> detail){
         //每户花销
         BigDecimal houseCost;
 
@@ -156,8 +161,7 @@ public class ShareService implements IShareService{
             if(shareType == 1){
                 //按面积分摊
                 //平米均摊价，按面积分摊时使用
-                BigDecimal everySquareCost = cost.divide(sumArea,2, BigDecimal.ROUND_HALF_EVEN);
-                houseCost = everySquareCost.multiply(house.getArea());
+                houseCost = house.getArea().multiply(cost).divide(sumArea,2,BigDecimal.ROUND_HALF_EVEN);
             }else if (shareType == 2){
                 //按户分摊
                 //每户均摊价，按户分摊时使用
@@ -174,10 +178,15 @@ public class ShareService implements IShareService{
             //新的余额
             BigDecimal newBalance = house.getAccountBalance().subtract(houseCost);
             if(newBalance.compareTo(new BigDecimal(0f))==-1) {
+                house.setShareMoney(houseCost);
                 unBalance.add(house);
             }
+            if(detail!=null){
+                house.setShareMoney(houseCost);
+                detail.add(house);
+            }
             if(insert){
-                insertShareAccountLog(house,handler,houseCost,stamp,record,newBalance);
+                insertShareAccountLog(house,handler,houseCost,stamp,record,newBalance,flowNum);
             }
         }
         return unBalance;
@@ -186,7 +195,7 @@ public class ShareService implements IShareService{
     /**
      * 写入临时表，不变更余额
      */
-    public void insertShareAccountLog(House house,String handler,BigDecimal houseCost,Date stamp,Integer record,BigDecimal newBalance){
+    public void insertShareAccountLog(House house,String handler,BigDecimal houseCost,Date stamp,Integer record,BigDecimal newBalance,Long flowNum){
         //余额变更记录
         AccountLog accountLog = new AccountLog();
         accountLog.setBalance(house.getAccountBalance());
@@ -196,7 +205,7 @@ public class ShareService implements IShareService{
         accountLog.setHouseOwner(house.getOwnerName());
         accountLog.setTradeMoney(houseCost.negate());
         accountLog.setTradeTime(stamp);
-        accountLog.setSeq(stamp.getTime());
+        accountLog.setSeq(flowNum);
         accountLog.setRemark(record.toString());
 //        //余额变更
 //        house.setAccountBalance(newBalance);
@@ -213,6 +222,8 @@ public class ShareService implements IShareService{
 
         //查询余额变更记录
         List<AccountLog> accountLogs = accountLogMapper.selectByRecord(repairRecord);
+
+        sum += accountLogMapper.backByRecord(repairRecord);
         //批量回滚余额
         for(AccountLog accountLog:accountLogs){
 

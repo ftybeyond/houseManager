@@ -42,6 +42,16 @@ public interface AccrualResultMapper {
 
     int billBatch(Map map);
 
+    List<AccrualResult> selectResultByTree(Map map);
+
+    List<AccrualInfo> selectAccrualInfoByTree(Map map);
+
+    int selectResultCountByTree(Map map);
+
+    List<AccrualInfo> summaryResultByTree(Map map);
+
+    Double sumResultByTree(Map map);
+
     List<AccrualInfo> allAccrualInfoInResidentialArea(AccrualResult accrualResult);
 
     List<AccrualInfo> allAccrualInfoInBuilding(AccrualResult accrualResult);

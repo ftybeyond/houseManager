@@ -3,6 +3,7 @@ package com.qth.action;
 import com.qth.model.AccrualResult;
 import com.qth.model.common.CommonRsp;
 import com.qth.model.common.DataTableRspWrapper;
+import com.qth.model.dto.AccrualInfo;
 import com.qth.service.IAccrualResultService;
 import com.qth.service.IAccrualService;
 import com.qth.service.IHouseService;
@@ -69,12 +70,23 @@ public class AccrualController extends BaseController {
     @RequestMapping("/rest/accrual/resultTable")
     @ResponseBody
     public DataTableRspWrapper<AccrualResult> table(AccrualResult accrualResult){
-        List<AccrualResult> list = accrualResultService.selectByModel(accrualResult);
-        DataTableRspWrapper rspWrapper = new DataTableRspWrapper();
-        rspWrapper.setData(list);
-        rspWrapper.setRecordsTotal(accrualResultService.selectCountByModel(accrualResult));
+        DataTableRspWrapper rspWrapper = accrualResultService.selectByTree(accrualResult);
         rspWrapper.setDraw(accrualResult.getDraw());
         return rspWrapper;
+    }
+
+    @RequestMapping("/rest/accrual/sumResult")
+    @ResponseBody
+    public CommonRsp sumResult(AccrualResult accrualResult){
+        Double result = accrualResultService.sumByTree(accrualResult);
+        return data2Rsp(result);
+    }
+
+    @RequestMapping("/rest/accrual/summaryResult")
+    @ResponseBody
+    public CommonRsp summaryResult(AccrualResult accrualResult){
+        List<AccrualInfo> result = accrualResultService.summaryResult(accrualResult);
+        return data2Rsp(result);
     }
 
     @RequestMapping("/rest/accrual/accrualBack")
@@ -86,8 +98,8 @@ public class AccrualController extends BaseController {
 
     @RequestMapping("/rest/accrual/bill")
     @ResponseBody
-    public CommonRsp accrualBill(AccrualResult accrualResult, HttpSession session) {
-        int effect = accrualService.billBatch(accrualResult,getHandler(session));
+    public CommonRsp accrualBill(AccrualResult accrualResult,String accountDate, HttpSession session) {
+        int effect = accrualService.billBatch(accrualResult,accountDate,getHandler(session));
         ;return dbEffect2Rsp(effect);
     }
 }

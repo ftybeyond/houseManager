@@ -16,7 +16,7 @@ public interface IShareService {
 
     public List<ZTreeModel> loadTreeNodes(ZTreeNodeReq req);
 
-    public List<House> checkShare(String paths,Integer shareType,BigDecimal sumArea,Integer totalHouse,BigDecimal cost ,Integer record);
+    public List<House> checkShare(String paths,Integer shareType,BigDecimal sumArea,Integer totalHouse,BigDecimal cost ,Integer record,List<House> detail);
 
 
         /**
@@ -29,13 +29,13 @@ public interface IShareService {
          * @param handler 操作员
          * @return
          */
-    public int share(String paths, Integer shareType, BigDecimal sumArea, Integer houses, BigDecimal cost,Integer record, String handler);
+    public int share(String paths, Integer shareType, BigDecimal sumArea, Integer houses, BigDecimal cost,Integer record,Long flowNum, String handler);
 
     public int shareBack(Integer record,String handler);
 
-    public int shareAccount(Integer record,String handler);
+    public int shareAccount(Integer record,Date accountDate ,String handler);
 
-    public int shareBackAccount(Integer record, String handler);
+    public int shareBackAccount(Integer record,String handler);
 
     public BigDecimal getRecordCost(Integer id);
 

@@ -85,10 +85,12 @@
                                             return;
                                         }
                                         layer.confirm('<p>批量返还（' + tree.getAllSelectPath() + '）余额？</p><p>合计：'+$(dt.column( 4 ).footer()).html()+'元</p><p>返还后，余额将被清零！</p>',{icon:3,yes:function(){
+                                            var loadingMask = layer.msg('拼命计算中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
                                             $.post("/rest/house/balanceBackBatch.action",$("#searchForm").serializeJSON(),null,"json").done(function (resp) {
                                                 $("#exportForm input[name='seq']").val(resp.data);
                                                 $("#exportForm input[name='supplement']").val($(dt.column( 4 ).footer()).html());
                                                 $("#exportForm").submit();
+                                                layer.close(loadingMask);
                                             })
                                             layer.closeAll();
                                         }})
@@ -103,7 +105,9 @@
                                     return;
                                 }
                                 layer.confirm('<p>产业编码：'+item.code+'</p><p>返还金额：'+item.accountBalance+'</p>',{title:"返还确认",yes:function () {
+                                    var loadingMask = layer.msg('拼命计算中......', {shade: [0.8, '#393D49'], time: 0, icon: 16});
                                     $.post("/rest/house/balanceBack.action",{house:item.id},null,"json").done(function (data) {
+                                        layer.close(loadingMask);
                                         layer.alert(data.description);
                                         tableObj.ajax.reload();
                                     })
@@ -153,13 +157,13 @@
                     <div class="col-xs-5 search-form-group">
                         <label class="control-label col-xs-3">起始登账时间</label>
                         <div class="col-xs-9">
-                            <input type="text" id="accountDateStart" class="form-control" placeholder="要查询的房屋的起始登账时间" onClick="WdatePicker({maxDate:'#F{$dp.$D(\'accountDateEnd\',{d:-1})}'})" name="accountDateStart"/>
+                            <input type="text" id="accountDateStart" class="form-control" placeholder="要查询的房屋的起始登账时间" onClick="WdatePicker({maxDate:'#F{$dp.$D(\'accountDateEnd\',{d:0})}'})" name="accountDateStart"/>
                         </div>
                     </div>
                     <div class="col-xs-5 search-form-group">
                         <label class="control-label col-xs-3">截止登账时间</label>
                         <div class="col-xs-9">
-                            <input type="text" id="accountDateEnd" class="form-control" placeholder="要查询的房屋的截止登账时间" onClick="WdatePicker({minDate:'#F{$dp.$D(\'accountDateStart\',{d:1})}'})" name="accountDateEnd"/>
+                            <input type="text" id="accountDateEnd" class="form-control" placeholder="要查询的房屋的截止登账时间" onClick="WdatePicker({minDate:'#F{$dp.$D(\'accountDateStart\',{d:0})}'})" name="accountDateEnd"/>
                         </div>
                     </div>
                     <div class="col-xs-2 search-form-group" style="float: right">

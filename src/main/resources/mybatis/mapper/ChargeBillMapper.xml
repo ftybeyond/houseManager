@@ -6,6 +6,7 @@
     <result column="house_code" jdbcType="VARCHAR" property="houseCode" />
     <result column="house_area" jdbcType="DECIMAL" property="houseArea" />
     <result column="house_unit_price" jdbcType="DECIMAL" property="houseUnitPrice" />
+    <result column="house_total_price" jdbcType="DECIMAL" property="houseTotalPrice" />
     <result column="house_owner" jdbcType="VARCHAR" property="houseOwner" />
     <result column="house_tel" jdbcType="VARCHAR" property="houseTel" />
     <result column="ratio" jdbcType="DECIMAL" property="ratio" />
@@ -26,12 +27,12 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into charge_bill (id, house_code, house_area,
-      house_unit_price, house_owner,house_tel, ratio,
+      house_unit_price,house_total_price, house_owner,house_tel, ratio,
       charge_type, create_time, handler,
       actual_sum, invoice_num,flow_num, state
       )
     values (#{id,jdbcType=INTEGER}, #{houseCode,jdbcType=VARCHAR}, #{houseArea,jdbcType=DECIMAL},
-      #{houseUnitPrice,jdbcType=DECIMAL}, #{houseOwner,jdbcType=VARCHAR},#{houseTel,jdbcType=VARCHAR}, #{ratio,jdbcType=DECIMAL},
+      #{houseUnitPrice,jdbcType=DECIMAL},#{houseTotalPrice,jdbcType=DECIMAL}, #{houseOwner,jdbcType=VARCHAR},#{houseTel,jdbcType=VARCHAR}, #{ratio,jdbcType=DECIMAL},
       #{chargeType,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{handler,jdbcType=VARCHAR},
       #{actualSum,jdbcType=DECIMAL}, #{invoiceNum,jdbcType=VARCHAR},#{flowNum,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER}
       )
@@ -195,10 +196,10 @@
         AND ra.id = #{residentialArea}
       </if>
       <if test="fromDate!=null">
-        AND cb.create_time  &gt;= #{fromDate}
+        AND DATE_FORMAT(cb.create_time, '%Y-%m-%d') &gt;= DATE_FORMAT(#{fromDate}, '%Y-%m-%d')
       </if>
       <if test="endDate!=null">
-        AND cb.create_time &lt;= #{endDate}
+        AND DATE_FORMAT(cb.create_time, '%Y-%m-%d') &lt;= DATE_FORMAT(#{endDate}, '%Y-%m-%d')
       </if>
       <if test="handler!=null">
         AND cb.`handler` = #{handler}
@@ -214,6 +215,37 @@
       limit #{start} ,#{length}
     </if>
 
+  </select>
+
+  <select id="selectSumByForm" parameterType="com.qth.model.dto.ChargeBillForm" resultType="double">
+    SELECT
+     sum(cb.actual_sum)
+    FROM
+    charge_bill cb
+    LEFT JOIN house h ON cb.house_code = h.`code`
+    LEFT JOIN unit u ON h.unit = u.id
+    LEFT JOIN building b ON b.id = u.building
+    LEFT JOIN residential_area ra ON ra.id = b.residential_area
+    <where>
+      <if test="residentialArea!=null">
+        AND ra.id = #{residentialArea}
+      </if>
+      <if test="fromDate!=null">
+        AND DATE_FORMAT(cb.create_time, '%Y-%m-%d') &gt;= DATE_FORMAT(#{fromDate}, '%Y-%m-%d')
+      </if>
+      <if test="endDate!=null">
+        AND DATE_FORMAT(cb.create_time, '%Y-%m-%d') &lt;= DATE_FORMAT(#{endDate}, '%Y-%m-%d')
+      </if>
+      <if test="handler!=null and handler.length>0">
+        AND cb.`handler` = #{handler}
+      </if>
+      <if test="ownerName!=null and ownerName.length>0">
+        AND cb.house_owner = #{ownerName}
+      </if>
+      <if test="flowNum!=null and flowNum.length>0">
+        AND cb.flow_num = #{flowNum}
+      </if>
+    </where>
   </select>
 
   <select id="selectCountByForm" parameterType="com.qth.model.dto.ChargeBillForm" resultType="int">
